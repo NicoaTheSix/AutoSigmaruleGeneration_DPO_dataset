@@ -1,0 +1,132 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically looking for emails with attachments named "malicious.docx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "malicious.docx"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+---
+- title: Identify Execution of Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for the execution of Microsoft Word processes initiated by Outlook that involve macros, specifically looking for PowerShell commands executed from Word documents.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Identify Downloading Additional Tools from C2
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell commands that download files from known malicious domains, specifically looking for commands that use Invoke-WebRequest to download executables.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "payload.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1105
+    - tactic: Command and Control
+  level: high
+---
+- title: Identify Execution of Downloaded Payload
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the execution of the downloaded payload (payload.exe) from the Downloads directory.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\cmd.exe"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Users\\Victim\\Downloads\\payload.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Identify Establishing Persistence and Further Exploitation
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for the creation of scheduled tasks that execute unusual binaries, specifically those that point to the downloaded payload.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\schtasks.exe"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Users\\Victim\\Downloads\\payload.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: high
+---
+- title: Identify Lateral Movement
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitor for the use of PsExec or similar tools that execute commands on remote machines.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Path\\To\\PsExec.exe"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Path\\To\\MaliciousTool.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1021
+    - tactic: Lateral Movement
+  level: high
+```

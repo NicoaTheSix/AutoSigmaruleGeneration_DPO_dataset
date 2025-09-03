@@ -1,0 +1,48 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Monitor for the creation of processes related to Outlook that involve email interactions. Specifically, look for emails with attachments named "Invoice_2023.xlsx" and subject lines containing "Important Document".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+
+2. **Detect Opening of Malicious Attachment**  
+   - Track the process creation of Excel when the user opens the malicious attachment. Ensure that the Excel file contains macros.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" (or similar path for Excel)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+
+3. **Monitor Macro Execution and Payload Download**  
+   - Look for PowerShell commands executed from Excel that download files from the internet, particularly those that reference a URL like "http://malicious-server.com/payload.exe".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-server.com"  
+     - `dstNode.Port`: 80 or 443  
+
+4. **Detect Execution of the Malicious Payload**  
+   - Monitor for the execution of the downloaded payload executable and any outbound network connections to known malicious IP addresses.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-ip-address"  
+
+5. **Identify Changes for Persistence**  
+   - Track modifications to registry keys that are commonly used for persistence, such as those under `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"  
+
+6. **Monitor Data Exfiltration Activities**  
+   - Look for large outbound data transfers or unusual traffic patterns indicating data being sent to the attacker's command and control server.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Port`: 80 or 443  

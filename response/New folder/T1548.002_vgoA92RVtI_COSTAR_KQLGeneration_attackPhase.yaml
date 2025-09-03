@@ -1,0 +1,3 @@
+<output>
+(EventID: 25 AND Subject: "*Invoice Attached*" AND Sender: "unknown") OR (EventID: 4688 AND Image: "*\\\\excel.exe" AND CommandLine: "*Invoice.xlsx*") OR (EventID: 4688 AND ParentImage: "*\\\\excel.exe" AND (CommandLine: "*Shell*" OR CommandLine: "*CreateObject*")) OR (EventID: 4688 AND Image: "C:\\\\Users\\\\Public\\\\payload.exe") OR (EventID: 5156 AND DestinationIP: "known_malicious_indicators")
+</output>

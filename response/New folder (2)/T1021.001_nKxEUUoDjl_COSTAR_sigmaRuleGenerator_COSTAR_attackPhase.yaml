@@ -1,0 +1,169 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically for emails with attachments named "malicious.docx" or "malicious.pdf".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: ["malicious.docx", "malicious.pdf"]
+  condition: selection
+  tags:
+    - T1566
+    - Initial Access
+  level: high
+---
+- title: Identify Execution of Malicious Macros
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for the execution of Microsoft Word processes that indicate macro execution, specifically looking for command lines that include "Start-Process" with a reference to "malicious.docx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "malicious.docx"
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Identify PowerShell Payload Delivery
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell commands that download executables from suspicious URLs, specifically looking for commands that include "Invoke-WebRequest" with a URL pointing to "malicious-website.com".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "payload.exe"
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Identify RDP Session Initiation
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the creation of RDP client processes that indicate an RDP session is being initiated, specifically looking for command lines that include "mstsc /v:VictimIPAddress".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\mstsc.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "VictimIPAddress"
+  condition: selection
+  tags:
+    - T1076
+    - Remote Access
+  level: medium
+---
+- title: Identify Lateral Movement via RDP
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for subsequent RDP sessions initiated from the original RDP session to other machines, specifically looking for command lines that include "mstsc /v:AnotherVictimIPAddress".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\mstsc.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "AnotherVictimIPAddress"
+  condition: selection
+  tags:
+    - T1076
+    - Lateral Movement
+  level: medium
+---
+- title: Identify Data Exfiltration Activities
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitor for file access logs indicating that sensitive files are being copied to a remote server, specifically looking for commands that include "xcopy" with paths leading to "AttackerIPAddress".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\cmd.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "SensitiveData"
+  condition: selection
+  tags:
+    - T1041
+    - Exfiltration
+  level: high
+---
+- title: Identify RDP Tunneling Activities
+  id: 123e4567-e89b-12d3-a456-426614174006
+  description: Monitor for the execution of tunneling tools like Plink that create RDP tunnels, specifically looking for command lines that include "plink.exe -L 3389:localhost:3389".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Path\\To\\plink.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "localhost"
+  condition: selection
+  tags:
+    - T1573
+    - Command and Control
+  level: medium
+---
+- title: Identify RDP Session via Tunnel
+  id: 123e4567-e89b-12d3-a456-426614174007
+  description: Monitor for RDP client processes connecting through established tunnels, specifically looking for command lines that include "mstsc /v:localhost:3389".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\mstsc.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "localhost"
+  condition: selection
+  tags:
+    - T1573
+    - Remote Access
+  level: medium
+```

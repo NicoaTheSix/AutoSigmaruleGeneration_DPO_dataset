@@ -1,0 +1,21 @@
+<output>
+1. **Identify Establishing Persistence via Windows Task Scheduler**  
+   - Monitor for events where the `srcNode` is a process responsible for creating scheduled tasks (e.g., `schtasks.exe`).  
+   - Set the `dstNode` to reflect the scheduled task being created, specifically targeting a task with the name "UpdateService".  
+   - Ensure the `relation` is set to "Process Create" for the task creation process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\schtasks.exe",
+         "Cmdline": "schtasks.exe /create /tn \"UpdateService\" /tr \"C:\\path\\to\\malicious_payload.exe\" /sc onlogon",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "UpdateService",
+         "Type": "Registry" // Assuming the task is stored in the registry
+       },
+       "relation": "Process Create"
+     }
+     ```
+</output>

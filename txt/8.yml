@@ -1,0 +1,24 @@
+title: Detect Persistence or System Modification on Initial Access
+id: 4a04d7d6-6ae7-4623-bafd-36363eaeecde
+description: Detects suspicious registry or file modifications for persistence by processes spawned from initial access or payload execution.
+status: production
+author: auto-generated
+date: 2025-07-13
+logsource:
+  category: custom
+  product: windows
+detection:
+  selection:
+    relation:
+      - RegSetValue
+      - CreateFile
+      - WriteFile
+    dstNode.Key|contains:
+      - \Software\Microsoft\Windows\CurrentVersion\Run
+    dstNode.Name|contains:
+      - \AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\
+  condition: selection
+tags:
+  - attack.t1566.001
+  - attack.persistence
+level: high

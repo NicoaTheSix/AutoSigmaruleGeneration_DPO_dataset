@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND srcNode.Cmdline: "*-ExecutionPolicy Bypass -File malicious_script.ps1*" AND dstNode.Dstaddress: "malicious.com" AND dstNode.Port: 80 AND dstNode.Type: "Network" AND relation: "TCP Connect"

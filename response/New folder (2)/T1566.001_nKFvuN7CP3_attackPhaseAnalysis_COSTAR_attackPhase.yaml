@@ -1,0 +1,56 @@
+1. **Framework Section**  
+   Phase 1: *Delivery*  
+   - Analyze email headers for spoofing indicators (e.g., "From" address discrepancies).  
+   - Monitor for common file types associated with spearphishing (e.g., .docx, .xls, .pdf, .zip).  
+   - Identify patterns in email content that suggest social engineering tactics (e.g., urgency, authority).  
+
+   Phase 2: *Execution*  
+   - Detect execution of malicious attachments (e.g., monitoring for processes spawned from Office applications).  
+   - Analyze file behavior upon opening (e.g., macro execution, file extraction from archives).  
+   - Monitor for user interactions with attachments (e.g., clicks on links, entering passwords).  
+
+   Phase 3: *Post-Execution*  
+   - Track network connections initiated by newly executed processes (e.g., C2 communication).  
+   - Monitor for persistence mechanisms established by the malware (e.g., registry modifications, scheduled tasks).  
+   - Analyze system changes made by the malware (e.g., file creation, modification of system files).  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Email Spoofing  
+     - Examples: "admin@338 has sent emails with malicious Microsoft Office documents attached."  
+     - Associated Phase: Delivery  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Malicious Attachment Types  
+     - Examples: "APT1 has sent spearphishing emails containing malicious attachments."  
+     - Associated Phase: Delivery  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Social Engineering Tactics  
+     - Examples: "The text of the spearphishing email usually tries to give a plausible reason why the file should be opened."  
+     - Associated Phase: Delivery  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Macro Execution  
+     - Examples: "FIN4 has used spearphishing emails containing attachments with embedded malicious macros."  
+     - Associated Phase: Execution  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Password-Protected Archives  
+     - Examples: "APT1 has sent spearphishing emails with password-protected RAR attachments to avoid being detected by the email gateway."  
+     - Associated Phase: Delivery  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: C2 Communication  
+     - Examples: "DarkHydrus has sent spearphishing emails that contained malicious Microsoft Office documents that use the 'attachedTemplate' technique to load a template from a remote server."  
+     - Associated Phase: Post-Execution  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Persistence Mechanisms  
+     - Examples: "Bumblebee has gained execution through luring users into opening malicious attachments."  
+     - Associated Phase: Post-Execution  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: File Type Manipulation  
+     - Examples: "Adversaries frequently manipulate file extensions and icons in order to make attached executables appear to be document files."  
+     - Associated Phase: Delivery  
+     - Mapping to TTP ID: T1566.001  

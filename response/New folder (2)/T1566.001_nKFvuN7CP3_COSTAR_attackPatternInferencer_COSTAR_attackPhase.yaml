@@ -1,0 +1,324 @@
+<output>
+Pattern Name: Email Spoofing
+Scenario Overview: An attacker sends a spearphishing email that appears to come from a trusted source, containing a malicious Microsoft Office document as an attachment. The email is designed to trick the recipient into opening the attachment, leading to the execution of malware.
+
+Attack Flow Breakdown:
+1. **Email Delivery**
+   - Application: Outlook
+   - User Action: User receives an email from a spoofed address (e.g., admin@338).
+   - Key Artifacts: Email headers indicating spoofing, attachment named "Invoice.docx".
+   - 
+   ```shell
+   # Analyze email headers for spoofing indicators
+   grep "From:" email_headers.txt | grep "admin@338"
+   ```
+
+2. **Attachment Interaction**
+   - Application: Outlook
+   - User Action: User opens the email and clicks on the attachment "Invoice.docx".
+   - Key Artifacts: User interaction logs, attachment file path.
+   - 
+   ```shell
+   # Log user interaction with the attachment
+   echo "User opened Invoice.docx" >> user_interaction.log
+   ```
+
+3. **Execution of Malicious Document**
+   - Application: Microsoft Word
+   - User Action: User enables macros when prompted by the document.
+   - Key Artifacts: Macro execution logs, process creation logs.
+   - 
+   ```shell
+   # Monitor for processes spawned from Word
+   ps -ef | grep "WINWORD.EXE"
+   ```
+
+4. **Malware Execution**
+   - Application: PowerShell (or other payload execution)
+   - User Action: Malicious macro executes a PowerShell command to download additional payloads.
+   - Key Artifacts: PowerShell command logs, network traffic to C2 server.
+   - 
+   ```shell
+   # Log PowerShell command execution
+   Get-Process | Where-Object { $_.ProcessName -eq "powershell" }
+   ```
+
+5. **C2 Communication**
+   - Application: Network
+   - User Action: Malware initiates a connection to a command and control server.
+   - Key Artifacts: Network logs showing outbound connections to suspicious IP addresses.
+   - 
+   ```shell
+   # Monitor network connections for C2 communication
+   netstat -an | grep "ESTABLISHED"
+   ```
+
+6. **Persistence Mechanism**
+   - Application: Registry Editor
+   - User Action: Malware modifies the registry to ensure persistence.
+   - Key Artifacts: Registry changes, scheduled tasks created by malware.
+   - 
+   ```shell
+   # Check for registry modifications
+   reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+   ```
+
+</output>
+
+<output>
+Pattern Name: Malicious Attachment Types
+Scenario Overview: An attacker sends a spearphishing email with a malicious attachment, such as a password-protected ZIP file, to evade detection. The user is tricked into extracting and executing the payload.
+
+Attack Flow Breakdown:
+1. **Email Delivery**
+   - Application: Outlook
+   - User Action: User receives an email with a password-protected ZIP file named "Documents.zip".
+   - Key Artifacts: Email content, attachment file type.
+   - 
+   ```shell
+   # Monitor for email attachments with .zip extension
+   grep ".zip" email_attachments.log
+   ```
+
+2. **Attachment Extraction**
+   - Application: Windows Explorer
+   - User Action: User downloads and extracts the ZIP file using built-in extraction tools.
+   - Key Artifacts: File extraction logs, extracted file path.
+   - 
+   ```shell
+   # Log extraction of ZIP file
+   echo "User extracted Documents.zip" >> extraction.log
+   ```
+
+3. **Execution of Malicious File**
+   - Application: Windows Command Prompt
+   - User Action: User runs the extracted executable "malware.exe".
+   - Key Artifacts: Process creation logs, command history.
+   - 
+   ```shell
+   # Monitor for execution of the extracted executable
+   ps -ef | grep "malware.exe"
+   ```
+
+4. **C2 Communication**
+   - Application: Network
+   - User Action: Malware connects to a remote server for further instructions.
+   - Key Artifacts: Network logs showing outbound connections to C2 IP.
+   - 
+   ```shell
+   # Monitor network traffic for suspicious connections
+   tcpdump -i eth0 'tcp port 80 or tcp port 443'
+   ```
+
+5. **Persistence Mechanism**
+   - Application: Task Scheduler
+   - User Action: Malware creates a scheduled task to ensure it runs on startup.
+   - Key Artifacts: Scheduled task logs, registry modifications.
+   - 
+   ```shell
+   # Check for scheduled tasks created by malware
+   schtasks /query /fo LIST /v | findstr "malware"
+   ```
+
+</output>
+
+<output>
+Pattern Name: Macro Execution
+Scenario Overview: An attacker sends a spearphishing email with a malicious Microsoft Office document that contains embedded macros. When the user enables macros, the malware executes, leading to further exploitation.
+
+Attack Flow Breakdown:
+1. **Email Delivery**
+   - Application: Outlook
+   - User Action: User receives an email with a document named "Report.docm" (macro-enabled).
+   - Key Artifacts: Email headers, attachment type.
+   - 
+   ```shell
+   # Check for macro-enabled document types
+   grep ".docm" email_attachments.log
+   ```
+
+2. **Opening the Document**
+   - Application: Microsoft Word
+   - User Action: User opens the document and is prompted to enable macros.
+   - Key Artifacts: User interaction logs, document open events.
+   - 
+   ```shell
+   # Log document opening event
+   echo "User opened Report.docm" >> document_access.log
+   ```
+
+3. **Macro Execution**
+   - Application: Microsoft Word
+   - User Action: User enables macros, triggering the execution of malicious code.
+   - Key Artifacts: Macro execution logs, process creation logs.
+   - 
+   ```shell
+   # Monitor for macro execution
+   Get-Process | Where-Object { $_.ProcessName -eq "WINWORD" }
+   ```
+
+4. **Payload Download**
+   - Application: PowerShell
+   - User Action: Malicious macro executes a PowerShell command to download additional malware.
+   - Key Artifacts: PowerShell command logs, network traffic to malicious domains.
+   - 
+   ```shell
+   # Log PowerShell command execution
+   Get-Content C:\path\to\powershell.log
+   ```
+
+5. **C2 Communication**
+   - Application: Network
+   - User Action: Malware establishes a connection to a command and control server.
+   - Key Artifacts: Network logs showing outbound connections.
+   - 
+   ```shell
+   # Monitor for C2 communication
+   netstat -an | grep "ESTABLISHED"
+   ```
+
+6. **Persistence Mechanism**
+   - Application: Registry Editor
+   - User Action: Malware modifies the registry to ensure it runs on startup.
+   - Key Artifacts: Registry changes, scheduled tasks created by malware.
+   - 
+   ```shell
+   # Check for registry modifications
+   reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+   ```
+
+</output>
+
+<output>
+Pattern Name: C2 Communication
+Scenario Overview: After executing a malicious attachment, the malware establishes a connection to a command and control (C2) server to receive further instructions or download additional payloads.
+
+Attack Flow Breakdown:
+1. **Email Delivery**
+   - Application: Outlook
+   - User Action: User receives a spearphishing email with a malicious attachment.
+   - Key Artifacts: Email headers, attachment file type.
+   - 
+   ```shell
+   # Monitor for spearphishing emails
+   grep "spearphishing" email_logs.txt
+   ```
+
+2. **Execution of Malicious Attachment**
+   - Application: Microsoft Word
+   - User Action: User opens the attachment and enables macros.
+   - Key Artifacts: Process creation logs, macro execution logs.
+   - 
+   ```shell
+   # Log macro execution
+   Get-Process | Where-Object { $_.ProcessName -eq "WINWORD" }
+   ```
+
+3. **Establishing C2 Connection**
+   - Application: Network
+   - User Action: Malware initiates a connection to a predefined C2 server.
+   - Key Artifacts: Network logs showing outbound connections to suspicious IP addresses.
+   - 
+   ```shell
+   # Monitor network connections for C2 communication
+   netstat -an | grep "ESTABLISHED"
+   ```
+
+4. **Data Exfiltration**
+   - Application: Network
+   - User Action: Malware sends sensitive data back to the C2 server.
+   - Key Artifacts: Network logs showing data packets sent to C2.
+   - 
+   ```shell
+   # Capture outgoing data packets
+   tcpdump -i eth0 -w exfiltration.pcap
+   ```
+
+5. **Receiving Commands**
+   - Application: Network
+   - User Action: Malware receives commands from the C2 server for further actions.
+   - Key Artifacts: Network logs showing command requests.
+   - 
+   ```shell
+   # Monitor for command requests from C2
+   tcpdump -i eth0 'tcp port 80 or tcp port 443'
+   ```
+
+6. **Persistence Mechanism**
+   - Application: Task Scheduler
+   - User Action: Malware creates a scheduled task to ensure it runs on startup.
+   - Key Artifacts: Scheduled task logs, registry modifications.
+   - 
+   ```shell
+   # Check for scheduled tasks created by malware
+   schtasks /query /fo LIST /v | findstr "malware"
+   ```
+
+</output>
+
+<output>
+Pattern Name: Persistence Mechanisms
+Scenario Overview: After executing a malicious attachment, the malware establishes persistence on the system to ensure it can execute again after a reboot or user logoff.
+
+Attack Flow Breakdown:
+1. **Email Delivery**
+   - Application: Outlook
+   - User Action: User receives a spearphishing email with a malicious attachment.
+   - Key Artifacts: Email headers, attachment file type.
+   - 
+   ```shell
+   # Monitor for spearphishing emails
+   grep "spearphishing" email_logs.txt
+   ```
+
+2. **Execution of Malicious Attachment**
+   - Application: Microsoft Word
+   - User Action: User opens the attachment and enables macros.
+   - Key Artifacts: Process creation logs, macro execution logs.
+   - 
+   ```shell
+   # Log macro execution
+   Get-Process | Where-Object { $_.ProcessName -eq "WINWORD" }
+   ```
+
+3. **Establishing Persistence**
+   - Application: Registry Editor
+   - User Action: Malware modifies the registry to ensure it runs on startup.
+   - Key Artifacts: Registry changes, scheduled tasks created by malware.
+   - 
+   ```shell
+   # Check for registry modifications
+   reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+   ```
+
+4. **Creating Scheduled Tasks**
+   - Application: Task Scheduler
+   - User Action: Malware creates a scheduled task to execute on user logon.
+   - Key Artifacts: Scheduled task logs, task creation events.
+   - 
+   ```shell
+   # Check for scheduled tasks created by malware
+   schtasks /query /fo LIST /v | findstr "malware"
+   ```
+
+5. **C2 Communication**
+   - Application: Network
+   - User Action: Malware connects to a command and control server for further instructions.
+   - Key Artifacts: Network logs showing outbound connections to C2 IP.
+   - 
+   ```shell
+   # Monitor for C2 communication
+   netstat -an | grep "ESTABLISHED"
+   ```
+
+6. **System Changes**
+   - Application: File System
+   - User Action: Malware creates or modifies files to maintain persistence.
+   - Key Artifacts: File creation logs, modified system files.
+   - 
+   ```shell
+   # Check for file modifications
+   find /c /i "malware" C:\path\to\system_files.log
+   ```
+
+</output>

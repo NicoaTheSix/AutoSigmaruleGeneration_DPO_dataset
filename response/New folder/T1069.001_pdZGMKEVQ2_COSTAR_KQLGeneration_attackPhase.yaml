@@ -1,0 +1,19 @@
+<output>
+subject: "Important Document" AND attachment: "Invoice.xlsx" AND sender: "*@suspiciousdomain.com"
+</output>
+<output>
+srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\OfficeXX\\EXCEL.EXE" AND dstNode.Image: "C:\\Users\\Victim\\Downloads\\Invoice.xlsx"
+</output>
+<output>
+srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\OfficeXX\\EXCEL.EXE" AND dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND Cmdline: ("*Invoke-WebRequest*" OR "*curl*")
+</output>
+<output>
+srcNode.Image: "C:\\Windows\\explorer.exe" AND dstNode.Image: "C:\\Users\\Victim\\Downloads\\malicious.exe"
+</output>
+<output>
+srcNode.Image: "C:\\Users\\Victim\\Downloads\\malicious.exe" AND dstNode.Type: "Network" AND relation: "TCP Connect" AND dstNode.Dstaddress: "malicious_ip_or_domain"
+</output>
+<output>
+relation: "TCP Send" AND data_transfer: "large_data_transfer_pattern"
+</output>
+</output>

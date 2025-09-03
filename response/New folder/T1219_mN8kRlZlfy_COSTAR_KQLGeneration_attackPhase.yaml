@@ -1,0 +1,18 @@
+<output>
+Subject: "Important: Invoice Attached" AND FileType: ("exe" OR "bat" OR "cmd")
+</output>
+<output>
+ProcessName: "EXCEL.EXE" AND CommandLine: "*Invoice_2023.xlsx*"
+</output>
+<output>
+CommandLine: "*Invoke-WebRequest*http://malicious-site.com/payload.exe*"
+</output>
+<output>
+ServiceName: "AnyDesk" AND CommandLine: "sc create AnyDesk binPath= \\"C:\\\\Program Files\\\\AnyDesk\\\\AnyDesk.exe\\" start= auto"
+</output>
+<output>
+DestinationIP: "192.0.2.1" AND DestinationPort: 443
+</output>
+<output>
+FileName: "confidential_data.zip" AND FileTransfer: true
+</output>

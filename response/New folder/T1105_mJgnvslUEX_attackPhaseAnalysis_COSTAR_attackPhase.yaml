@@ -1,0 +1,56 @@
+1. **Framework Section**  
+   Phase 1: *Initial Access and Tool Transfer*  
+   - Monitor for command and control (C2) communications that may indicate file transfers (e.g., HTTP, FTP, SFTP).  
+   - Analyze logs for the use of common file transfer utilities (e.g., `curl`, `wget`, `scp`, `certutil`).  
+   - Detect unusual file downloads or uploads from external sources, especially from known malicious domains.  
+
+   Phase 2: *Execution and Payload Delivery*  
+   - Identify execution of scripts or commands that download files (e.g., PowerShell commands like `IEX(New-Object Net.WebClient).downloadString()`).  
+   - Monitor for the creation of new processes that may indicate the execution of downloaded payloads.  
+   - Analyze file integrity checks (e.g., hash checks using `certutil -hashfile`) to detect potential malicious file modifications.  
+
+   Phase 3: *Lateral Movement and Internal Tool Transfer*  
+   - Track file transfers between internal systems, especially using administrative tools (e.g., `PsExec`, `copy`).  
+   - Monitor for the use of remote management tools that may facilitate lateral movement (e.g., `WinRM`, `RDP`).  
+   - Detect abnormal patterns of file access or execution on multiple systems within the network.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: C2 File Download  
+     - Examples: "ABK has the ability to download files from C2."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1105  
+
+   - **Pattern Name**: PowerShell File Retrieval  
+     - Examples: "APT41 used certutil to download additional files."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1105  
+
+   - **Pattern Name**: Lateral Tool Transfer  
+     - Examples: "During the 2015 Ukraine Electric Power Attack, Sandworm Team pushed additional malicious tools onto an infected system."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1105  
+
+   - **Pattern Name**: Use of File Transfer Utilities  
+     - Examples: "Agent Tesla can download additional files for execution on the victim’s machine."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1105  
+
+   - **Pattern Name**: Integrity Verification  
+     - Examples: "After downloading a file, a threat actor may attempt to verify its integrity by checking its hash value."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1105  
+
+   - **Pattern Name**: Abuse of Package Managers  
+     - Examples: "Adversaries may also abuse installers and package managers, such as yum or winget, to download tools to victim hosts."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1105  
+
+   - **Pattern Name**: Remote File Syncing  
+     - Examples: "Adversaries may leverage services that sync between a web-based and an on-premises client, such as Dropbox or OneDrive."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1105  
+
+   - **Pattern Name**: Command Execution via File Transfer  
+     - Examples: "During Operation MidnightEclipse, threat actors downloaded additional payloads on compromised devices."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1105  

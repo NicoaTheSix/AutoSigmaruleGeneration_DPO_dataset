@@ -1,0 +1,21 @@
+<output>
+- title: Identify Establishing Persistence via Windows Task Scheduler
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Detects the creation of a scheduled task named "UpdateService" using schtasks.exe, indicating potential persistence mechanisms.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: 'C:\\Windows\\System32\\schtasks.exe'
+      Cmdline: '*schtasks.exe /create /tn "UpdateService" /tr*'
+      relation: 'Process Create'
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: high
+</output>

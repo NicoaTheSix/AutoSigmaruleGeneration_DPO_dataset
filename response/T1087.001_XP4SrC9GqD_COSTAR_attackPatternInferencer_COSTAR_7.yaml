@@ -1,0 +1,7 @@
+
+8. **Data Exfiltration**
+   - Application: PowerShell
+   - User Action: The payload collects sensitive data and sends it back to the C2 server.
+   - Key Artifacts: PowerShell command that uses `Invoke-WebRequest` or `Invoke-RestMethod` to send data.
+   - Detection: Monitor for PowerShell commands that send data to external servers, especially those containing sensitive information.
+

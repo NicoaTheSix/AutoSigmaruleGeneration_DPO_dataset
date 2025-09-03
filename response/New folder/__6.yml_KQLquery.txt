@@ -1,0 +1,2 @@
+
+(srcNode.Image: (winword.exe OR excel.exe OR powerpnt.exe OR powershell.exe OR wscript.exe OR mshta.exe OR cmd.exe)) AND (dstNode.Image: (powershell.exe OR curl.exe OR certutil.exe OR bitsadmin.exe OR rundll32.exe OR mshta.exe OR wget.exe OR *.exe))

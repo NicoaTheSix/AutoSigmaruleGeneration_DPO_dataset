@@ -1,0 +1,190 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically for emails with attachments named "invoice.docx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "invoice.docx"
+  condition: selection
+  tags:
+    - T1566
+    - Initial Access
+  level: high
+---
+- title: Monitor Opening of Malicious Attachments
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Track the execution of Microsoft Word or Excel when a user opens a document containing a macro.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "invoice.docx"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Capture Execution of the Macro
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Detect when a macro in Word or Excel invokes PowerShell to execute commands.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Identify UAC Bypass via COM Interface
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the use of the CMSTPLUA COM object invoked by PowerShell to bypass UAC.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Windows\\System32\\CMSTPLUA.exe"
+  condition: selection
+  tags:
+    - T1548
+    - Privilege Escalation
+  level: high
+---
+- title: Track Execution of Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Look for the execution of a malicious executable that establishes a reverse shell or installs additional malware.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\CMSTPLUA.exe"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Users\\User\\Downloads\\payload.exe"
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Monitor Registry Key Manipulation for UAC Bypass
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Detect modifications to the registry key that suppress UAC prompts.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKCU\\Software\\Classes\\ms-settings\\shell\\open\\command"
+  condition: selection
+  tags:
+    - T1548
+    - Privilege Escalation
+  level: high
+---
+- title: Capture Scheduled Task Creation for Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174006
+  description: Monitor for the creation of scheduled tasks that execute malicious payloads with elevated privileges.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks"
+  condition: selection
+  tags:
+    - T1053
+    - Persistence
+  level: high
+---
+- title: Identify Use of Legitimate Tools for Malicious Purposes
+  id: 123e4567-e89b-12d3-a456-426614174007
+  description: Track the execution of legitimate Windows utilities used to run malicious payloads without triggering UAC.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\fodhelper.exe"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Path\\To\\Malware.exe"
+  condition: selection
+  tags:
+    - T1218
+    - Execution
+  level: high
+---
+- title: Monitor DLL Hijacking for UAC Bypass
+  id: 123e4567-e89b-12d3-a456-426614174008
+  description: Detect the loading of malicious DLLs that exploit DLL hijacking vulnerabilities to bypass UAC.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Path\\To\\MaliciousDLL\\malicious.dll"
+  condition: selection
+  tags:
+    - T1218
+    - Execution
+  level: high
+```

@@ -1,0 +1,53 @@
+1. **Identify Initial Access via Email**  
+   - Monitor for the creation of processes related to Microsoft Outlook when an email with the subject line "Important Document" and an attachment named "Invoice.xlsx" is received.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice.xlsx"  
+     - `relation`: "Process Create"  
+
+2. **Identify Opening of Malicious Attachment**  
+   - Monitor for the execution of Microsoft Excel when the "Invoice.xlsx" file is opened, which contains a macro designed to execute malicious code.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice.xlsx"  
+     - `relation`: "Process Create"  
+
+3. **Identify Execution of Malicious Payload**  
+   - Monitor for PowerShell execution initiated by the Excel macro that downloads and executes a backdoor from a remote server.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "backdoor.exe"  
+     - `relation`: "Process Create"  
+
+4. **Identify Registry Modification for Persistence**  
+   - Monitor for registry modifications that add an entry to ensure the backdoor runs on startup.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"  
+     - `relation`: "RegSetValue"  
+
+5. **Identify Data Exfiltration Attempts**  
+   - Monitor for network traffic initiated by the backdoor to a command and control (C2) server for data exfiltration.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" (or similar for other browsers)  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-server.com"  
+     - `relation`: "TCP Connect"  
+
+6. **Identify Cleanup and Covering Tracks**  
+   - Monitor for the deletion of the backdoor executable and any logs to avoid detection.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\cmd.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "backdoor.exe"  
+     - `relation`: "CloseFile"  

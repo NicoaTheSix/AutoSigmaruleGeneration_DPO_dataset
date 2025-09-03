@@ -1,0 +1,8 @@
+<output>
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice.docx") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Documents.zip") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Report.docm") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "<suspicious IP>") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\reg.exe" AND dstNode.Type: "Registry" AND dstNode.Key: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND dstNode.Type: "Process" AND dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe")
+</output>

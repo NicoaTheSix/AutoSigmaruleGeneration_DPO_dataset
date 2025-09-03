@@ -1,0 +1,39 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Monitor for the creation of processes related to Outlook that involve email interactions. Specifically, look for emails with attachments named "Invoice.docx" and subject lines containing "Important Update".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice.docx"  
+
+2. **Identify Opening of the Malicious Attachment**  
+   - Monitor for the execution of Microsoft Word processes that open the malicious document. Specifically, look for the execution of macros, particularly `AutoOpen()`.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" (or similar path for Word)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "C:\\Users\\Victim\\Downloads\\Invoice.docx"  
+
+3. **Identify Payload Download via PowerShell**  
+   - Monitor for PowerShell commands that download executables, specifically those using `Invoke-WebRequest` to download from suspicious URLs.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"  
+
+4. **Identify Execution of the Malicious Payload**  
+   - Monitor for the execution of the downloaded payload, particularly looking for outbound connections to known malicious command and control servers.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "attacker-server.com"  
+
+5. **Identify Establishing Persistence via Task Scheduler**  
+   - Monitor for the creation of new scheduled tasks that run the malicious payload, particularly those created by non-administrative users.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\schtasks.exe"  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks\\MaliciousTask"  

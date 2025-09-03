@@ -1,0 +1,17 @@
+1. **Title**: Monitor for Suspicious Email Attachments  
+   **Details**: Identify events where an email is received with the subject "Invoice Attached" and an attachment named "Invoice_2023.xlsx". This can be tracked through email logs or security gateways that log email metadata.
+
+2. **Title**: Detect Execution of Macros in Excel  
+   **Details**: Map events where the Excel file "Invoice_2023.xlsx" is opened, specifically looking for the execution of macros that invoke PowerShell commands. This can be detected by monitoring for the "Process Create" relation where the source is Excel and the destination is PowerShell.
+
+3. **Title**: Track PowerShell Script Execution  
+   **Details**: Validate events where PowerShell is executed with commands that include "Invoke-WebRequest" to download an executable from "http://malicious-website.com/payload.exe". Focus on the "Cmdline" field of the PowerShell process for the specific command structure.
+
+4. **Title**: Monitor for Executable Execution in Temp Directory  
+   **Details**: Identify events where the executable "payload.exe" is created and executed from the Temp directory. This should be tracked by monitoring the "Process Create" relation where the source is a process that creates "payload.exe" in the Temp directory.
+
+5. **Title**: Detect Registry Modifications for Persistence  
+   **Details**: Monitor for events indicating modifications to the Registry key "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\MaliciousPayload" to ensure it runs on startup. This can be detected through "RegSetValue" actions in the Registry logs.
+
+6. **Title**: Track Data Exfiltration via PowerShell  
+   **Details**: Identify events where PowerShell is used to send data to external servers, specifically looking for commands that include "Invoke-WebRequest" with a POST method to "http://malicious-website.com/exfiltrate". Focus on the "Cmdline" field of the PowerShell process for the specific command structure.

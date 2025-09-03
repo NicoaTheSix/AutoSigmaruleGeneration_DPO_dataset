@@ -1,0 +1,19 @@
+<output>
+subject: "*Important Document*" AND attachment: "Invoice.xlsx"
+</output>
+<output>
+Image: "*excel.exe*" AND CommandLine: "*Invoice.xlsx*" AND EventID: 4688
+</output>
+<output>
+CommandLine: "*Invoke-WebRequest*http://malicious-server.com/payload.exe*"
+</output>
+<output>
+Image: "*Downloads*" AND FileName: "payload.exe" AND EventID: 4688
+</output>
+<output>
+EventID: 4698 AND Image: "*unknown*"
+</output>
+<output>
+DestinationIP: ("malicious_ip_1" OR "malicious_ip_2") AND BytesTransferred: ">100MB"
+</output>
+</output>

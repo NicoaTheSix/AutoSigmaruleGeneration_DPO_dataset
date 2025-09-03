@@ -1,0 +1,26 @@
+<output>
+- title: Identify Scheduled Task Creation for Persistence
+- id: 123e4567-e89b-12d3-a456-426614174000
+- description: Detects the creation of a scheduled task named "MaliciousTask" which may indicate persistence mechanisms used by attackers.
+- status: production
+- author: auto-generated
+- date: 2023-10-01
+- logsource:
+    category: custom
+    product: windows
+- detection:
+    selection:
+        srcNode:
+            Image: 'C:\\Windows\\System32\\schtasks.exe'
+            Cmdline: 'schtasks /create /tn "MaliciousTask" /tr "C:\\path\\to\\malicious.exe" /sc onstart'
+            Type: Process
+        dstNode:
+            Name: 'MaliciousTask'
+            Type: Registry
+        relation: 'Process Create'
+- condition: selection
+- tags:
+    - T1053
+    - Persistence
+- level: high
+</output>

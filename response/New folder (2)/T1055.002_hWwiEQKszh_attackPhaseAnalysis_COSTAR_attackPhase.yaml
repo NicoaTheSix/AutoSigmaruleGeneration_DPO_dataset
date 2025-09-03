@@ -1,0 +1,61 @@
+1. **Framework Section**  
+   Phase 1: *Injection Preparation*  
+   - Identify target processes for injection (e.g., Explorer.exe, WerFault.exe)  
+   - Utilize Windows API calls such as `VirtualAllocEx` and `WriteProcessMemory` to allocate and write code into the target process's memory  
+   - Analyze the use of shellcode or other payloads that may be injected  
+
+   Phase 2: *Execution of Injected Code*  
+   - Monitor the invocation of the injected code using `CreateRemoteThread` or similar methods  
+   - Track the execution context of the injected code to determine if it is running under a legitimate process  
+   - Assess memory remapping functionality to ensure proper execution of the injected code  
+
+   Phase 3: *Post-Injection Activities*  
+   - Evaluate the persistence mechanisms employed by the injected code (e.g., maintaining access, establishing C2 communication)  
+   - Investigate any changes to system/network resources accessed by the injected process  
+   - Analyze the potential for privilege escalation resulting from the injection  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Process Injection via PE  
+     - Examples: "Brute Ratel C4 has injected Latrodectus into the Explorer.exe process"  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1055.002  
+
+   - **Pattern Name**: Direct Injection into New Process  
+     - Examples: "Carbanak downloads an executable and injects it directly into a new process"  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1055.002  
+
+   - **Pattern Name**: Decrypted Payload Injection  
+     - Examples: "DUSTPAN can inject its decrypted payload into another process"  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1055.002  
+
+   - **Pattern Name**: Loader-Based Execution  
+     - Examples: "Gootloader can use its own PE loader to execute payloads in memory"  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1055.002  
+
+   - **Pattern Name**: Remote Access Tool Injection  
+     - Examples: "Gorgon Group malware can download a remote access tool, ShiftyBug, and inject into another process"  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1055.002  
+
+   - **Pattern Name**: Backdoor Injection  
+     - Examples: "InvisiMole can inject its backdoor as a portable executable into a target process"  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1055.002  
+
+   - **Pattern Name**: Hard-Coded Process Injection  
+     - Examples: "Pikabot, following payload decryption, creates a process hard-coded into the dropped (e.g., WerFault.exe) and injects the decrypted core modules into it"  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1055.002  
+
+   - **Pattern Name**: Evasion through Process Injection  
+     - Examples: "Rocke's miner, 'TermsHost.exe', evaded defenses by injecting itself into Windows processes, including Notepad.exe"  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1055.002  
+
+   - **Pattern Name**: Conditional Process Injection  
+     - Examples: "Zeus Panda checks processes on the system and if they meet the necessary requirements, it injects into that process"  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1055.002  

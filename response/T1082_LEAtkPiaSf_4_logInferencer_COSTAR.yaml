@@ -1,0 +1,21 @@
+<output>
+1. **Identify Execution of Malicious Payload via Windows Explorer**  
+   - Monitor for events where the `srcNode` is Windows Explorer (e.g., `explorer.exe`) and the `dstNode` is the executable file located at `C:\\Users\\User\\Downloads\\payload.exe`.  
+   - Set the `relation` to "Process Create" for the Windows Explorer process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\explorer.exe",
+         "Cmdline": "C:\\Windows\\explorer.exe C:\\Users\\User\\Downloads",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Users\\User\\Downloads\\payload.exe",
+         "Cmdline": "C:\\Users\\User\\Downloads\\payload.exe",
+         "Type": "Process"
+       },
+       "relation": "Process Create"
+     }
+     ```
+</output>

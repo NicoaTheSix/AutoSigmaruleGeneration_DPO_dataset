@@ -1,0 +1,342 @@
+C — Context  
+
+You are a senior cybersecurity detection engineer with deep expertise in threat detection, MITRE ATT&CK TTPs, and writing Sigma rules. You have access to a proprietary event log format and will be provided with TTP context, attack procedures, and existing detection patterns.
+
+  - TTP ID: {"T1566.001"}  
+
+  - Description: {"Adversaries may send spearphishing emails with a malicious attachment in an attempt to gain access to victim systems. Spearphishing attachment is a specific variant of spearphishing. Spearphishing attachment is different from other forms of spearphishing in that it employs the use of malware attached to an email. All forms of spearphishing are electronically delivered social engineering targeted at a specific individual, company, or industry. In this scenario, adversaries attach a file to the spearphishing email and usually rely uponUser Executionto gain execution.[1]Spearphishing may also involve social engineering techniques, such as posing as a trusted source.There are many options for the attachment such as Microsoft Office documents, executables, PDFs, or archived files. Upon opening the attachment (and potentially clicking past protections), the adversary's payload exploits a vulnerability or directly executes on the user's system. The text of the spearphishing email usually tries to give a plausible reason why the file should be opened, and may explain how to bypass system protections in order to do so. The email may also contain instructions on how to decrypt an attachment, such as a zip file password, in order to evade email boundary defenses. Adversaries frequently manipulate file extensions and icons in order to make attached executables appear to be document files, or files exploiting one application appear to be a file for a different one."}  
+
+  - Procedure Examples: {"During the2015 Ukraine Electric Power Attack,Sandworm Teamobtained their initial foothold into many IT systems using Microsoft Office attachments delivered through phishing emails.[2]",
+
+      "admin@338has sent emails with malicious Microsoft Office documents attached.[3]",
+
+      "The primary delivered mechanism forAgent Teslais through email phishing messages.[4]",
+
+      "Ajax Security Teamhas used personalized spearphishing attachments.[5]",
+
+      "Andarielhas conducted spearphishing campaigns that included malicious Word or Excel attachments.[6][7]",
+
+      "AppleSeedhas been distributed to victims through malicious e-mail attachments.[8]",
+
+      "APT-C-36has used spearphishing emails with password protected RAR attachment to avoid being detected by the email gateway.[9]",
+
+      "APT1has sent spearphishing emails containing malicious attachments.[10]",
+
+      "APT12has sent emails with malicious Microsoft Office documents and PDFs attached.[11][12]",
+
+      "APT19sent spearphishing emails with malicious attachments in RTF and XLSM formats to deliver initial exploits.[13]",
+
+      "APT28sent spearphishing emails containing malicious Microsoft Office and RAR attachments.[14][15][16][17][18][19][20][21]",
+
+      "APT29has used spearphishing emails with an attachment to deliver files with exploits to initial victims.[22][23][24][25]",
+
+      "APT30has used spearphishing emails with malicious DOC attachments.[26]",
+
+      "APT32has sent spearphishing emails with a malicious executable disguised as a document or spreadsheet.[27][28][29][30][31][32]",
+
+      "APT33has sent spearphishing e-mails with archive attachments.[33]",
+
+      "APT37delivers malware using spearphishing emails with malicious HWP attachments.[34][35][36]",
+
+      "APT38has conducted spearphishing campaigns using malicious email attachments.[37]",
+
+      "APT39leveraged spearphishing emails with malicious attachments to initially compromise victims.[38][39][40]",
+
+      "APT41sent spearphishing emails with attachments such as compiled HTML (.chm) files to initially compromise their victims.[41]",
+
+      "Astarothhas been delivered via malicious e-mail attachments.[42]",
+
+      "BADFLICKhas been distributed via spearphishing campaigns containing malicious Microsoft Word documents.[43]",
+
+      "Bandookis delivered via a malicious Word document inside a zip file.[44]",
+
+      "Bisonalhas been delivered as malicious email attachments.[45]",
+
+      "BITTERhas sent spearphishing emails with a malicious RTF document or Excel spreadsheet.[46][47]",
+
+      "BlackTechhas used spearphishing e-mails with malicious password-protected archived files (ZIP or RAR) to deliver malware.[48][49]",
+
+      "BLINDINGCANhas been delivered by phishing emails containing malicious Microsoft Office documents.[50]",
+
+      "BRONZE BUTLERused spearphishing emails with malicious Microsoft Word attachments to infect victims.[51][52]",
+
+      "Bumblebeehas gained execution through luring users into opening malicious attachments.[53][54][55][56]",
+
+      "DuringC0011,Transparent Tribesent malicious attachments via email to student targets in India.[57]",
+
+      "ForC0015, security researchers assessed the threat actors likely used a phishing campaign to distribute a weaponized attachment to victims.[58]",
+
+      "Chaeshas been delivered by sending victims a phishing email containing a malicious .docx file.[59]",
+
+      "Clamblinghas been delivered to victim's machines through malicious e-mail attachments.[60]",
+
+      "Cobalt Grouphas sent spearphishing emails with various attachment types to corporate and personal email accounts of victim organizations. Attachment types have included .rtf, .doc, .xls, archives containing LNK files, and password protected archives containing .exe and .scr executables.[61][62][63][64][65][66][67][68]",
+
+      "Confuciushas crafted and sent victims malicious attachments to gain initial access.[69]",
+
+      "CURIUMhas used phishing with malicious attachments for initial access to victim environments.[70]",
+
+      "DanBothas been distributed within a malicious Excel attachment via spearphishing emails.[71]",
+
+      "DarkGatecan be distributed through emails with malicious attachments from a spoofed email address.[72]",
+
+      "Darkhotelhas sent spearphishing emails with malicious RAR and .LNK attachments.[73][74]",
+
+      "DarkHydrushas sent spearphishing emails with password-protected RAR archives containing malicious Excel Web Query files (.iqy). The group has also sent spearphishing emails that contained malicious Microsoft Office documents that use the \"attachedTemplate\" technique to load a template from a remote server.[1][75][76]",
+
+      "DarkTortillahas been distributed via spearphishing emails containing archive attachments, with file types such as .iso, .zip, .img, .dmg, and .tar, as well as through malicious documents.[77]",
+
+      "DarkWatchmanhas been delivered via spearphishing emails that contain a malicious zip file.[78]",
+
+      "Dragonflyhas sent emails with malicious attachments to gain initial access.[79]",
+
+      "Elderwoodhas delivered zero-day exploits and malware to victims via targeted emails containing malicious attachments.[80][81]",
+
+      "Emotethas been delivered by phishing emails containing attachments.[82][83][84][85][86][87][88][89][90]",
+
+      "EnvyScouthas been distributed via spearphishing as an email attachment.[91]",
+
+      "EXOTIC LILYconducted an e-mail thread-hijacking campaign with malicious ISO attachments.[92][53]",
+
+      "Ferocious Kittenhas conducted spearphishing campaigns containing malicious documents to lure victims to open the attachments.[93]",
+
+      "FIN4has used spearphishing emails containing attachments (which are often stolen, legitimate documents sent from compromised accounts) with embedded malicious macros.[94][95]",
+
+      "FIN6has targeted victims with e-mails containing malicious attachments.[96]",
+
+      "FIN7sent spearphishing emails with either malicious Microsoft Documents or RTF files attached.[97][98][99][100][101]",
+
+      "FIN8has distributed targeted emails containing Word documents with embedded malicious macros.[102][103][104]",
+
+      "Flagprohas been distributed via spearphishing as an email attachment.[49]",
+
+      "DuringFrankenstein, the threat actors likely used spearphishing emails to send malicious Microsoft Word documents.[105]",
+
+      "Gallmakersent emails with malicious Microsoft Office documents attached.[106]",
+
+      "Gamaredon Grouphas delivered spearphishing emails with malicious attachments to targets.[107][108][109][110][111][112][113]",
+
+      "Gorgon Groupsent emails to victims with malicious Microsoft Office documents attached.[114]",
+
+      "Hancitorhas been delivered via phishing emails with malicious attachments.[115]",
+
+      "Higaisahas sent spearphishing emails containing malicious attachments.[116][117]",
+
+      "IcedIDhas been delivered via phishing e-mails with malicious attachments.[118][119]",
+
+      "Inceptionhas used weaponized documents attached to spearphishing emails for reconnaissance and initial compromise.[120][121][122][123]",
+
+      "IndigoZebrasent spearphishing emails containing malicious password-protected RAR attachments.[124][125]",
+
+      "Javalihas been delivered as malicious e-mail attachments.[42]",
+
+      "JSS Loaderhas been delivered by phishing emails containing malicious Microsoft Excel attachments.[100]",
+
+      "Kerrdownhas been distributed through malicious e-mail attachments.[32]",
+
+      "Kimsukyhas used emails containing Word, Excel and/or HWP (Hangul Word Processor) documents in their spearphishing campaigns.[126][127][128][129][130][8][131][132]",
+
+      "KOCTOPUShas been distributed via spearphishing emails with malicious attachments.[133]",
+
+      "KONNIhas been delivered via spearphishing campaigns through a malicious Word document.[134]",
+
+      "KOPILUWAKhas been delivered to victims as a malicious email attachment.[135]",
+
+      "Latrodectushas been distributed through reply-chain phishing emails with malicious attachments.[136]",
+
+      "Lazarus Grouphas targeted victims with spearphishing emails containing malicious Microsoft Word documents.[137][138][139][140]",
+
+      "LazyScripterhas used spam emails weaponized with archive or document files as its initial infection vector.[133]",
+
+      "Leviathanhas sent spearphishing emails with malicious attachments, including .rtf, .doc, and .xls files.[141][142]",
+
+      "Lokibotis delivered via a malicious XLS attachment contained within a spearhpishing email.[143]",
+
+      "Lumma Stealerhas been delivered through phishing emails with malicious attachments.[144]",
+
+      "Machetehas delivered spearphishing emails that contain a zipped file with malicious contents.[145][146][147]",
+
+      "Malteirohas sent spearphishing emails containing malicious .zip files.[148]",
+
+      "menuPasshas sent malicious Office documents via email as part of spearphishing campaigns as well as executables disguised as documents.[149][150][151][152]",
+
+      "Metamorfohas been delivered to victims via emails with malicious HTML attachments.[153][154]",
+
+      "Mofangdelivered spearphishing emails with malicious documents, PDFs, or Excel files attached.[155]",
+
+      "Moleratshas sent phishing emails with malicious Microsoft Word and PDF attachments.[156][157][158]",
+
+      "Moonstone Sleetdelivered various payloads to victims as spearphishing attachments.[159]",
+
+      "MuddyWaterhas compromised third parties and used compromised accounts to send spearphishing emails with targeted attachments to recipients.[160][161][162][163][164][165][166][167]",
+
+      "Mustang Pandahas used spearphishing attachments to deliver initial access payloads.[168][169][170]",
+
+      "Naikonhas used malicious e-mail attachments to deliver malware.[171]",
+
+      "NETWIREhas been spread via e-mail campaigns utilizing malicious attachments.[172][173]",
+
+      "Nomadic Octopushas targeted victims with spearphishing emails containing malicious attachments.[174][175]",
+
+      "OceanSalthas been delivered via spearphishing emails with Microsoft Office attachments.[176]",
+
+      "Octopushas been delivered via spearsphishing emails.[175]",
+
+      "OilRighas sent spearphising emails with malicious attachments to potential victims using compromised and/or spoofed email accounts.[177][178][179][180]",
+
+      "DuringOperation Dream Job,Lazarus Groupsent emails with malicious attachments to gain unauthorized access to targets' computers.[181][182]",
+
+      "DuringOperation Dust Storm, the threat actors sent spearphishing emails that contained a malicious Microsoft Word document.[183]",
+
+      "DuringOperation Spalax, the threat actors sent phishing emails that included a PDF document that in some cases led to the download and execution of malware.[184]",
+
+      "OutSteelhas been distributed as a malicious attachment within a spearphishing email.[185]",
+
+      "Patchworkhas used spearphishing with an attachment to deliver files with exploits to initial victims.[186][187][188][189]",
+
+      "PLATINUMhas sent spearphishing emails with attachments to victims as its primary initial access vector.[190]",
+
+      "PoetRATwas distributed via malicious Word documents.[191]",
+
+      "Ponyhas been delivered via spearphishing attachments.[192]",
+
+      "QakBothas spread through emails with malicious attachments.[193][194][195][196][197][198][199][200][201]",
+
+      "Ramsayhas been distributed through spearphishing emails with malicious attachments.[202]",
+
+      "Rancorhas attached a malicious document to an email to gain initial access.[203]",
+
+      "RedCurlhas used phishing emails with malicious files to gain initial access.[204][205]",
+
+      "Mustang Pandaleveraged malicious attachments in spearphishing emails for initial access to victim environments inRedDelta Modified PlugX Infection Chain Operations.[206]",
+
+      "REvilhas been distributed via malicious e-mail attachments including MS Word Documents.[207][208][209][210][211]",
+
+      "Rifdoorhas been distributed in e-mails with malicious Excel or Word documents.[212]",
+
+      "ROKRAThas been delivered via spearphishing emails that contain a malicious Hangul Office or Microsoft Word document.[213]",
+
+      "RTMhas been delivered via spearphishing attachments disguised as PDF documents.[214]",
+
+      "RTMhas used spearphishing attachments to distribute its malware.[215]",
+
+      "Saint Bearuses a variety of file formats, such as Microsoft Office documents, ZIP archives, PDF documents, and other items as phishing attachments for initial access.[185]",
+
+      "Saint Bothas been distributed as malicious attachments within spearphishing emails.[216][185]",
+
+      "Sandworm Teamhas delivered malicious Microsoft Office and ZIP file attachments via spearphishing emails.[217][218][219][220][221][222]",
+
+      "SideCopyhas sent spearphishing emails with malicious hta file attachments.[223]",
+
+      "Sidewinderhas sent e-mails with malicious attachments often crafted for specific targets.[224]",
+
+      "Silencehas sent emails with malicious DOCX, CHM, LNK and ZIP attachments.[225][226][227]",
+
+      "Snip3has been delivered to victims through malicious e-mail attachments.[228]",
+
+      "Squirrelwafflehas been distributed via malicious Microsoft Office documents within spam emails.[229]",
+
+      "Star Blizzardhas sent emails with malicious .pdf files to spread malware.[230]",
+
+      "StrelaStealerhas been distributed as a spearphishing attachment.[231]",
+
+      "SVCReadyhas been distributed via spearphishing campaigns containing malicious Mircrosoft Word documents.[232]",
+
+      "TA2541has sent phishing emails with malicious attachments for initial access including MS Word documents.[233][234]",
+
+      "TA459has targeted victims using spearphishing emails with malicious Microsoft Word attachments.[235]",
+
+      "TA505has used spearphishing emails with malicious attachments to initially compromise victims.[236][237][238][239][240][241][242][243][244]",
+
+      "TA551has sent spearphishing attachments with password protected ZIP files.[245][246][247]",
+
+      "Taidoorhas been delivered through spearphishing emails.[248]",
+
+      "The White Companyhas sent phishing emails with malicious Microsoft Word attachments to victims.[249]",
+
+      "Threat Group-3390has used e-mail to deliver malicious attachments to victims.[60]",
+
+      "ThreatNeedlehas been distributed via a malicious Word document within a spearphishing email.[138]",
+
+      "Tonto Teamhas delivered payloads via spearphishing attachments.[250]",
+
+      "Transparent Tribehas sent spearphishing e-mails with attachments to deliver malicious payloads.[251][252][253][254][255]",
+
+      "TrickBothas used an email with an Excel sheet containing a malicious macro to deploy the malware[256]",
+
+      "Tropic Troopersent spearphishing emails that contained malicious Microsoft Office and fake installer file attachments.[257][258][259][260][261]",
+
+      "Valakhas been delivered via spearphishing e-mails with password protected ZIP files.[245]",
+
+      "WarzoneRAThas been distributed as a malicious attachment within an email.[262][69]",
+
+      "Water Curupira Pikabot Distributionattached password-protected ZIP archives to deliverPikabotinstallers.[263]",
+
+      "Windshifthas sent spearphishing emails with attachment to harvest credentials and deliver malware.[264]",
+
+      "Winter Vivernleverages malicious attachments delivered via email for initial access activity.[265][266][267]",
+
+      "WIRTEhas sent emails to intended victims with malicious MS Word and Excel attachments.[268]",
+
+      "Wizard Spiderhas used spearphishing attachments to deliver Microsoft documents containing macros or PDFs containing malicious links to download eitherEmotet, Bokbot,TrickBot, orBazar.[269][270][271]",
+
+      "Woody RAThas been delivered via malicious Word documents and archive files.[272]",
+
+      "XLoaderhas been delivered as a phishing attachment, including PDFs with embedded links, Word and Excel files, and various archive files (ZIP, RAR, ACE, and ISOs) containing EXE payloads.[273][274]",
+
+      "ZxxZhas been distributed via spearphishing emails, usually containing a malicious RTF or Excel attachment.[46]"}  
+
+
+
+O — Objective  
+Your primary objective is to deconstruct the provided procedure examples into a structured attack chain and identify behavioral patterns, using the analysis framework that was previously generated for this TTP.
+Specifically, analyze the examples and categorize patterns into the following phases:
+{
+
+**1. Delivery Phase**
+*Key Focus: Email Delivery & Attachment Presence*
+
+* Inbound email containing file attachments (Office documents, executables, PDFs, archives, etc.)
+* Indicators of spearphishing (targeted recipient, suspicious sender, spoofed/fake display name, urgency/social engineering content)
+* Uncommon or suspicious attachment types/extensions (e.g., double extensions, macro-enabled formats, password-protected archives)
+* Presence of instructions to bypass security (e.g., password for ZIP, directions to enable macros/content)
+
+---
+
+**2. User Interaction & Execution Phase**
+*Key Focus: Attachment Execution Triggered by User*
+
+* Opening of the malicious attachment (Office document, PDF, executable, etc.) via user action
+* Process creation: Email client or browser launching document viewer, script engine, or executable
+* Activation of macros, embedded scripts, or exploit code within the opened file
+* File extension or icon manipulation to mislead user (e.g., .doc.exe, PDF icon on executable)
+
+---
+
+**3. Payload Deployment Phase**
+*Key Focus: Malicious Payload Activity Post-Execution*
+
+* Child process execution (e.g., Office application spawning scripting engines, command shells, or binaries)
+* Dropping or loading of additional malware, payloads, or persistence artifacts
+* Outbound network connections or C2 activity initiated by the payload
+* Modification of system or user files as part of initial compromise
+} 
+
+
+S — Style  
+
+• Precise and technical  
+• Use clear, bullet-style descriptions  
+• Reference process names, file types, and command-line behaviors  
+
+T — Tone  
+Professional and authoritative, demonstrating deep domain knowledge.
+
+A — Audience  
+Cybersecurity detection engineers and threat hunters who will use these findings to design Sigma rules.
+
+R — Response Format  
+A list of behavioral patterns with:  
+- Pattern name  
+- Example(s)  
+- Mapping to {"T1566.001"}

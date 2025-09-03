@@ -1,0 +1,46 @@
+1. **Framework Section**  
+   Phase 1: *Registry Interaction*  
+   - Monitor for modifications to critical registry keys, such as `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run` and `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`.  
+   - Analyze command-line usage of `reg.exe` and other tools that interact with the Windows Registry.  
+   - Detect changes to registry values that may indicate defense evasion, such as disabling security features or enabling macros.  
+
+   Phase 2: *Persistence Mechanisms*  
+   - Identify newly created or modified registry keys that establish persistence, particularly under `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run` and `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`.  
+   - Track registry modifications that involve adding or altering service configurations, especially those that point to malicious executables.  
+   - Monitor for obfuscation techniques, such as null character prepending in registry key names to hide malicious entries.  
+
+   Phase 3: *Execution and Lateral Movement*  
+   - Detect registry changes that facilitate the execution of malicious payloads, such as modifications to `ServiceDLL` values or command-line arguments for services.  
+   - Monitor for remote registry access attempts, particularly those that modify execution-related keys on remote systems.  
+   - Analyze the use of registry modifications to enable lateral movement techniques, such as enabling Remote Desktop Protocol (RDP) or altering security settings.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Registry Modification for Defense Evasion  
+     - Examples: "Gamaredon Group has removed security settings for VBA macro execution by changing registry values."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Establishing Persistence via Registry  
+     - Examples: "Agent Tesla can achieve persistence by modifying Registry key entries."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Remote Registry Access for Execution  
+     - Examples: "During Operation Honeybee, the threat actors used batch files that modified registry keys."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Obfuscation Techniques in Registry  
+     - Examples: "Adversaries may prepend key names with a null character to hide malicious payloads."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Modifying Service Configurations for Execution  
+     - Examples: "NightClub can modify the Registry to set the ServiceDLL for a service created by the malware for persistence."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Credential Caching via Registry  
+     - Examples: "Wizard Spider has modified the Registry key to force credentials to be stored in clear text in memory."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1112  

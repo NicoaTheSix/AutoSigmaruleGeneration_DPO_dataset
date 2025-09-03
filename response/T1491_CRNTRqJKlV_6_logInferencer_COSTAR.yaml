@@ -1,0 +1,45 @@
+<output>
+1. **Identify Scheduled Task Creation for Persistence**  
+   - Monitor for events where the `srcNode` is a process that creates a scheduled task.  
+   - Set the `relation` to "Process Create" for the process responsible for creating the scheduled task.  
+   - Ensure the `dstNode` reflects the scheduled task entry created, which should point to the malicious payload executable.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Path\\To\\MaliciousExecutable.exe",
+         "Cmdline": "C:\\Path\\To\\MaliciousExecutable.exe -createTask",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "MaliciousScheduledTask",
+         "Type": "Registry" // Assuming the scheduled task is stored in the registry
+       },
+       "relation": "Process Create"
+     }
+     ```
+2. **Validate User Privileges**  
+   - Ensure that the creation of the scheduled task is performed by a non-administrative user.  
+   - This can be validated by checking the user context under which the `srcNode` is running.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "User": "NonAdminUser",
+         "Type": "Process"
+       }
+     }
+     ```
+3. **Map Unusual Executables**  
+   - Identify the `dstNode` executable path to ensure it points to an unusual or suspicious executable.  
+   - This can be done by maintaining a list of known good executables and comparing against the `dstNode.Image`.  
+   - Example:  
+     ```json
+     {
+       "dstNode": {
+         "Image": "C:\\Unusual\\Path\\To\\Executable.exe",
+         "Type": "Process"
+       }
+     }
+     ```
+</output>

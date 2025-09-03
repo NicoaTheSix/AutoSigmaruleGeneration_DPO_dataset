@@ -1,0 +1,19 @@
+<output>
+EventID: 25 AND Subject: "Important Document" AND AttachmentName: "Invoice_2023.xlsx"
+</output>
+<output>
+EventID: 4688 AND Image: "*\\EXCEL.EXE" AND CommandLine: "*Invoice_2023.xlsx*"
+</output>
+<output>
+EventID: 4104 AND CommandLine: "*Invoke-WebRequest*" AND URL: "http://malicious-server.com/payload.exe" AND OutputFile: "$env:TEMP\\payload.exe"
+</output>
+<output>
+EventID: 4688 AND Image: "$env:TEMP\\payload.exe" AND ParentImage: "*\\powershell.exe"
+</output>
+<output>
+EventID: 4698 AND TaskName: "*payload.exe*" AND CommandLine: "*schtasks*"
+</output>
+<output>
+EventID: 4104 AND CommandLine: "*Invoke-WebRequest*" AND Method: "POST"
+</output>
+</output>

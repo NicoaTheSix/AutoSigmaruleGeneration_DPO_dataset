@@ -1,0 +1,61 @@
+1. **Framework Section**  
+   Phase 1: *Initial Access*  
+   - Focus on identifying the use of valid accounts for RDP access.  
+   - Monitor for credential access techniques that may lead to RDP logins.  
+   - Analyze logs for unusual RDP connection attempts, especially from external IPs.  
+
+   Phase 2: *Lateral Movement*  
+   - Detect RDP sessions initiated from compromised accounts within the network.  
+   - Monitor for the use of tunneling tools (e.g., Plink, reGeorg) that may facilitate RDP connections.  
+   - Analyze network traffic for RDP protocol usage, especially on non-standard ports.  
+
+   Phase 3: *Persistence*  
+   - Identify configurations that enable RDP access on systems, including registry keys and service settings.  
+   - Monitor for the creation of new RDP users or modifications to existing user permissions.  
+   - Analyze for the use of Accessibility Features or Terminal Services DLLs that may indicate persistence mechanisms.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: RDP Access via Compromised Credentials  
+     - Examples: "Agrius tunnels RDP traffic through deployed web shells to access victim environments via compromised accounts."  
+     - Associated Phase: Initial Access  
+     - Mapping to TTP ID: T1021.001  
+
+   - **Pattern Name**: Lateral Movement Using RDP  
+     - Examples: "Akira has used RDP for lateral movement."  
+     - Associated Phase: Lateral Movement  
+     - Mapping to TTP ID: T1021.001  
+
+   - **Pattern Name**: RDP for File Transfer  
+     - Examples: "Blue Mockingbird has used Remote Desktop to log on to servers interactively and manually copy files to remote hosts."  
+     - Associated Phase: Lateral Movement  
+     - Mapping to TTP ID: T1021.001  
+
+   - **Pattern Name**: RDP Configuration for Persistence  
+     - Examples: "APT3 enables the Remote Desktop Protocol for persistence."  
+     - Associated Phase: Persistence  
+     - Mapping to TTP ID: T1021.001  
+
+   - **Pattern Name**: Tunneling RDP Connections  
+     - Examples: "APT41 used NAT Bypass to expose local RDP ports on compromised systems to the Internet."  
+     - Associated Phase: Lateral Movement  
+     - Mapping to TTP ID: T1021.001  
+
+   - **Pattern Name**: RDP Session Management  
+     - Examples: "APT39 has been seen using RDP for lateral movement and persistence, in some cases employing the rdpwinst tool for management of multiple sessions."  
+     - Associated Phase: Lateral Movement  
+     - Mapping to TTP ID: T1021.001  
+
+   - **Pattern Name**: RDP Access for Interactive Control  
+     - Examples: "DarkComet can open an active screen of the victim’s machine and take control of the mouse and keyboard."  
+     - Associated Phase: Lateral Movement  
+     - Mapping to TTP ID: T1021.001  
+
+   - **Pattern Name**: RDP for Network Reconnaissance  
+     - Examples: "During C0015, the threat actors used RDP to access specific network hosts of interest."  
+     - Associated Phase: Lateral Movement  
+     - Mapping to TTP ID: T1021.001  
+
+   - **Pattern Name**: RDP User Creation  
+     - Examples: "ServHelper has commands for adding a remote desktop user and sending RDP traffic to the attacker through a reverse SSH tunnel."  
+     - Associated Phase: Persistence  
+     - Mapping to TTP ID: T1021.001  

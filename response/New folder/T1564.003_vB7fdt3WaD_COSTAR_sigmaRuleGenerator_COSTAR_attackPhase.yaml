@@ -1,0 +1,174 @@
+```yaml
+- title: Detection of Concealment via PowerShell
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Identify events where PowerShell is used to execute a script with hidden window style.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Image: powershell.exe
+      srcNode.Cmdline: '-ExecutionPolicy Bypass -File "C:\\Users\\User\\Downloads\\malicious_script.ps1" -WindowStyle Hidden'
+      relation: Process Create
+      dstNode.Type: Process
+      dstNode.Image: malicious_script.ps1
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059.001
+    - tactic: Execution
+  level: high
+---
+- title: Detection of Hidden Window Creation
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Identify events where cmd.exe is used to create a hidden window for execution.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Image: cmd.exe
+      srcNode.Cmdline: 'start /B "Hidden" "C:\\Path\\To\\malicious.exe"'
+      relation: Process Create
+      dstNode.Type: Process
+      dstNode.Image: malicious.exe
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059.003
+    - tactic: Execution
+  level: high
+---
+- title: Detection of Registry Modification for Concealment
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Identify registry modifications that conceal application execution.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: Registry
+      relation: RegSetValue
+      dstNode.Key: HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run
+      value: '*-WindowStyle Hidden*'
+  condition: selection
+  tags:
+    - ATT&CK ID: T1547.001
+    - tactic: Persistence
+  level: medium
+---
+- title: Detection of Execution of Hidden Applications
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Identify events where hidden applications are executed via cmd.exe.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Image: cmd.exe
+      srcNode.Cmdline: 'start /B "Hidden" "C:\\Path\\To\\hidden_app.exe"'
+      relation: Process Create
+      dstNode.Type: Process
+      dstNode.Image: hidden_app.exe
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059.003
+    - tactic: Execution
+  level: high
+---
+- title: Detection of Remote Access via Hidden Interfaces
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Identify events where hidden remote access tools are executed.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Image: cmd.exe
+      srcNode.Cmdline: 'start /B "Hidden" "C:\\Path\\To\\hidden_vnc.exe"'
+      relation: Process Create
+      dstNode.Type: Process
+      dstNode.Image: hidden_vnc.exe
+  condition: selection
+  tags:
+    - ATT&CK ID: T1219
+    - tactic: Command and Control
+  level: high
+---
+- title: Detection of Use of API for Window Concealment
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Identify events where APIs are used to conceal windows.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Image: malicious.exe
+      relation: Process Create
+      api_calls: 
+        - ShowWindow
+  condition: selection
+  tags:
+    - ATT&CK ID: T1055
+    - tactic: Defense Evasion
+  level: medium
+---
+- title: Detection of Execution of Scripts in Hidden Mode
+  id: 123e4567-e89b-12d3-a456-426614174006
+  description: Identify events where PowerShell scripts are executed in hidden mode.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Image: powershell.exe
+      srcNode.Cmdline: '-ExecutionPolicy Bypass -File "C:\\Path\\To\\malicious_script.ps1" -WindowStyle Hidden'
+      relation: Process Create
+      dstNode.Type: Process
+      dstNode.Image: malicious_script.ps1
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059.001
+    - tactic: Execution
+  level: high
+---
+- title: Detection of Concealment of Scheduled Tasks
+  id: 123e4567-e89b-12d3-a456-426614174007
+  description: Identify events where scheduled tasks are created to run in hidden mode.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: Task Scheduler
+      relation: Task Create
+      task_name: MaliciousTask
+      command: '*-WindowStyle Hidden*'
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: medium
+```

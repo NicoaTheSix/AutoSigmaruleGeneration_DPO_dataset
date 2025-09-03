@@ -1,0 +1,24 @@
+<output>
+- title: Identify Execution of Malicious Macro in Microsoft Word
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Detects the execution of a malicious macro in Microsoft Word that triggers a PowerShell process to download a file.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: 'C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE'
+      Cmdline: '* /m'
+      relation: 'Process Create'
+      dstNode:
+        Image: 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
+        Cmdline: '*Invoke-WebRequest*'
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+</output>

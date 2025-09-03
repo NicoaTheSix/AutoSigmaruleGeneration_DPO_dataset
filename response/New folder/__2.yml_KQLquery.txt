@@ -1,0 +1,2 @@
+
+relation: "CreateFile" OR relation: "WriteFile" AND srcNode.Image: (winzip.exe OR 7z.exe OR explorer.exe) AND dstNode.Name: (".docm" OR ".xlsm" OR ".exe" OR ".lnk" OR ".js" OR ".vbs" OR ".zip" OR ".rar" OR ".iso" OR ".img" OR ".chm") AND (dstNode.Name: "*\\Downloads\\*" OR dstNode.Name: "*\\Desktop\\*" OR dstNode.Name: "*\\Temp\\*")

@@ -1,0 +1,7 @@
+
+   6. **Establishing Persistence**
+      - Application: reg.exe
+      - User Action: The payload modifies the registry to ensure persistence.
+      - Key Artifacts: Registry key created at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\MaliciousApp`.
+      - Detection: Monitor for use of `reg.exe` to create or modify registry keys associated with persistence.
+   

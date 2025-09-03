@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Path\\To\\SuspiciousExecutable.exe" AND srcNode.Cmdline: "C:\\Path\\To\\SuspiciousExecutable.exe -createTask" AND dstNode.Name: "NewScheduledTask" AND dstNode.Type: Process

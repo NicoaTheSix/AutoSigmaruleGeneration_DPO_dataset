@@ -1,0 +1,2 @@
+
+Image: "C:\\Windows\\System32\\schtasks.exe" AND Cmdline: "*schtasks.exe /create /tn \"UpdateService\" /tr*"

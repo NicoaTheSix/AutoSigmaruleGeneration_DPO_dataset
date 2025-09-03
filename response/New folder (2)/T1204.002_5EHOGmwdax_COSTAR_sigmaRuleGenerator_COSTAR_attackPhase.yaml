@@ -1,0 +1,110 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically for emails with attachments named "Invoice.doc" and subject lines containing "Important Document Attached".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice.doc"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+---
+- title: Identify User Interaction with Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Track the execution of Microsoft Word when a user opens the malicious attachment and enables macros.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice.doc"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+---
+- title: Detect Execution of Malicious Macro
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell execution initiated by the Word macro that downloads a secondary payload.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious-site.com"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+---
+- title: Monitor Post-Execution Network Activity
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Analyze network traffic for outbound connections initiated by the execution of the downloaded payload (payload.exe).
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Users\\User\\Downloads\\payload.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "C2 server IP"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1071
+    - tactic: Command and Control
+  level: high
+---
+- title: Detect Establishing Persistence via Scheduled Tasks
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for the creation of new scheduled tasks that execute the malicious payload on system startup.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\schtasks.exe"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks"
+      relation: "RegCreateKey"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: high
+```

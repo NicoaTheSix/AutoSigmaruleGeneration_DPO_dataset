@@ -1,0 +1,23 @@
+1. **Identify Initial Access via Email**  
+   - Monitor for events where an email is received with a specific subject line (e.g., "Invoice Attached"). Capture relevant email headers and attachment filenames. This can be tracked in email server logs.
+
+2. **Map Opening the Malicious Attachment**  
+   - Detect the creation of a process for Microsoft Excel when a user opens an attachment. Look for events where the `srcNode` has `Image` set to the path of Excel (e.g., `C:\Program Files\Microsoft Office\root\Office16\EXCEL.EXE`) and the `relation` is "Process Create".
+
+3. **Validate Macro Execution**  
+   - Track events indicating that macros are enabled in Excel. This may involve monitoring for specific VBA code execution logs or settings changes in Excel.
+
+4. **Capture Payload Download and Execution**  
+   - Identify PowerShell command executions that download a file from a malicious URL. Look for events where the `srcNode` has `Image` set to PowerShell (e.g., `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`) and the `relation` is "Process Create". The `Cmdline` should include `Invoke-WebRequest` or `curl` commands.
+
+5. **Detect Execution of the Malicious Payload**  
+   - Monitor for the creation of a process for the downloaded executable (e.g., `malware.exe`). Ensure that the `srcNode` reflects the path of the downloaded file and that the `relation` is "Process Create".
+
+6. **Establish Command and Control Detection**  
+   - Look for outbound network connections initiated by the malicious executable to a C2 server. This can be captured in network logs where the `dstNode` has `Dstaddress` set to the C2 server's IP and the `relation` is "TCP Connect".
+
+7. **Monitor for Persistence Mechanism**  
+   - Detect the creation of a scheduled task by the malware. This can be tracked by monitoring for events where the `srcNode` indicates a command to create a scheduled task (e.g., `schtasks /create`) and the `relation` is "Process Create".
+
+8. **Identify Data Exfiltration**  
+   - Capture outbound network traffic that indicates sensitive data is being sent to the C2 server. Look for events where the `dstNode` has `Dstaddress` set to the C2 server and the `relation` is "TCP Send".

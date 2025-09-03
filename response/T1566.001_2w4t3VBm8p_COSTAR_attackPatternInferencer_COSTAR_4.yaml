@@ -1,0 +1,6 @@
+
+5. **Execution of Malicious Payload**
+   - Application: Windows Explorer
+   - User Action: User inadvertently executes the downloaded payload from the Downloads folder.
+   - Key Artifacts: Executable file "payload.exe" is run.
+   - Detection: Monitor for execution of newly created executables in user directories, especially from the Downloads folder.

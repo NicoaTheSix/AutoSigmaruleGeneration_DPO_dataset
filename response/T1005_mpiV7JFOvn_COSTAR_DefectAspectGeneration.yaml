@@ -1,0 +1,19 @@
+1. **Incomplete Attack Flow**: The scenario may not cover all stages of the attack, missing critical steps in the attack chain.
+
+2. **Ambiguous User Actions**: User actions may be described in a vague manner, lacking clarity on what specific actions were taken.
+
+3. **Missing Key Artifacts**: Important artifacts that should be included in the attack scenario may be omitted, leading to gaps in detection capabilities.
+
+4. **Insufficient Technical Detail**: The command-line syntax or network indicators provided may lack the necessary detail for effective detection rule creation.
+
+5. **Inaccurate Application Mapping**: The applications involved in each stage may be incorrectly identified, leading to confusion in the attack flow.
+
+6. **Lack of Contextual Comments**: Comments explaining the purpose of each technical step may be missing or insufficient, making it difficult for the audience to understand the rationale behind each action.
+
+7. **Overly Simplified Scenarios**: The scenarios may be too simplistic, failing to capture the complexity of real-world attack behaviors.
+
+8. **Redundant Information**: Repetitive details across different stages may clutter the output and detract from the overall clarity.
+
+9. **Inconsistent Tone**: The tone of the output may vary, lacking the professional and deeply technical style required for the audience.
+
+10. **Failure to Align with TTP IDs**: The mapping to TTP IDs may be incorrect or missing, which is crucial for threat intelligence alignment.

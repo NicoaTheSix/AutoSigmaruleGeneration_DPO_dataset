@@ -1,0 +1,23 @@
+1. **Identify Email Delivery Phase**  
+   - Monitor for email events indicating the receipt of an email with a subject line containing urgent language (e.g., "Important Update"). Look for headers that suggest a spoofed sender address.
+
+2. **Detect Attachment Identification**  
+   - Track events related to the opening of attachments in Outlook, specifically for files named "Invoice_2023.docx" or similar .docx files that are commonly used for macros.
+
+3. **Monitor Process Creation for Microsoft Word**  
+   - Capture events where the process `WINWORD.EXE` is created, indicating that the user has opened the malicious attachment.
+
+4. **Track Macro Execution in Microsoft Word**  
+   - Look for events in the Microsoft Office operational logs that indicate the execution of macros, particularly those that may download a payload.
+
+5. **Detect PowerShell Payload Download**  
+   - Monitor for PowerShell events that indicate a command is executed to download a malicious executable from a remote server. Focus on network traffic to known malicious IP addresses.
+
+6. **Capture Malware Execution Events**  
+   - Identify events where a process is created for the downloaded malicious executable. This should include monitoring for any executable that matches known malicious patterns (e.g., `malicious.exe`).
+
+7. **Monitor Registry Modifications for Persistence**  
+   - Track registry events that indicate the creation or modification of keys related to persistence, particularly under `HKCU:\Software\Microsoft\Windows\CurrentVersion\Run`.
+
+8. **Detect Data Exfiltration Attempts**  
+   - Monitor outbound network connections for any traffic directed to suspicious domains, particularly those associated with data exfiltration activities.

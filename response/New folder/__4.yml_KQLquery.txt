@@ -1,0 +1,2 @@
+
+process.name: (winword.exe OR excel.exe OR powerpnt.exe) AND process.parent.name: (powershell.exe OR cmd.exe OR wscript.exe OR mshta.exe OR rundll32.exe)

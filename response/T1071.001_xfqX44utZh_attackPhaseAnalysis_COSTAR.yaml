@@ -1,0 +1,56 @@
+1. **Framework Section**  
+   Phase 1: *Command and Control Establishment*  
+   - Monitor for HTTP/S and WebSocket traffic patterns that deviate from normal behavior.  
+   - Analyze HTTP headers and payloads for unusual or suspicious content, such as encoded data or unexpected parameters.  
+   - Identify and log connections to known malicious IP addresses or domains associated with C2 infrastructure.  
+
+   Phase 2: *Data Exfiltration and Communication*  
+   - Inspect outbound HTTP/S traffic for POST requests that contain sensitive data or unusual payload sizes.  
+   - Track the use of common web protocols (HTTP/S) for data transfer, especially in non-standard contexts.  
+   - Correlate command and control traffic with user activity to identify potential data exfiltration events.  
+
+   Phase 3: *Anomaly Detection and Response*  
+   - Implement anomaly detection systems to flag unusual patterns in web traffic, such as spikes in HTTP requests or unexpected user-agent strings.  
+   - Utilize threat intelligence feeds to update detection rules for known malicious C2 domains and IPs.  
+   - Conduct regular reviews of web server logs for signs of unauthorized access or command execution.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: HTTP Command and Control  
+     - Examples: "Sandworm Team used BlackEnergy to communicate via HTTP post requests."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: Data Concealment in HTTP Headers  
+     - Examples: "ChChes communicates to its C2 server over HTTP and embeds data within the Cookie HTTP header."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: Use of Standard Ports for C2  
+     - Examples: "ADVSTORESHELL connects to port 80 of a C2 server using Wininet API."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: HTTP POST for Data Exfiltration  
+     - Examples: "BlackByte collected victim device information then transmitted this via HTTP POST to command and control infrastructure."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: Anomalous User-Agent Strings  
+     - Examples: "Sagerunex communicates via HTTPS, at times using a hard-coded User Agent of Mozilla/5.0 (compatible; MSIE 7.0; Win32)."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: HTTP GET Requests for Command Retrieval  
+     - Examples: "Cobalt Strike can use a custom command and control protocol that can be encapsulated in HTTP or HTTPS."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: Use of Encrypted Payloads  
+     - Examples: "The Carbanak malware communicates to its command server using HTTP with an encrypted payload."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: WebSocket for C2 Communication  
+     - Examples: "Drovorub can use the WebSocket protocol and has initiated communication with C2 servers with an HTTP Upgrade request."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1071.001  

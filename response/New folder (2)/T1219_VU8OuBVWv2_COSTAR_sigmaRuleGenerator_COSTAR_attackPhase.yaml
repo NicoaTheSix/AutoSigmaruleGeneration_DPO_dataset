@@ -1,0 +1,106 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically for emails with attachments named "Invoice.docx" and subject lines containing "Important Update".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice.docx"
+  condition: selection
+  tags:
+    - T1566
+    - Initial Access
+  level: high
+---
+- title: Identify Opening of the Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for the execution of Microsoft Word processes that open the malicious document, specifically looking for the execution of macros, particularly `AutoOpen()`.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "C:\\Users\\Victim\\Downloads\\Invoice.docx"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Identify Payload Download via PowerShell
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell commands that download executables, specifically those using `Invoke-WebRequest` to download from suspicious URLs.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Identify Execution of the Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the execution of the downloaded payload, particularly looking for outbound connections to known malicious command and control servers.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "attacker-server.com"
+  condition: selection
+  tags:
+    - T1071
+    - Command and Control
+  level: high
+---
+- title: Identify Establishing Persistence via Task Scheduler
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for the creation of new scheduled tasks that run the malicious payload, particularly those created by non-administrative users.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\schtasks.exe"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks\\MaliciousTask"
+  condition: selection
+  tags:
+    - T1053
+    - Persistence
+  level: high
+```

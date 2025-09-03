@@ -1,0 +1,23 @@
+<output>
+- title: Identify Post-Exploitation Activities via Command Execution
+- id: 123e4567-e89b-12d3-a456-426614174000
+- description: Detects command execution activities indicative of post-exploitation behavior, focusing on common commands used by attackers.
+- status: production
+- author: auto-generated
+- date: 2023-10-01
+- logsource:
+    category: custom
+    product: windows
+- detection:
+    selection:
+        srcNode:
+            Image: 'C:\\Windows\\System32\\cmd.exe'
+            Cmdline: '*net user*'
+            Type: Process
+        relation: 'Process Create'
+    condition: selection
+- tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+- level: high
+</output>

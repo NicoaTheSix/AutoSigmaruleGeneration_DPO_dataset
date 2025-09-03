@@ -1,0 +1,2 @@
+
+Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND Cmdline: "* /mFileOpen" AND dstNode.Image: "C:\\Users\\User\\Downloads\\malicious_payload.exe" AND dstNode.Cmdline: "C:\\Users\\User\\Downloads\\malicious_payload.exe"

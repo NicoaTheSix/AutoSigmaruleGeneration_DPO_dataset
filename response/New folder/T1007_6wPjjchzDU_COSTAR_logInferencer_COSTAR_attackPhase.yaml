@@ -1,0 +1,25 @@
+1. **Identify Initial Access via Email**  
+   - Monitor for events where Outlook is used to send or receive emails with specific subject lines such as "Important Document".  
+   - Capture email headers and attachment details, specifically looking for attachments named "Invoice_2023.xlsx".  
+
+2. **Map Opening of Malicious Attachment**  
+   - Detect when Microsoft Excel is launched with the command line indicating the opening of "Invoice_2023.xlsx".  
+   - Look for events that indicate the execution of macros within the Excel file, which may not be explicitly logged but can be inferred from subsequent actions.  
+
+3. **Validate Macro Execution and Payload Download**  
+   - Track PowerShell execution events that include commands resembling `Invoke-WebRequest` with URLs pointing to suspicious domains (e.g., `http://malicious-server.com/payload.exe`).  
+   - Ensure the command line includes parameters that indicate the output file is being saved to a temporary directory (e.g., `$env:TEMP\\payload.exe`).  
+
+4. **Capture Execution of the Malicious Payload**  
+   - Monitor for process creation events where the executable file is `payload.exe` located in the temporary directory.  
+   - Validate that the process creation is initiated by PowerShell or Windows Explorer, indicating user interaction or automated execution.  
+
+5. **Detect Establishing Persistence**  
+   - Look for events related to the creation of scheduled tasks, specifically those that reference `schtasks` commands with parameters indicating the execution of `payload.exe` on logon.  
+   - Monitor registry modifications that may indicate persistence mechanisms, such as entries related to startup programs or scheduled tasks.  
+
+6. **Identify Data Exfiltration or Lateral Movement**  
+   - Track PowerShell commands that include `Invoke-WebRequest` with POST methods targeting external servers, especially those that reference sensitive data files.  
+   - Monitor network traffic logs for unusual outbound connections, particularly those that align with the timing of the previous stages of the attack.  
+
+By following these steps, detection engineers can create precise detection logic that maps directly to the attack scenario outlined in T1566.001, ensuring comprehensive coverage of the spearphishing attack lifecycle.

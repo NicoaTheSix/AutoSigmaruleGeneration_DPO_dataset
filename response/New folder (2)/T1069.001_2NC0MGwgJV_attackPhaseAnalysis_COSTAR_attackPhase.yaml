@@ -1,0 +1,43 @@
+1. **Framework Section**  
+   Phase 1: *Discovery of Local Groups*  
+   - Execute commands to list local groups (e.g., `net localgroup`, `dscl . -list /Groups`, `groups`)  
+   - Collect information about group memberships and permissions  
+   - Identify users with elevated privileges, particularly in local administrator groups  
+
+   Phase 2: *Analysis of Permissions*  
+   - Analyze the output of group enumeration commands for privilege escalation opportunities  
+   - Cross-reference group memberships with known user accounts to identify potential targets  
+   - Document findings for further exploitation or lateral movement  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Local Group Enumeration  
+     - Examples:  
+       - `net localgroup administrator >> %temp%\download[1]`  
+       - `net localgroup "administrator"`  
+       - `net localgroup`  
+     - Associated Phase: Discovery of Local Groups  
+     - Mapping to TTP ID: T1069.001  
+
+   - **Pattern Name**: Privilege Identification  
+     - Examples:  
+       - BloodHound collecting information about local groups and members  
+       - Cobalt Strike using `net localgroup` to list local groups  
+       - FlawedAmmyy enumerating privilege levels during initial infection  
+     - Associated Phase: Analysis of Permissions  
+     - Mapping to TTP ID: T1069.001  
+
+   - **Pattern Name**: Command Execution for Group Information  
+     - Examples:  
+       - `Kwampirs` collecting users in local groups with `net localgroup administrators`  
+       - `Tonto Team` using `ShowLocalGroupDetails` to identify accounts  
+       - `Volt Typhoon` running `net localgroup administrators`  
+     - Associated Phase: Discovery of Local Groups  
+     - Mapping to TTP ID: T1069.001  
+
+   - **Pattern Name**: Cross-Platform Group Enumeration  
+     - Examples:  
+       - `Gomir` checking effective group ID in Linux  
+       - `Caterpillar WebShell` obtaining local group lists  
+       - `Emissary` executing `net localgroup administrators`  
+     - Associated Phase: Discovery of Local Groups  
+     - Mapping to TTP ID: T1069.001  

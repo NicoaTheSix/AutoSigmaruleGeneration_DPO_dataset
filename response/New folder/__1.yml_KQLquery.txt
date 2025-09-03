@@ -1,0 +1,2 @@
+
+(srcNode.Image: (outlook.exe OR thunderbird.exe OR chrome.exe OR msedge.exe OR firefox.exe)) AND (dstNode.Name: (*.docm OR *.xlsm OR *.exe OR *.lnk OR *.js OR *.vbs OR *.zip OR *.rar OR *.iso OR *.img OR *.chm)) AND (relation: CreateFile OR relation: WriteFile)

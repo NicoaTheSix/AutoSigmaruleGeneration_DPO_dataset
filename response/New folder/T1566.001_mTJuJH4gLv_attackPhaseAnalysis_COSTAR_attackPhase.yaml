@@ -1,0 +1,51 @@
+1. **Framework Section**  
+   Phase 1: *Delivery*  
+   - Analyze email headers for spoofing indicators (e.g., "From" address discrepancies).  
+   - Monitor for common spearphishing keywords and phrases in email subjects and bodies.  
+   - Identify and categorize attachment types (e.g., .docx, .xls, .zip) in incoming emails.  
+
+   Phase 2: *Execution*  
+   - Detect execution of processes initiated by opening attachments (e.g., Microsoft Office applications, scripts).  
+   - Monitor for unusual command-line arguments or behaviors associated with document opening (e.g., macros execution).  
+   - Analyze file system changes or new processes spawned after attachment execution.  
+
+   Phase 3: *Post-Execution*  
+   - Investigate network connections initiated by newly executed processes (e.g., C2 communications).  
+   - Monitor for persistence mechanisms (e.g., scheduled tasks, registry modifications) established by the malware.  
+   - Collect and analyze artifacts related to the malware's behavior (e.g., dropped files, logs).  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Email Spoofing  
+     - Examples: "admin@338 has sent emails with malicious Microsoft Office documents attached."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Malicious Attachment Types  
+     - Examples: "APT1 has sent spearphishing emails containing malicious attachments."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Macro Execution  
+     - Examples: "FIN8 has distributed targeted emails containing Word documents with embedded malicious macros."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Command-Line Execution  
+     - Examples: "TrickBot has used an email with an Excel sheet containing a malicious macro to deploy the malware."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: C2 Communication  
+     - Examples: "DarkHydrus has sent spearphishing emails with password-protected RAR archives containing malicious Excel Web Query files."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Persistence Mechanisms  
+     - Examples: "APT29 has used spearphishing emails with an attachment to deliver files with exploits to initial victims."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: File Manipulation  
+     - Examples: "Cobalt Group has sent spearphishing emails with various attachment types to corporate and personal email accounts."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1566.001  

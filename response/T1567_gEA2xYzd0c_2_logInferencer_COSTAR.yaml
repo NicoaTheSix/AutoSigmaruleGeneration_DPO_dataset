@@ -1,0 +1,22 @@
+<output>
+1. **Identify Execution of Malicious Macro in Microsoft Word**  
+   - Monitor for events where the `srcNode` is Microsoft Word (e.g., "WINWORD.EXE").  
+   - Set the `relation` to "Process Create" for the Word process.  
+   - Ensure the `dstNode` indicates a script or file download action, such as a process that executes a script or a file being created or downloaded.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+         "Cmdline": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE /mFileOpen",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Users\\User\\Downloads\\malicious_payload.exe",
+         "Cmdline": "C:\\Users\\User\\Downloads\\malicious_payload.exe",
+         "Type": "Process"
+       },
+       "relation": "Process Create"
+     }
+     ```
+</output>

@@ -1,0 +1,7 @@
+<output>
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice_2023.xlsx") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice_2023.xlsx") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Type: "File" AND dstNode.Name: "malicious_script.ps1") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Type: "Registry" AND dstNode.Key: "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "malicious-website.com")
+</output>

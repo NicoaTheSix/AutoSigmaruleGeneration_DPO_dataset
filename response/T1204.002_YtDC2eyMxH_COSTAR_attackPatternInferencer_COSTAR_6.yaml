@@ -1,0 +1,6 @@
+
+7. **Post-Execution Network Activity**
+   - Application: Network Stack
+   - User Action: The payload initiates outbound connections to a command and control (C2) server.
+   - Key Artifacts: Network traffic to IP address 192.0.2.1 on port 443.
+   - Detection: Monitor for unusual outbound connections, especially to known malicious IPs or domains.

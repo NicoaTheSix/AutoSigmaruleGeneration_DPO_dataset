@@ -1,0 +1,61 @@
+1. **Identify Initial Access via Email**  
+   - Monitor for the creation of processes related to Outlook when an email with the subject line "Urgent: Invoice Attached" is received.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+
+2. **Monitor Opening of Malicious Attachment**  
+   - Track the spawning of the Excel process when the attachment `Invoice_2023.xlsx` is opened.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" (or similar path for Excel)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+3. **Detect Macro Execution**  
+   - Look for the execution of commands within the Excel process that indicate a macro is running, specifically commands that download a payload.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "C:\\Windows\\System32\\cmd.exe"  
+     - `relation`: "Process Create"  
+
+4. **Track Payload Download and Execution**  
+   - Monitor for the execution of commands that download and run the payload from a remote server using cmd.exe.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\cmd.exe"  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "%temp%\\payload.exe"  
+     - `relation`: "Process Create"  
+
+5. **Identify Registry Modifications for Persistence**  
+   - Detect registry modifications that add entries for persistence under `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\reg.exe"  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"  
+     - `relation`: "RegSetValue"  
+
+6. **Monitor Network Communication for Data Exfiltration**  
+   - Track outbound network connections to suspicious IP addresses that may indicate data exfiltration.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\cmd.exe"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "192.0.2.1" (or similar suspicious IP)  
+     - `relation`: "TCP Connect"  
+
+7. **Detect Follow-on Actions**  
+   - Monitor for additional commands executed on the system that indicate further reconnaissance or lateral movement.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\cmd.exe"  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "C:\\Windows\\System32\\systeminfo.exe"  
+     - `relation`: "Process Create"  

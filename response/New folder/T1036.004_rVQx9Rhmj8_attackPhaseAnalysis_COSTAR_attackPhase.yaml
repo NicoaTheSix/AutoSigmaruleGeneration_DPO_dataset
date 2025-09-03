@@ -1,0 +1,51 @@
+1. **Framework Section**  
+   **Phase 1: Name Manipulation**  
+   - Analyze task and service names for similarities to legitimate processes.  
+   - Review descriptions and display names for benign-sounding phrases.  
+   - Monitor for the use of non-printing characters or unusual formatting in names.  
+
+   **Phase 2: Service Creation and Modification**  
+   - Investigate the creation of new services or tasks that mimic legitimate ones.  
+   - Track modifications to existing scheduled tasks or services, especially using commands like `SCHTASKS /Change`.  
+   - Examine registry keys related to service creation and persistence mechanisms.  
+
+   **Phase 3: Execution and Persistence**  
+   - Observe the execution of tasks or services that have been renamed or disguised.  
+   - Monitor for the establishment of persistence through scheduled tasks or services with misleading names.  
+   - Analyze command-line arguments and execution paths for anomalies related to disguised services.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Name Masquerading  
+     - Examples: "Windows Defender System Service" (Emote), "AdobeFlashSync" (FIN7)  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Service Creation  
+     - Examples: "Windows User Service" (Aquatic Panda), "MicrosoftEdge" (POWERSTATS)  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Task Modification  
+     - Examples: `SCHTASKS /Change` to modify legitimate tasks (APT41), "WinUpdate" (Frankenstein)  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Persistence Establishment  
+     - Examples: "TaskMgr" (Truvasys), "ntssrv" (Shamoon)  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Execution Under False Pretense  
+     - Examples: "CalendarChecker" (Spica), "CacheTask.bat" (Magic Hound)  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Use of Benign Descriptions  
+     - Examples: "Windows Check AV" (Exaramel), "System Authorization Service" (Seasalt)  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Impersonation of Legitimate Services  
+     - Examples: "svchost.exe" (DCSrv), "WMI Performance Adapter Extension" (Kwampir)  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1036.004  

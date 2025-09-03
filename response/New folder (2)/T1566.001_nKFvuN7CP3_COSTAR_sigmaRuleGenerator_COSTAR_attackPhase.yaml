@@ -1,0 +1,133 @@
+```yaml
+- title: Identify Email Spoofing
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve receiving emails from spoofed addresses, specifically looking for emails with attachments named "Invoice.docx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice.docx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Identify Malicious Attachment Types
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for events where the srcNode is an email application (e.g., Outlook) and the dstNode is a password-protected ZIP file named "Documents.zip".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Documents.zip"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Identify Macro Execution
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for events where the srcNode is Microsoft Word and the dstNode is a macro-enabled document named "Report.docm".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Report.docm"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Identify C2 Communication
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for outbound network connections initiated by processes that have executed malicious attachments, looking for connections to suspicious IP addresses.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "<suspicious IP>"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1071
+    - tactic: Command and Control
+  level: high
+---
+- title: Identify Persistence Mechanisms
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for registry modifications or scheduled tasks created by processes that have executed malicious attachments.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\reg.exe"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+      relation: "RegSetValue"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1547
+    - tactic: Persistence
+  level: high
+---
+- title: Identify Execution of Malicious Document
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitor for the execution of processes spawned from Microsoft Word that indicate macro execution.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+```

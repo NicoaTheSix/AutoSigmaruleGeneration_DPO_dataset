@@ -1,0 +1,20 @@
+<output>
+1. **Identify User Interaction with Malicious Attachment in Outlook**  
+   - Monitor for events where the `srcNode` is the Outlook application and the `dstNode` is an attachment file (e.g., "malicious_macro.docm").  
+   - Set the `relation` to "Process Create" for the Outlook process when the user opens the email and clicks on the attachment.  
+   - Additionally, monitor for events indicating that the user has enabled macros within the attachment.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Name": "Outlook",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "malicious_macro.docm",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+</output>

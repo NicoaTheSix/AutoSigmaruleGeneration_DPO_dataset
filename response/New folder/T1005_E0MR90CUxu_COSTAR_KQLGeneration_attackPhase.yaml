@@ -1,0 +1,3 @@
+<output>
+(srcNode.Name: "Outlook" AND dstNode.Name: "Important Update") OR (srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\OfficeXX\\EXCEL.EXE" AND dstNode.Image: "C:\\Users\\Victim\\Downloads\\Invoice_2023.xlsx") OR (srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Image: "C:\\Users\\Victim\\Downloads\\payload.exe") OR (srcNode.Image: "C:\\Windows\\System32\\schtasks.exe" AND dstNode.Name: "MaliciousTask") OR (srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Name: "C:\\Temp\\StagedFiles\\") OR (srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Dstaddress: "malicious-website.com")
+</output>

@@ -1,0 +1,8 @@
+<output>
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice.xlsx") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice.xlsx" AND relation: "Process Create") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "malicious-domain.com" AND relation: "TCP Connect") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\cmd.exe" AND dstNode.Type: "File" AND dstNode.Name: "payload.exe" AND relation: "Process Create") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Users\\Public\\payload.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "malicious-c2.com" AND relation: "TCP Connect") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\cmd.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "malicious-c2.com" AND relation: "TCP Connect")
+</output>

@@ -1,0 +1,44 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Monitor for the creation of processes related to Outlook that involve email interactions. Specifically, look for emails with subject lines containing "Important Update" and attachments named "Invoice_2023.xlsx".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+2. **Identify Opening of Malicious Attachment**  
+   - Monitor for the execution of Microsoft Excel processes that open the attachment "Invoice_2023.xlsx".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" (or similar path for Excel)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+3. **Identify Payload Download and Execution**  
+   - Monitor for PowerShell commands executed by Excel that download executables from remote servers. Look for commands that include "Invoke-WebRequest" or "DownloadFile".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "payload.exe" (or similar name for the downloaded executable)  
+     - `relation`: "Process Create"  
+
+4. **Identify Establishing Persistence via Scheduled Task**  
+   - Monitor for the creation of scheduled tasks by unknown executables, particularly those that reference "malicious.exe".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\ProgramData\\malicious.exe"  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks"  
+     - `relation`: "RegCreateKey"  
+
+5. **Identify Command and Control Communication**  
+   - Monitor for outbound network connections to known malicious domains or IP addresses associated with the C2 server (e.g., "malicious-site.com").  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\svchost.exe" (or similar process initiating the connection)  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-site.com"  
+     - `relation`: "TCP Connect"  

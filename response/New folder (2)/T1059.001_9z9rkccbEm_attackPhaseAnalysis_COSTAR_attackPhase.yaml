@@ -1,0 +1,66 @@
+1. **Framework Section**  
+   Phase 1: *Execution*  
+   - Monitor for the use of PowerShell commands and scripts, particularly `Invoke-Command`, `Start-Process`, and `Invoke-WebRequest`.  
+   - Analyze command-line arguments for encoded or obfuscated PowerShell commands.  
+   - Detect the execution of PowerShell scripts from unusual locations or via non-standard methods (e.g., through .NET assemblies).  
+
+   Phase 2: *Discovery*  
+   - Identify the use of PowerShell cmdlets that gather system information, such as `Get-ChildItem`, `Get-Process`, and `Get-ADUser`.  
+   - Track the use of PowerShell for querying network configurations and user credentials.  
+   - Monitor for PowerShell scripts that interact with Windows Management Instrumentation (WMI) for reconnaissance purposes.  
+
+   Phase 3: *Persistence*  
+   - Look for PowerShell scripts that create scheduled tasks or modify startup items to maintain persistence.  
+   - Detect registry modifications related to PowerShell execution, such as entries under `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.  
+   - Monitor for the creation of PowerShell scripts in common persistence locations, such as the Startup folder or user profile directories.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: PowerShell Command Execution  
+     - Examples: "During the 2016 Ukraine Electric Power Attack, Sandworm Team used PowerShell scripts to run a credential harvesting tool in memory to evade defenses."  
+     - Associated Phase: Execution  
+     - Mapping to TTP ID: T1059.001  
+
+   - **Pattern Name**: Credential Harvesting via PowerShell  
+     - Examples: "Akira has used PowerShell scripts for credential harvesting and privilege escalation."  
+     - Associated Phase: Execution  
+     - Mapping to TTP ID: T1059.001  
+
+   - **Pattern Name**: Use of Encoded PowerShell Scripts  
+     - Examples: "During C0018, the threat actors used encoded PowerShell scripts for execution."  
+     - Associated Phase: Execution  
+     - Mapping to TTP ID: T1059.001  
+
+   - **Pattern Name**: Discovery Commands  
+     - Examples: "APT28 used PowerShell cmdlet Get-ChildItem to access credentials, among other PowerShell functions deployed."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1059.001  
+
+   - **Pattern Name**: PowerShell for Lateral Movement  
+     - Examples: "Cobalt Strike can execute a payload on a remote host with PowerShell."  
+     - Associated Phase: Execution  
+     - Mapping to TTP ID: T1059.001  
+
+   - **Pattern Name**: Scheduled Task Creation  
+     - Examples: "Spica can use an obfuscated PowerShell command to create a scheduled task for persistence."  
+     - Associated Phase: Persistence  
+     - Mapping to TTP ID: T1059.001  
+
+   - **Pattern Name**: Downloading and Executing Payloads  
+     - Examples: "APT33 has utilized PowerShell to download files from the C2 server and run various scripts."  
+     - Associated Phase: Execution  
+     - Mapping to TTP ID: T1059.001  
+
+   - **Pattern Name**: Modifying Group Policy  
+     - Examples: "LockBit 2.0 can use the PowerShell module Invoke-GPUpdate to modify Group Policy."  
+     - Associated Phase: Persistence  
+     - Mapping to TTP ID: T1059.001  
+
+   - **Pattern Name**: Remote Command Execution  
+     - Examples: "Blue Mockingbird has used PowerShell reverse TCP shells to issue interactive commands over a network connection."  
+     - Associated Phase: Execution  
+     - Mapping to TTP ID: T1059.001  
+
+   - **Pattern Name**: Obfuscated PowerShell Execution  
+     - Examples: "During C0021, the threat actors used obfuscated PowerShell to extract an encoded payload from within an .LNK file."  
+     - Associated Phase: Execution  
+     - Mapping to TTP ID: T1059.001  

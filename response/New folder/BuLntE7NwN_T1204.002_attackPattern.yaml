@@ -1,0 +1,56 @@
+<output>
+Pattern Name: Spearphishing with Malicious Attachments  
+Scenario Overview: An attacker sends a spearphishing email containing a malicious Microsoft Word attachment. The victim opens the email, downloads the attachment, and enables macros, leading to the execution of malware that establishes a foothold in the victim's environment.
+
+Attack Flow Breakdown:  
+**Stage 1: Initial Access**  
+- **Application Involved**: Outlook  
+- **User Action**: The user receives an email from a seemingly legitimate sender (e.g., admin@338) with a subject line that entices the user to open the attachment.  
+- **Key Artifacts**: Email headers, attachment file (e.g., malicious_document.docx).  
+- **Detection Focus**: Monitor for spearphishing emails with suspicious sender addresses and attachments.  
+```shell
+# Example command to extract email headers for analysis
+grep -i "admin@338" /var/log/mail.log
+```
+
+**Stage 2: User Interaction with Malicious File**  
+- **Application Involved**: Microsoft Word  
+- **User Action**: The user downloads and opens the malicious Word document. Upon opening, a prompt appears asking the user to enable macros to view the content.  
+- **Key Artifacts**: Document file (malicious_document.docx), macro settings.  
+- **Detection Focus**: Monitor for user interactions with files that have common extensions and the enabling of macros.  
+```shell
+# Example command to check for macro execution in Word
+Get-WinEvent -LogName "Microsoft-Windows-Word/Operational" | Where-Object { $_.Id -eq 1001 }
+```
+
+**Stage 3: Execution of Malicious Code**  
+- **Application Involved**: Microsoft Word (parent), PowerShell (child)  
+- **User Action**: The user enables macros, which triggers the execution of a PowerShell command embedded in the document.  
+- **Key Artifacts**: PowerShell command execution logs, temporary files created by the macro.  
+- **Detection Focus**: Monitor for PowerShell execution initiated from Microsoft Word, especially commands that download or execute additional payloads.  
+```shell
+# Example command to monitor PowerShell execution
+Get-WinEvent -LogName "Microsoft-Windows-PowerShell/Operational" | Where-Object { $_.Message -like "*Invoke-WebRequest*" }
+```
+
+**Stage 4: Establishing Persistence**  
+- **Application Involved**: Windows Task Scheduler  
+- **User Action**: The malicious PowerShell script creates a scheduled task to ensure persistence.  
+- **Key Artifacts**: Scheduled task entries, registry modifications.  
+- **Detection Focus**: Monitor for new scheduled tasks created by non-administrative users.  
+```shell
+# Example command to list scheduled tasks created by the user
+schtasks /query /fo LIST /v | findstr /C:"TaskName" /C:"Last Run Time"
+```
+
+**Stage 5: Exfiltration and Command & Control (C2) Communication**  
+- **Application Involved**: PowerShell, Web Browser (for C2 communication)  
+- **User Action**: The malware initiates outbound connections to a command and control server to receive further instructions.  
+- **Key Artifacts**: Network traffic logs, DNS queries to known malicious domains.  
+- **Detection Focus**: Investigate unusual outbound connections and DNS queries to suspicious domains.  
+```shell
+# Example command to analyze outbound connections
+netstat -an | findstr "ESTABLISHED"
+```
+
+</output>

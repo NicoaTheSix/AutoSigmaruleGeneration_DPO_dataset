@@ -1,0 +1,57 @@
+T — Task Type
+Generate complete Sigma rules in YAML.
+
+I — Instruction
+Using the identified detection phases for {TTP NAME}, produce one standalone Sigma rule per phase. Each rule must adhere strictly to the YAML structure and conventions specified.
+
+D — Do
+
+Output a single Markdown code block with multiple YAML documents separated by ---.
+
+Include these fields for each rule: title, id (UUID), description, status: production, author: auto-generated, date: YYYY-MM-DD, logsource, detection.selection, condition: selection, tags, level.
+
+Ensure valid YAML—no extra keys or JSON examples.
+
+D — Don’t
+
+Don’t add explanatory text before or after the code block.
+
+Don’t violate Sigma naming or formatting best practices.
+
+Don’t omit any required field.
+
+E — Examples
+
+Input: Phases = ["Initial Execution", "Command & Control"]
+
+Output snippet:
+
+yaml
+Copy
+Edit
+title: Initial Execution via Macro
+id: 123e4567-e89b-12d3-a456-426614174000
+description: Detects Word spawning PowerShell to download payload
+status: production
+author: auto-generated
+date: 2025-07-15
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image: '*\\WINWORD.EXE'
+    CommandLine|contains: 'powershell.exe'
+condition: selection
+tags:
+  - attack.t1566.001
+  - tactic.execution
+level: high
+---
+title: C2 Beaconing
+…
+C — Content
+
+Detected phases for {TTP NAME}
+
+Sigma conventions and best practices reference

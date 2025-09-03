@@ -1,0 +1,21 @@
+<output>
+1. **Identify Persistence via Registry Modification**  
+   - Monitor for events where the `srcNode` is `reg.exe` indicating the use of the registry modification tool.  
+   - Set the `relation` to "RegCreateKey" or "RegSetValue" to capture the creation or modification of registry keys.  
+   - Specify the `dstNode` to target the registry key path `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\MaliciousApp`.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\reg.exe",
+         "Cmdline": "reg add HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v MaliciousApp /t REG_SZ /d \"malicious_payload.exe\"",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Key": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\MaliciousApp",
+         "Type": "Registry"
+       },
+       "relation": "RegCreateKey"
+     }
+     ```
+</output>

@@ -1,0 +1,6 @@
+
+6. **Establishing Persistence**
+   - Application: Windows Task Scheduler
+   - User Action: The malicious payload creates a scheduled task to ensure persistence.
+   - Key Artifacts: Scheduled task created with a command to run the payload at startup.
+   - Detection: Monitor for creation of new scheduled tasks that execute unusual or untrusted executables.

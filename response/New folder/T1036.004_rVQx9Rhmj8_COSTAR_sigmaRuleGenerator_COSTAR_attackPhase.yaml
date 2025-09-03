@@ -1,0 +1,124 @@
+```yaml
+- title: Identify Initial Access via Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for events indicating the receipt of an email with a specific subject line. Target the srcNode as Microsoft Outlook and check for the relation indicating email interaction. Look for the dstNode containing the email subject "Invoice Attached" and a sender resembling "invoice@trustedcompany.com".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode: "Microsoft Outlook"
+      relation: "email interaction"
+      dstNode: "Invoice Attached"
+      sender: "invoice@trustedcompany.com"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+---
+- title: Map Opening of Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Detect when the user opens the Excel attachment "Invoice_12345.xlsm". Set the srcNode to Microsoft Excel and ensure the relation indicates a process creation event. The dstNode should reflect the Excel file being opened, and the command line should include the macro execution that triggers a PowerShell command.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode: "Microsoft Excel"
+      relation: "process creation"
+      dstNode: "Invoice_12345.xlsm"
+      command_line: "*macro execution*"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+---
+- title: Validate Payload Download and Execution
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Track the execution of the PowerShell command that downloads "payload.exe". The srcNode should be PowerShell, and the relation must indicate a process creation event. The dstNode should show the execution path as "C:\\Users\\Victim\\Downloads\\payload.exe".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode: "PowerShell"
+      relation: "process creation"
+      dstNode: "C:\\Users\\Victim\\Downloads\\payload.exe"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+---
+- title: Detect Establishing Persistence via Scheduled Task
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Look for events where a scheduled task is created. The srcNode should reflect the command used to create the task, with the relation indicating a process creation event. The dstNode must include the scheduled task name "Windows Update Service" and the command to execute "C:\\Users\\Victim\\Downloads\\payload.exe".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode: "Task Scheduler"
+      relation: "process creation"
+      dstNode: "Windows Update Service"
+      command: "C:\\Users\\Victim\\Downloads\\payload.exe"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: high
+---
+- title: Monitor Execution Under False Pretense
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Identify when the scheduled task executes the payload upon user logon. The srcNode should be the task scheduler or Windows Explorer, and the relation must indicate the execution of "payload.exe". Ensure the dstNode reflects the execution path of the payload.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode: "Task Scheduler"
+      relation: "execution"
+      dstNode: "C:\\Users\\Victim\\Downloads\\payload.exe"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Track Data Exfiltration or Further Compromise
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitor network traffic for outbound connections to the command and control server. The srcNode should be the payload process, and the relation must indicate network activity. The dstNode should include the C2 server URL "http://malicious-server.com" and the relevant network traffic details.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode: "payload process"
+      relation: "network activity"
+      dstNode: "http://malicious-server.com"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1041
+    - tactic: Exfiltration
+  level: high
+```

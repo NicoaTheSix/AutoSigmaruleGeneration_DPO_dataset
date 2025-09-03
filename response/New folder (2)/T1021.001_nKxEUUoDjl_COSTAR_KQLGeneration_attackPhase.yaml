@@ -1,0 +1,10 @@
+<output>
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: ("malicious.docx" OR "malicious.pdf")) OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND dstNode.Type: "File" AND dstNode.Name: "malicious.docx") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Type: "File" AND dstNode.Name: "payload.exe") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\mstsc.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "VictimIPAddress") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\mstsc.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "AnotherVictimIPAddress") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\cmd.exe" AND dstNode.Type: "File" AND dstNode.Name: "SensitiveData") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Path\\To\\plink.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "localhost") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\mstsc.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "localhost")
+</output>

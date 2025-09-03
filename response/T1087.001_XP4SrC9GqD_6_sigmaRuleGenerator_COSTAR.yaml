@@ -1,0 +1,29 @@
+<output>
+- title: Identify Command and Control Communication via PowerShell
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Detects potential command and control communication initiated by PowerShell processes to known malicious IPs or domains.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
+        Cmdline: '*'
+        Type: Process
+      dstNode:
+        Dstaddress: 
+          - '192.0.2.1'
+          - 'malicious.com'
+        Port: 443
+        Type: Network
+      relation: 'TCP Connect'
+  condition: selection
+  tags:
+    - T1071
+    - Command and Control
+  level: high
+</output>

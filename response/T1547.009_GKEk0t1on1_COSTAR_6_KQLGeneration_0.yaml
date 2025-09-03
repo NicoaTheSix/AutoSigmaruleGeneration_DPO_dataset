@@ -1,0 +1,2 @@
+
+dstNode.Name: "Chrome.lnk" AND dstNode.Image: "C:\\Users\\User\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Chrome.lnk" AND relation: "WriteFile"

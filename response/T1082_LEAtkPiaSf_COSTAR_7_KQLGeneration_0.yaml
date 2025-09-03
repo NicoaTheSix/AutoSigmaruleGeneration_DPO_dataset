@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Windows\\System32\\cmd.exe" AND srcNode.Cmdline: "*del /f /q %temp%\\*" AND dstNode.Name: "%temp%\\*" AND dstNode.Type: File AND srcNode.Type: Process

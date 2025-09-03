@@ -1,0 +1,41 @@
+1. **Framework Section**  
+   Phase 1: *Information Gathering*  
+   - Utilize OS utilities (e.g., `ipconfig`, `ifconfig`, `arp`, `nbtstat`, `route`) to collect network configuration details.  
+   - Execute commands on network devices (e.g., `show ip route`, `show ip interface`) to retrieve interface configurations and routing information.  
+   - Leverage specialized tools (e.g., `esxcli` on ESXi) to gather network settings and configurations from virtualized environments.  
+
+   Phase 2: *Data Exfiltration*  
+   - Log and transmit collected network information (e.g., IP addresses, MAC addresses) to command and control (C2) servers.  
+   - Use scripts or malware capabilities to automate the collection and sending of network configuration data.  
+   - Ensure persistence of data collection through scheduled tasks or backdoor mechanisms to maintain access to network information.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Network Configuration Discovery  
+     - Examples: `ipconfig /all`, `ifconfig`, `arp -a`, `nbtstat -n`  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Command Execution for Network Information  
+     - Examples: `show ip route`, `show ip interface`, `esxcli network ip interface ipv4 get`  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Data Logging and Transmission  
+     - Examples: `ipconfig /all >> %temp%\download`, sending collected data to C2  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Automated Network Discovery  
+     - Examples: Using scripts to run multiple commands (e.g., `cmd.exe /c ipconfig /all`)  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Proxy and Domain Information Collection  
+     - Examples: Collecting proxy settings and domain names using `GetAdaptersInfo`, `net config workstation`  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Network Information Exfiltration  
+     - Examples: Sending MAC and IP addresses to C2 servers, logging network settings  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1016  

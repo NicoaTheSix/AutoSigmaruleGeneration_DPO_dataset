@@ -1,0 +1,21 @@
+<output>
+1. **Identify Post-Exploitation Activities via Command Execution**  
+   - Monitor for events where the `srcNode` is a command-line interpreter (e.g., `cmd.exe` or `powershell.exe`).  
+   - Set the `relation` to "Process Create" for the command execution process.  
+   - Ensure the `dstNode` reflects the command being executed, such as `net user`, `whoami`, or `powershell -exec bypass`.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\cmd.exe",
+         "Cmdline": "C:\\Windows\\System32\\cmd.exe /c net user",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "net user",
+         "Type": "Process"
+       },
+       "relation": "Process Create"
+     }
+     ```
+</output>

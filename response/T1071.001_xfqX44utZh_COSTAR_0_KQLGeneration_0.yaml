@@ -1,0 +1,1 @@
+srcNode.Name: "Outlook" AND srcNode.Type: "Process" AND dstNode.Name: "Invoice.docx" AND dstNode.Type: "File" AND relation: "Process Create"

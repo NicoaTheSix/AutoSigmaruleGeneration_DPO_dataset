@@ -1,0 +1,27 @@
+<output>
+- title: Identify Command and Control Communication via PowerShell
+- id: 123e4567-e89b-12d3-a456-426614174000
+- description: Detects PowerShell processes establishing outbound connections to known malicious domains or IP addresses, indicating potential command and control communication.
+- status: production
+- author: auto-generated
+- date: 2023-10-01
+- logsource:  
+    - category: custom  
+    - product: windows  
+- detection:  
+    - selection:  
+        srcNode:  
+            Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+            Cmdline: "*-ExecutionPolicy Bypass -File *"  
+            Type: "Process"  
+        dstNode:  
+            Dstaddress: "malicious.com"  
+            Port: 80  
+            Type: "Network"  
+        relation: "TCP Connect"  
+- condition: selection  
+- tags:  
+    - ATT&CK ID: T1071.001  
+    - tactic: Command and Control  
+- level: high  
+</output>

@@ -1,0 +1,15 @@
+<error>Incomplete Rule Structure<error>
+<error>Invalid YAML Formatting<error>
+<error>Missing Required Fields<error>
+<error>Incorrect UUID Format<error>
+<error>Ambiguous Descriptions<error>
+<error>Improper Logsource Definition<error>
+<error>Missing Detection Conditions<error>
+<error>Incorrect Relation Types<error>
+<error>Improper Tagging of ATT&CK ID<error>
+<error>Inconsistent Date Format<error>
+<error>Unclear Process Identification<error>
+<error>Missing Author Information<error>
+<error>Improper Level Assignment<error>
+<error>Excessive Explanatory Text<error>
+<error>Non-compliance with Sigma Best Practices<error>

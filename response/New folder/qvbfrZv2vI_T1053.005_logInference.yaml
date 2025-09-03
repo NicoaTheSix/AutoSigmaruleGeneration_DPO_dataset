@@ -1,0 +1,23 @@
+1. **Identify Initial Access via Email**  
+   - Monitor for incoming emails that contain attachments with the filename pattern `*.xlsx`. This can be done by checking the email headers for suspicious domains (e.g., `malicious-domain.com`).  
+   - Schema Reference: `dstNode.Name` should match the suspicious domain, and `dstNode.Type` should be "File" with `dstNode.Key` containing the attachment filename.
+
+2. **Map User Interaction with Malicious Attachment**  
+   - Detect when Microsoft Excel (process name `EXCEL`) is opened with a command line that includes the malicious attachment (e.g., `Invoice_2023.xlsx`).  
+   - Schema Reference: `srcNode.Image` should be `C:\Program Files\Microsoft Office\root\OfficeXX\EXCEL.EXE` (where XX is the version number), and `dstNode.Image` should match the path of the malicious Excel file.
+
+3. **Validate Execution of Malicious Macro**  
+   - Monitor for the execution of macros within Excel that may download a payload. Look for temporary files created during this process (e.g., `C:\Users\<username>\AppData\Local\Temp\payload.exe`).  
+   - Schema Reference: `srcNode.Image` should be `C:\Program Files\Microsoft Office\root\OfficeXX\EXCEL.EXE`, and `dstNode.Image` should be the path of the downloaded payload.
+
+4. **Detect Payload Execution**  
+   - Track the execution of the downloaded payload, specifically looking for command line executions that include `cmd.exe /c start C:\Users\<username>\AppData\Local\Temp\payload.exe`.  
+   - Schema Reference: `srcNode.Image` should be `C:\Windows\System32\cmd.exe`, and `dstNode.Image` should be the path of the payload.
+
+5. **Monitor for Establishing Persistence**  
+   - Identify the creation of scheduled tasks using `schtasks.exe` that reference the malicious payload. Look for commands that include `schtasks /create /tn "MaliciousTask" /tr "C:\Users\<username>\AppData\Local\Temp\payload.exe"`.  
+   - Schema Reference: `srcNode.Image` should be `C:\Windows\System32\schtasks.exe`, and `dstNode.Type` should be "Process" with the command line reflecting the task creation.
+
+6. **Track Data Exfiltration**  
+   - Monitor for PowerShell commands that may indicate data exfiltration, specifically those that use `Invoke-WebRequest` to send data to external servers.  
+   - Schema Reference: `srcNode.Image` should be `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`, and `dstNode.Type` should be "Network" with outbound connections to external IPs.

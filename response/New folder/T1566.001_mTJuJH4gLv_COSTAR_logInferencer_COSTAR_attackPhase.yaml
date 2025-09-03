@@ -1,0 +1,29 @@
+1. **Email Spoofing Detection**  
+   - **Details**: Identify email delivery events where the "From" address is spoofed. Analyze email headers for discrepancies in the "From" address. Look for keywords in the subject line indicating urgency.  
+
+2. **Malicious Attachment Type Detection**  
+   - **Details**: Monitor incoming emails for attachments with specific file types (e.g., .xls, .docx). Identify and categorize these attachment types in the email logs.  
+
+3. **Attachment Interaction Monitoring**  
+   - **Details**: Detect when users open emails and click on attachments. Log the attachment type and monitor for common spearphishing keywords in email subjects and bodies.  
+
+4. **Execution of Malicious Document Detection**  
+   - **Details**: Detect the execution of Microsoft Word or Excel processes initiated by opening attachments. Monitor for unusual command-line arguments associated with these processes.  
+
+5. **Macro Execution Detection**  
+   - **Details**: Monitor for macro execution logs when users enable macros in documents. Track document modification timestamps and log any PowerShell command execution initiated by these macros.  
+
+6. **Post-Execution Behavior Monitoring**  
+   - **Details**: Investigate network connections initiated by newly executed processes, particularly those that connect to suspicious IPs. Log PowerShell command history for any commands that download additional payloads.  
+
+7. **Persistence Mechanism Detection**  
+   - **Details**: Monitor for the creation of scheduled tasks or registry modifications that indicate persistence mechanisms established by malware. Log any new scheduled task entries or registry changes.  
+
+8. **File Manipulation Detection**  
+   - **Details**: Track file extraction events from ZIP or RAR files. Monitor for file manipulation events during extraction and log any new files created.  
+
+9. **Data Exfiltration Monitoring**  
+   - **Details**: Investigate network traffic logs for connections to external IPs initiated by processes executing commands to exfiltrate data. Log any suspicious network activity related to data exfiltration.  
+
+10. **Command-Line Execution Monitoring**  
+    - **Details**: Monitor command-line execution logs for suspicious executables triggered by macros. Log any new process creation that matches known malicious patterns.

@@ -1,0 +1,57 @@
+1. **Framework Section**  
+   Phase 1: *Initial Access and Execution*  
+   - Monitor for modifications to the following Registry keys:  
+     - `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`  
+     - `HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run`  
+   - Detect the creation of new files or shortcuts in the Startup folder:  
+     - `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`  
+     - `%ProgramData%\Microsoft\Windows\Start Menu\Programs\Startup`  
+   - Analyze command-line arguments for processes that may indicate the execution of malicious payloads during user login.  
+
+   Phase 2: *Persistence Mechanism Establishment*  
+   - Identify and log changes to the Registry keys associated with startup programs:  
+     - `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce`  
+     - `HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnce`  
+   - Monitor for the presence of unusual or unauthorized entries in the Registry that may indicate persistence mechanisms.  
+   - Track the creation of DLLs or executables in common persistence locations, such as the Startup folder or temporary directories.  
+
+   Phase 3: *Post-Execution and Evasion*  
+   - Investigate the use of masquerading techniques in Registry entries or Startup folder items to disguise malicious activity.  
+   - Analyze the behavior of processes that are executed from the Startup folder or via Registry keys for signs of lateral movement or further exploitation.  
+   - Monitor for any attempts to modify or delete existing persistence mechanisms to evade detection.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Registry Run Key Modification  
+     - Examples:  
+       - "ADVSTORESHELL achieves persistence by adding itself to the HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run Registry key."  
+       - "Agent Tesla can add itself to the Registry as a startup program to establish persistence."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1547.001  
+
+   - **Pattern Name**: Startup Folder Manipulation  
+     - Examples:  
+       - "Amadey has changed the Startup folder to the one containing its executable by overwriting the registry keys."  
+       - "APT28 has deployed malware that has copied itself to the startup directory for persistence."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1547.001  
+
+   - **Pattern Name**: Use of RunOnce Keys  
+     - Examples:  
+       - "AppleSeed has the ability to create the Registry key name EstsoftAutoUpdate at HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce to establish persistence."  
+       - "AvosLocker has been executed via the RunOnce Registry key to run itself on safe mode."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1547.001  
+
+   - **Pattern Name**: DLL Dependency Injection  
+     - Examples:  
+       - "Adversaries can add other programs or processes to the registry value which will automatically launch at boot."  
+       - "Using a 'Depend' key with RunOnceEx to load a DLL at logon."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1547.001  
+
+   - **Pattern Name**: Masquerading Techniques  
+     - Examples:  
+       - "Adversaries may also use Masquerading to make the Registry entries look as if they are associated with legitimate programs."  
+       - "Creating shortcuts in the Startup folder disguised as legitimate applications."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1547.001  

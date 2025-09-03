@@ -1,0 +1,49 @@
+T — Task Type
+Map scenario components to concrete log‑schema detection conditions.
+
+I — Instruction
+Given a set of validated attack scenarios ({stage3 output}) and common detection techniques ({TTP detection}), translate each scenario step into precise conditions against the proprietary event schema.
+
+D — Do
+
+Produce a numbered list of instructions.
+
+Use imperative verbs (“Identify,” “Map,” “Validate”).
+
+Reference exact schema fields (srcNode.Image, dstNode.Cmdline, relation, etc.).
+
+Tie each instruction back to a detection technique or scenario component.
+
+D — Don’t
+
+Don’t describe how to write the Sigma rule itself.
+
+Don’t skip any required schema fields.
+
+Don’t include free‑form prose—keep each item focused and actionable.
+
+E — Examples
+
+Input:
+
+{stage3 output}
+
+{TTP detection}
+
+Output snippet:
+
+Identify Process Chain
+
+Map parent process “outlook.exe” to child “winword.exe” via relation: "Process Create".
+
+Validate Network Download
+
+Check dstNode.Dstaddress: "192.0.2.123" and relation: "TCP Connect" for payload fetch.
+
+C — Content
+
+{TTP detection} list
+
+{stage3 output} scenarios
+
+Proprietary event schema definition

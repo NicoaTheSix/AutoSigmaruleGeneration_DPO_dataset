@@ -1,0 +1,41 @@
+1. **Framework Section**  
+   Phase 1: *Establishment of Remote Access*  
+   - Identify the installation of remote access tools (e.g., AnyDesk, TeamViewer, Ammyy Admin) on endpoints.  
+   - Monitor for command-line executions or GUI interactions that initiate remote sessions.  
+   - Analyze network traffic for connections to known remote access tool servers or unusual external IP addresses.  
+
+   Phase 2: *Persistence Mechanisms*  
+   - Investigate the creation of Windows Services or scheduled tasks associated with remote access tools.  
+   - Review system logs for entries related to the installation or execution of remote management software.  
+   - Check for modifications to registry keys that may indicate persistence (e.g., Run keys, Services).  
+
+   Phase 3: *Command and Control Communication*  
+   - Analyze outbound traffic for patterns indicative of command and control (C2) communications (e.g., unusual ports, protocols).  
+   - Monitor for the use of legitimate remote access tools in conjunction with known malicious behaviors (e.g., file encryption, lateral movement).  
+   - Correlate remote access tool usage with other indicators of compromise (IoCs) to identify potential adversary actions.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Use of Legitimate Remote Access Tools  
+     - Examples: Akira uses AnyDesk and PuTTY; BlackByte uses AnyDesk; Cobalt Group uses Ammyy Admin and TeamViewer.  
+     - Associated Phase: Establishment of Remote Access  
+     - Mapping to TTP ID: T1219  
+
+   - **Pattern Name**: Establishing Persistence via Remote Access Tools  
+     - Examples: Scattered Spider deploys RMM software including AnyDesk and ConnectWise Control; FIN7 utilizes Atera for malware deployment.  
+     - Associated Phase: Persistence Mechanisms  
+     - Mapping to TTP ID: T1219  
+
+   - **Pattern Name**: Command and Control via Remote Sessions  
+     - Examples: Hildegard establishes tmate sessions for C2 communications; TrickBot uses vncDll module for remote control.  
+     - Associated Phase: Command and Control Communication  
+     - Mapping to TTP ID: T1219  
+
+   - **Pattern Name**: Lateral Movement Using Remote Management Tools  
+     - Examples: DarkVishnya uses DameWare Mini Remote Control; MuddyWater uses ScreenConnect and AteraAgent for lateral movement.  
+     - Associated Phase: Command and Control Communication  
+     - Mapping to TTP ID: T1219  
+
+   - **Pattern Name**: Abuse of EDR Features for Remote Access  
+     - Examples: Egregor checks for LogMein event logs; Sandworm Team uses remote administration tools for malicious actions.  
+     - Associated Phase: Establishment of Remote Access  
+     - Mapping to TTP ID: T1219  

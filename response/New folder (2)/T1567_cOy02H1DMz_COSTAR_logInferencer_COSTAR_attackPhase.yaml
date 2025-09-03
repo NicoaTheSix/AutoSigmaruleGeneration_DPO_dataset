@@ -1,0 +1,42 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Monitor for the creation of processes related to Outlook that involve email interactions. Specifically, look for emails with attachments named "Update_Invoice.xlsx" and subject lines containing "Important Update Required".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Update_Invoice.xlsx"  
+
+2. **Identify Execution of Malicious Payload**  
+   - Monitor for the execution of Excel processes that are triggered by the opening of the malicious attachment. Look for the presence of macros, specifically `Auto_Open()`, which indicates the execution of a malicious payload.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" (or similar path for Excel)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Update_Invoice.xlsx"  
+     - `relation`: "Process Create"  
+
+3. **Identify Establishing Persistence**  
+   - Monitor for the creation of scheduled tasks that reference the backdoor executable located at "C:\\ProgramData\\malicious.exe". Look for the command that creates the scheduled task named "UpdateTask".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\schtasks.exe"  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "C:\\ProgramData\\malicious.exe"  
+     - `relation`: "Process Create"  
+
+4. **Identify Data Exfiltration**  
+   - Monitor for the use of web browsers (e.g., Chrome) that upload files to cloud storage services. Specifically, look for uploads of files named "sensitive_data.docx" to "https://drive.google.com/upload".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" (or similar path for Chrome)  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "drive.google.com"  
+     - `relation`: "TCP Send"  
+
+5. **Identify Cleanup and Covering Tracks**  
+   - Monitor for the execution of commands that clear event logs, specifically the use of "C:\\Windows\\System32\\wevtutil.exe cl Security".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\wevtutil.exe"  
+     - `dstNode.Type`: null  
+     - `relation`: "Process Create"  

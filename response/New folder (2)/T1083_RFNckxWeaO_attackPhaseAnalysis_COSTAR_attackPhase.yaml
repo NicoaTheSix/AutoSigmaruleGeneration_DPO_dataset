@@ -1,0 +1,56 @@
+1. **Framework Section**  
+   **Phase 1: Discovery**  
+   - Identify and enumerate files and directories using command-line utilities (e.g., `dir`, `ls`, `find`, `tree`).  
+   - Utilize custom tools or scripts to gather file and directory information from the file system.  
+   - Access network device CLIs to retrieve file and directory listings from network shares.  
+
+   **Phase 2: Analysis**  
+   - Analyze gathered file and directory information to identify files of interest based on specific criteria (e.g., file types, metadata).  
+   - Perform checks for specific files or directories that may indicate the presence of sensitive information or potential targets for follow-on actions.  
+   - Assess permissions and access controls to determine if elevated privileges are required to access certain files or directories.  
+
+   **Phase 3: Exfiltration Preparation**  
+   - Compile lists of identified files and directories for potential exfiltration or further exploitation.  
+   - Filter and categorize files based on their relevance to the adversary's objectives (e.g., sensitive documents, executables).  
+   - Prepare commands or scripts for automated collection of identified files for exfiltration.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: File Enumeration via Command-Line  
+     - Examples: "admin@338 actors used the following commands after exploiting a machine with LOWBALL malware to obtain information about files and directories: `dir c:\\ >> %temp%\\downloaddir`"  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: Custom Tool Usage for File Discovery  
+     - Examples: "AcidPour can identify specific files and directories within the Linux operating system corresponding with storage devices for follow-on wiping activity."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: Metadata Retrieval  
+     - Examples: "3PARA RAT has a command to retrieve metadata for files on disk as well as a command to list the current working directory."  
+     - Associated Phase: Analysis  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: Targeted File Search  
+     - Examples: "Akira examines files prior to encryption to determine if they meet requirements for encryption and can be encrypted by the ransomware."  
+     - Associated Phase: Analysis  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: Recursive Directory Listing  
+     - Examples: "Epic recursively searches for all .doc files on the system and collects a directory listing of the Desktop, %TEMP%, and %WINDOWS%\\Temp directories."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: File Filtering for Exfiltration  
+     - Examples: "Raccoon Stealer identifies target files and directories for collection based on a configuration file."  
+     - Associated Phase: Exfiltration Preparation  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: Command Execution for File Listing  
+     - Examples: "cmd can be used to find files and directories with native functionality such as `dir` commands."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: File Type Specific Search  
+     - Examples: "Zebrocy searches for files that are 60mb and less and contain the following extensions: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .exe, .zip, and .rar."  
+     - Associated Phase: Analysis  
+     - Mapping to TTP ID: T1083  

@@ -1,0 +1,24 @@
+<output>
+- title: Identify Execution of Malicious Macro in Microsoft Word
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Detects execution of a malicious macro in Microsoft Word that leads to the creation or execution of a potentially harmful file.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: 'C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE'
+      Cmdline: '* /mFileOpen'
+      relation: 'Process Create'
+      dstNode:
+        Image: 'C:\\Users\\User\\Downloads\\malicious_payload.exe'
+        Cmdline: 'C:\\Users\\User\\Downloads\\malicious_payload.exe'
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+</output>

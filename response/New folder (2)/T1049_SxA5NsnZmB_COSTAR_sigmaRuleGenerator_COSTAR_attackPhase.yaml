@@ -1,0 +1,111 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically for emails with subject lines containing "Important Update" and attachments named "Invoice_2023.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice_2023.xlsx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+---
+- title: Identify Opening of Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for the execution of Microsoft Excel processes that open the attachment "Invoice_2023.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice_2023.xlsx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+---
+- title: Identify Payload Download and Execution
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell commands executed by Excel that download executables from remote servers, specifically looking for commands that include "Invoke-WebRequest" or "DownloadFile".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "payload.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+---
+- title: Identify Establishing Persistence via Scheduled Task
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the creation of scheduled tasks by unknown executables, particularly those that reference "malicious.exe".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\ProgramData\\malicious.exe"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks"
+      relation: "RegCreateKey"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: high
+---
+- title: Identify Command and Control Communication
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for outbound network connections to known malicious domains or IP addresses associated with the C2 server (e.g., "malicious-site.com").
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\svchost.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious-site.com"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1071
+    - tactic: Command and Control
+  level: high
+```

@@ -1,0 +1,39 @@
+C — Context  
+You have identified key detection phases for the MITRE ATT&CK technique“{TTP NAME}”and now need to translate those phases into Sigma rules.
+
+O — Objective  
+Produce a series of complete, individual Sigma rules—one per detection phase—fully compliant with the specified structure.
+Generate only one rule.
+
+S — Style  
+• Valid YAML only  
+• No explanatory text or JSON examples  
+• Follow Sigma conventions and best practices exactly  
+
+T — Tone  
+Precise, technical, and authoritative.
+
+A — Audience  
+Sigma rule authors and cybersecurity detection engineers implementing these rules.
+
+R — Response Format  
+Each output should be enclosed in XML tag <output></output>.
+A single Markdown code block containing multiple YAML rule definitions, separated by `---`. Each rule must include:
+
+<output>
+- title: rule 1
+- id (UUID)  
+- description  
+- status: production  
+- author: auto-generated  
+- date: YYYY-MM-DD  
+- logsource:  
+  - category: custom  
+  - product: windows  
+- detection:  
+  - block named `selection` only  
+- condition: `selection`  
+- tags (ATT&CK ID and tactic)  
+- level (high/medium/low)  
+
+</output>

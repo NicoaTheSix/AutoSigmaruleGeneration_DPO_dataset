@@ -1,0 +1,7 @@
+
+   6. **Establishing Persistence**
+      - Application: Windows Registry
+      - User Action: The payload modifies registry keys to ensure it runs on startup.
+      - Key Artifacts: Registry keys under `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`.
+      - Detection: Monitor for changes to registry keys that add new startup entries.
+   

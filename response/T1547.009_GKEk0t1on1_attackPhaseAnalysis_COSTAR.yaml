@@ -1,0 +1,41 @@
+1. **Framework Section**  
+   Phase 1: *Shortcut Creation and Modification*  
+   - Analyze the creation of new .LNK files in user directories, particularly the Startup folder.  
+   - Monitor modifications to existing .LNK files, including changes to target paths.  
+   - Identify the use of masquerading techniques to disguise malicious shortcuts as legitimate applications.  
+
+   Phase 2: *Execution During Startup*  
+   - Track the execution of .LNK files during system boot or user login processes.  
+   - Investigate the invocation of malicious payloads through shortcuts, especially in conjunction with system startup events.  
+   - Examine command-line arguments associated with .LNK file execution to identify potential malicious behavior.  
+
+   Phase 3: *Persistence Mechanisms*  
+   - Review the establishment of persistence through shortcuts in the Startup folder and other common locations.  
+   - Analyze the creation of Registry Run keys associated with .LNK files to maintain persistence.  
+   - Monitor for modifications to browser shortcuts that may lead to the execution of malicious extensions or payloads.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Shortcut Creation for Persistence  
+     - Examples: BACKSPACEC creates a shortcut to itself in the CSIDL_STARTUP directory; Kazuar adds a .lnk file to the Windows startup folder.  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1547.009  
+
+   - **Pattern Name**: Modification of Existing Shortcuts  
+     - Examples: MarkiRAT modifies the shortcut that launches Telegram by replacing its path with the malicious payload; Empire modifies a .LNK file to include a backdoor.  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1547.009  
+
+   - **Pattern Name**: Execution of Malicious Shortcuts  
+     - Examples: Astaroth's initial payload is a malicious .LNK file; Gorgon Group malware creates a .lnk file and adds a Registry Run key.  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1547.009  
+
+   - **Pattern Name**: Establishing Persistence via Registry  
+     - Examples: Gorgon Group adds a Registry Run key to establish persistence; SslMM drops a link disguised as a legitimate application.  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1547.009  
+
+   - **Pattern Name**: Browser Shortcut Manipulation  
+     - Examples: Grandoreiro modifies browser shortcuts to launch malicious extensions; Gazercan modifies existing .lnk files to execute malware through cmd.exe.  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1547.009  

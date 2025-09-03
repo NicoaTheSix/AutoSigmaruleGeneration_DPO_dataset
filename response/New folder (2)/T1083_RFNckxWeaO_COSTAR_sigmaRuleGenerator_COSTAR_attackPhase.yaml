@@ -1,0 +1,133 @@
+```yaml
+- title: Identify Initial Access via Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Microsoft Outlook when an email with the subject line "Important Document" and an attachment named "Invoice.xlsx" is received.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice.xlsx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+---
+- title: Identify Opening of Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for the execution of Microsoft Excel when the "Invoice.xlsx" file is opened, which contains a macro designed to execute malicious code.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice.xlsx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+---
+- title: Identify Execution of Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell execution initiated by the Excel macro that downloads and executes a backdoor from a remote server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "backdoor.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+---
+- title: Identify Registry Modification for Persistence
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for registry modifications that add an entry to ensure the backdoor runs on startup.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+      relation: "RegSetValue"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1547
+    - tactic: Persistence
+  level: high
+---
+- title: Identify Data Exfiltration Attempts
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for network traffic initiated by the backdoor to a command and control (C2) server for data exfiltration.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious-server.com"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1041
+    - tactic: Exfiltration
+  level: high
+---
+- title: Identify Cleanup and Covering Tracks
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitor for the deletion of the backdoor executable and any logs to avoid detection.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\cmd.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "backdoor.exe"
+      relation: "CloseFile"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1070
+    - tactic: Defense Evasion
+  level: high
+```

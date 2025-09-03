@@ -1,0 +1,17 @@
+1. **Identify Initial Access via Email**  
+   - **Details**: Monitor for events indicating the receipt of an email with a specific subject line. Target the `srcNode` as Microsoft Outlook and check for the `relation` indicating email interaction. Look for the `dstNode` containing the email subject "Invoice Attached" and a sender resembling "invoice@trustedcompany.com".
+
+2. **Map Opening of Malicious Attachment**  
+   - **Details**: Detect when the user opens the Excel attachment "Invoice_12345.xlsm". Set the `srcNode` to Microsoft Excel and ensure the `relation` indicates a process creation event. The `dstNode` should reflect the Excel file being opened, and the command line should include the macro execution that triggers a PowerShell command.
+
+3. **Validate Payload Download and Execution**  
+   - **Details**: Track the execution of the PowerShell command that downloads "payload.exe". The `srcNode` should be PowerShell, and the `relation` must indicate a process creation event. The `dstNode` should show the execution path as "C:\\Users\\Victim\\Downloads\\payload.exe".
+
+4. **Detect Establishing Persistence via Scheduled Task**  
+   - **Details**: Look for events where a scheduled task is created. The `srcNode` should reflect the command used to create the task, with the `relation` indicating a process creation event. The `dstNode` must include the scheduled task name "Windows Update Service" and the command to execute "C:\\Users\\Victim\\Downloads\\payload.exe".
+
+5. **Monitor Execution Under False Pretense**  
+   - **Details**: Identify when the scheduled task executes the payload upon user logon. The `srcNode` should be the task scheduler or Windows Explorer, and the `relation` must indicate the execution of "payload.exe". Ensure the `dstNode` reflects the execution path of the payload.
+
+6. **Track Data Exfiltration or Further Compromise**  
+   - **Details**: Monitor network traffic for outbound connections to the command and control server. The `srcNode` should be the payload process, and the `relation` must indicate network activity. The `dstNode` should include the C2 server URL "http://malicious-server.com" and the relevant network traffic details.

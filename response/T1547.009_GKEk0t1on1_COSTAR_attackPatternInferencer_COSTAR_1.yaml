@@ -1,0 +1,7 @@
+
+   2. **User Interaction**
+      - Application: Outlook
+      - User Action: User opens the email and clicks on the attachment.
+      - Key Artifacts: User clicks on "Enable Content" to allow macros.
+      - Detection: Monitor for user interactions with attachments and enabling macros.
+   

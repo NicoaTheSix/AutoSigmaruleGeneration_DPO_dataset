@@ -1,0 +1,133 @@
+```yaml
+- title: Identify Initial Access via Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook when an email with a subject line containing "Invoice Attached" is received, specifically looking for the attachment named Invoice.docx.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice.docx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+---
+- title: Identify Exploitation of the Document
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for the execution of Microsoft Word when the Invoice.docx file is opened, which contains a macro designed to execute a PowerShell command.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice.docx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Identify Payload Execution via PowerShell
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell command execution triggered by the macro in the Word document that downloads a malicious payload from a remote server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious.com"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+---
+- title: Identify Establishing Persistence via Task Scheduler
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the creation of scheduled tasks by the downloaded payload (payload.exe) to ensure it runs on system startup.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\schtasks.exe"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks"
+      relation: "RegCreateKey"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: medium
+---
+- title: Identify Command and Control Communication
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for outbound network connections initiated by the payload to the attacker's command and control (C2) server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Path\\To\\MaliciousExecutable.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious.com"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1071
+    - tactic: Command and Control
+  level: high
+---
+- title: Identify Data Exfiltration Activities
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitor for large outbound data transfers initiated by various applications (e.g., PowerShell, FTP client) to detect potential data exfiltration.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Network"
+      dstNode.Port: 21
+      relation: "TCP Send"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1041
+    - tactic: Exfiltration
+  level: medium
+```

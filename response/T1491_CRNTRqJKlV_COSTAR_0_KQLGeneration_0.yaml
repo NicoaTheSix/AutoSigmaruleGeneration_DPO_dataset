@@ -1,0 +1,2 @@
+
+srcNode.Name: "Outlook" AND srcNode.Type: "Process" AND dstNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND dstNode.Cmdline: "*malicious_document.docm*" AND dstNode.Type: "Process"

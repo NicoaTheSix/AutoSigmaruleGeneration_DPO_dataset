@@ -1,0 +1,32 @@
+1. **Identify Initial Access via Email**  
+   - Map the event where the victim receives a spearphishing email with a malicious attachment.  
+   - Target the `srcNode` as the Outlook application, with `Name` set to "Outlook" and `Type` as "Process".  
+   - Loggable events include email received and attachment download events in Outlook logs.
+
+2. **Capture Opening of the Malicious Attachment**  
+   - Detect when the victim opens the malicious attachment in Microsoft Word.  
+   - Set `srcNode` to the Word application, with `Name` as "Winword" and `Type` as "Process".  
+   - Look for events indicating the document was opened and macros executed.
+
+3. **Monitor Payload Download via Web Browser**  
+   - Identify the execution of a PowerShell command that downloads the malicious executable from a remote server.  
+   - Set `srcNode` to PowerShell, with `Name` as "PowerShell" and `Type` as "Process".  
+   - The `dstNode` should reflect the URL of the malicious payload, with `Type` as "Network".  
+   - Capture HTTP request logs showing the download of the executable.
+
+4. **Track Execution of the Malicious Payload**  
+   - Detect the execution of the downloaded executable that establishes a reverse shell to the C2 server.  
+   - Set `srcNode` to PowerShell, with `Name` as "PowerShell" and `Type` as "Process".  
+   - The `dstNode` should represent the malicious executable, with `Image` set to "payload.exe" and `Type` as "Process".  
+   - Capture process creation logs indicating the execution of the malicious executable.
+
+5. **Log Establishing Command and Control**  
+   - Monitor the payload's communication with the C2 server for further instructions.  
+   - Set `srcNode` to PowerShell, with `Name` as "PowerShell" and `Type` as "Process".  
+   - The `dstNode` should reflect the C2 server's IP address, with `Type` as "Network".  
+   - Capture network logs showing connections to the C2 server.
+
+6. **Detect Post-Exploitation Activities**  
+   - Identify further commands executed by the attacker to escalate privileges or move laterally.  
+   - Set `srcNode` to cmd.exe or PowerShell, with `Name` as "cmd.exe" or "PowerShell" and `Type` as "Process".  
+   - Capture command execution logs showing suspicious commands and any user account changes or privilege escalation logs.

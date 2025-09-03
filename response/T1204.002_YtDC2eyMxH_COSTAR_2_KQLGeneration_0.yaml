@@ -1,0 +1,2 @@
+
+Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND Cmdline: "* /m" AND dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Cmdline: "*Invoke-WebRequest*"

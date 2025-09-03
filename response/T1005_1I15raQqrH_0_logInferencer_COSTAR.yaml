@@ -1,0 +1,92 @@
+<output>
+1. **Identify Process Creation from Suspicious Binary**  
+   - Monitor for events where the `srcNode` is a known malicious binary (e.g., "malicious.exe") and the `dstNode` is a legitimate process (e.g., "explorer.exe").  
+   - Set the `relation` to "Process Create" for the malicious binary process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Path\\To\\malicious.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Windows\\explorer.exe",
+         "Type": "Process"
+       },
+       "relation": "Process Create"
+     }
+     ```
+
+2. **Detect Network Connection to Command and Control Server**  
+   - Monitor for events where the `srcNode` is a process (e.g., "malicious.exe") and the `dstNode` is a known C2 IP address (e.g., "192.168.1.100").  
+   - Set the `relation` to "TCP Connect" for the network connection.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Path\\To\\malicious.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Dstaddress": "192.168.1.100",
+         "Port": 443,
+         "Type": "Network"
+       },
+       "relation": "TCP Connect"
+     }
+     ```
+
+3. **Monitor Registry Modifications by Suspicious Process**  
+   - Monitor for events where the `srcNode` is a suspicious process (e.g., "malicious.exe") and the `dstNode` is a registry key (e.g., "HKEY_CURRENT_USER\\Software\\Malicious").  
+   - Set the `relation` to "RegSetValue" for the registry modification.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Path\\To\\malicious.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Key": "HKEY_CURRENT_USER\\Software\\Malicious",
+         "Type": "Registry"
+       },
+       "relation": "RegSetValue"
+     }
+     ```
+
+4. **Identify File Creation by Malicious Process**  
+   - Monitor for events where the `srcNode` is a malicious process (e.g., "malicious.exe") and the `dstNode` is a file being created (e.g., "C:\\Path\\To\\malicious_file.txt").  
+   - Set the `relation` to "CreateFile" for the file creation event.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Path\\To\\malicious.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "C:\\Path\\To\\malicious_file.txt",
+         "Type": "File"
+       },
+       "relation": "CreateFile"
+     }
+     ```
+
+5. **Detect Process Injection Techniques**  
+   - Monitor for events where the `srcNode` is a legitimate process (e.g., "svchost.exe") and the `dstNode` is a suspicious process (e.g., "malicious.dll").  
+   - Set the `relation` to "Process Create" for the injection event.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\system32\\svchost.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Path\\To\\malicious.dll",
+         "Type": "Process"
+       },
+       "relation": "Process Create"
+     }
+     ```
+</output>

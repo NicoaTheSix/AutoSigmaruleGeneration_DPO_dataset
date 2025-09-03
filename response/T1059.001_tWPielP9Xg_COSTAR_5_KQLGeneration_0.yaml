@@ -1,0 +1,2 @@
+
+Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND Cmdline: "*New-ScheduledTask*" AND dstNode.Image: "C:\\Users\\User\\Downloads\\payload.exe"

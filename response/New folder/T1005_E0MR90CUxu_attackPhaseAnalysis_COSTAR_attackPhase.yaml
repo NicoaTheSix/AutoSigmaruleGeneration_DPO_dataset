@@ -1,0 +1,46 @@
+1. **Framework Section**  
+   Phase 1: *Data Discovery*  
+   - Identify and enumerate local file systems and directories for files of interest.  
+   - Utilize command-line interfaces (CLI) and scripting interpreters to search for sensitive data.  
+   - Analyze configuration files and local databases for valuable information.  
+
+   Phase 2: *Data Collection*  
+   - Execute automated collection tools to gather files based on predefined criteria (e.g., file extensions).  
+   - Use malware capabilities to extract data from compromised hosts, including documents and sensitive information.  
+   - Monitor and log file access and collection activities for potential exfiltration preparation.  
+
+   Phase 3: *Data Exfiltration Preparation*  
+   - Stage collected files in temporary locations for later exfiltration.  
+   - Utilize file transfer protocols or command execution to prepare data for exfiltration.  
+   - Implement anti-analysis techniques to obfuscate data collection activities from detection.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Local File Enumeration  
+     - Examples: "Fox Kitten has searched local system resources to access sensitive documents."  
+     - Associated Phase: Data Discovery  
+     - Mapping to TTP ID: T1005  
+
+   - **Pattern Name**: Automated Data Collection  
+     - Examples: "Action RAT can collect local data from an infected machine."  
+     - Associated Phase: Data Collection  
+     - Mapping to TTP ID: T1005  
+
+   - **Pattern Name**: File Staging for Exfiltration  
+     - Examples: "APT28 has retrieved internal documents from machines inside victim environments, including by using Forfiles to stage documents before exfiltration."  
+     - Associated Phase: Data Exfiltration Preparation  
+     - Mapping to TTP ID: T1005  
+
+   - **Pattern Name**: Use of Command-Line Tools for Data Access  
+     - Examples: "QakBot can use a variety of commands, including esentutl.exe to steal sensitive data."  
+     - Associated Phase: Data Discovery  
+     - Mapping to TTP ID: T1005  
+
+   - **Pattern Name**: File Type Specific Collection  
+     - Examples: "BADNEWScrawls the victim's local drives and collects documents with the following extensions: .doc, .docx, .pdf, .ppt, .pptx, and .txt."  
+     - Associated Phase: Data Collection  
+     - Mapping to TTP ID: T1005  
+
+   - **Pattern Name**: Exfiltration via Backdoor  
+     - Examples: "Lazarus Group has collected data and files from compromised networks."  
+     - Associated Phase: Data Exfiltration Preparation  
+     - Mapping to TTP ID: T1005  

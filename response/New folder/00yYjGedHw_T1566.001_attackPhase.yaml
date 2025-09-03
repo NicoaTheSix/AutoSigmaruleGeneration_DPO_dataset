@@ -1,0 +1,46 @@
+1. **Framework Section**  
+   Phase 1: *Delivery*  
+   - Analyze email headers for spoofing indicators (e.g., "From" address discrepancies).  
+   - Monitor for common spearphishing keywords and phrases in email subjects and bodies.  
+   - Identify and categorize attachment types (e.g., .docx, .xls, .zip) in incoming emails.  
+
+   Phase 2: *Execution*  
+   - Detect user interactions with email attachments (e.g., opening, downloading).  
+   - Monitor for execution of processes initiated by opened attachments (e.g., Microsoft Office applications).  
+   - Analyze system logs for unusual file access patterns or execution of scripts/malware post-attachment interaction.  
+
+   Phase 3: *Post-Execution*  
+   - Investigate network traffic for connections to known malicious domains or IPs following attachment execution.  
+   - Monitor for persistence mechanisms (e.g., registry modifications, scheduled tasks) established by the malware.  
+   - Analyze endpoint behavior for signs of lateral movement or data exfiltration following initial compromise.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Malicious Attachment Delivery  
+     - Examples: "Sandworm Team obtained their initial foothold using Microsoft Office attachments delivered through phishing emails."  
+     - Associated Phase: Delivery  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: User Execution of Malicious Attachments  
+     - Examples: "APT32 has sent spearphishing emails with a malicious executable disguised as a document or spreadsheet."  
+     - Associated Phase: Execution  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Exploit Execution via Document Macros  
+     - Examples: "FIN4 has used spearphishing emails containing attachments with embedded malicious macros."  
+     - Associated Phase: Execution  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Use of Password-Protected Archives  
+     - Examples: "APT1 has sent spearphishing emails containing malicious attachments with password-protected ZIP files."  
+     - Associated Phase: Delivery  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Network Communication Post-Execution  
+     - Examples: "DarkHydrus has sent spearphishing emails that contained malicious Microsoft Office documents that use the 'attachedTemplate' technique to load a template from a remote server."  
+     - Associated Phase: Post-Execution  
+     - Mapping to TTP ID: T1566.001  
+
+   - **Pattern Name**: Lateral Movement Indicators  
+     - Examples: "MuddyWater has compromised third parties and used compromised accounts to send spearphishing emails with targeted attachments."  
+     - Associated Phase: Post-Execution  
+     - Mapping to TTP ID: T1566.001  

@@ -1,0 +1,7 @@
+
+   6. **Establishing Persistence**
+      - Application: Registry Editor
+      - User Action: The malicious payload creates a Registry Run key to ensure it runs at startup.
+      - Key Artifacts: Registry key created at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\MaliciousApp`.
+      - Detection: Monitor for changes to Registry Run keys and the creation of new entries that point to suspicious executables.
+   

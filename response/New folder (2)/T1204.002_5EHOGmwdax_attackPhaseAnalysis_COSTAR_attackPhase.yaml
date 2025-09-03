@@ -1,0 +1,51 @@
+1. **Framework Section**  
+   Phase 1: *Initial Access*  
+   - Focus on detection of spearphishing emails containing malicious attachments.  
+   - Monitor for user interactions with files that have common extensions (.doc, .pdf, .xls, .rtf, .scr, .exe, .lnk, .pif, .cpl, .reg).  
+   - Analyze email headers and content for signs of social engineering tactics.  
+
+   Phase 2: *Execution*  
+   - Track execution of macros in Microsoft Office documents and other file types.  
+   - Monitor for processes initiated by user actions on malicious files (e.g., double-clicking, enabling content).  
+   - Identify patterns of file access in shared directories or user desktops that may indicate user-triggered execution.  
+
+   Phase 3: *Post-Execution*  
+   - Analyze network traffic for callbacks or command and control (C2) communications initiated by executed payloads.  
+   - Monitor for persistence mechanisms that may be established following initial execution (e.g., scheduled tasks, registry modifications).  
+   - Review system logs for unusual behavior or processes spawned as a result of the executed malicious files.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Spearphishing with Malicious Attachments  
+     - Examples: "admin@338 has attempted to get victims to launch malicious Microsoft Word attachments delivered via spearphishing emails."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1204.002  
+
+   - **Pattern Name**: Macro Execution in Office Documents  
+     - Examples: "APT28 attempted to get users to click on Microsoft Office attachments containing malicious macro scripts."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1204.002  
+
+   - **Pattern Name**: User Interaction with Malicious Files  
+     - Examples: "Cobalt Group has sent emails containing malicious attachments that require users to execute a file or macro to infect the victim machine."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1204.002  
+
+   - **Pattern Name**: Social Engineering Tactics  
+     - Examples: "Dark Caracal makes their malware look like Flash Player, Office, or PDF documents in order to entice a user to click on it."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1204.002  
+
+   - **Pattern Name**: Execution via User-Triggered Actions  
+     - Examples: "FIN7 lured victims to double-click on images in the attachments they sent which would then execute the hidden LNK file."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1204.002  
+
+   - **Pattern Name**: Post-Execution Network Activity  
+     - Examples: "Emotet has relied upon users clicking on a malicious attachment delivered through spearphishing."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1204.002  
+
+   - **Pattern Name**: Persistence Mechanisms  
+     - Examples: "MuddyWater has attempted to get users to open malicious PDF attachment and to enable macros and launch malicious Microsoft Word documents delivered via spearphishing emails."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1204.002  

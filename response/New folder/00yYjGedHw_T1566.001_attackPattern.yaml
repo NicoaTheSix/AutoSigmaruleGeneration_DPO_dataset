@@ -1,0 +1,84 @@
+<output>
+Pattern Name: Malicious Attachment Delivery  
+Scenario Overview: An attacker sends a spearphishing email containing a malicious Microsoft Office document as an attachment. The email is crafted to appear legitimate, tricking the user into opening the attachment, which ultimately leads to the execution of malware on the victim's system.
+
+Attack Flow Breakdown:  
+**Phase 1: Delivery**  
+1. **Email Sent**  
+   - Application: Outlook  
+   - User Action: User receives an email with a subject line containing urgent language (e.g., "Important Update").  
+   - Key Artifacts: Email headers indicating a spoofed sender address.  
+   - Example:  
+     ```shell
+     # Analyze email headers for spoofing indicators
+     grep "From:" email.eml | grep -i "spoofed_sender@example.com"
+     ```
+
+2. **Attachment Identification**  
+   - Application: Outlook  
+   - User Action: User notices an attachment named "Invoice_2023.docx".  
+   - Key Artifacts: Attachment type is .docx, which is commonly used for macros.  
+
+**Phase 2: Execution**  
+3. **Opening the Attachment**  
+   - Application: Microsoft Word  
+   - User Action: User double-clicks the attachment to open it.  
+   - Key Artifacts: Process creation of `WINWORD.EXE`.  
+   - Example:  
+     ```shell
+     # Monitor process creation for Microsoft Word
+     Get-Process | Where-Object { $_.ProcessName -eq "WINWORD" }
+     ```
+
+4. **Macro Execution**  
+   - Application: Microsoft Word  
+   - User Action: User enables macros when prompted by the document.  
+   - Key Artifacts: Execution of a malicious macro that downloads a payload.  
+   - Example:  
+     ```shell
+     # Monitor for macro execution in Word
+     Get-WinEvent -LogName "Microsoft-Windows-Office/Operational" | Where-Object { $_.Message -like "*macro*" }
+     ```
+
+**Phase 3: Post-Execution**  
+5. **Payload Download**  
+   - Application: PowerShell  
+   - User Action: The macro executes a PowerShell command to download a malicious executable from a remote server.  
+   - Key Artifacts: Network traffic to a known malicious IP.  
+   - Example:  
+     ```shell
+     # Monitor network traffic for connections to known malicious domains
+     Get-NetTCPConnection | Where-Object { $_.RemoteAddress -eq "malicious-ip.com" }
+     ```
+
+6. **Malware Execution**  
+   - Application: PowerShell  
+   - User Action: The downloaded executable is executed silently.  
+   - Key Artifacts: Process creation of the malicious executable.  
+   - Example:  
+     ```shell
+     # Monitor for execution of the downloaded malware
+     Get-Process | Where-Object { $_.Path -like "*malicious.exe*" }
+     ```
+
+7. **Establishing Persistence**  
+   - Application: Registry  
+   - User Action: The malware modifies the registry to ensure persistence.  
+   - Key Artifacts: Registry keys created or modified.  
+   - Example:  
+     ```shell
+     # Check for registry modifications
+     Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" | Where-Object { $_.Value -like "*malicious*" }
+     ```
+
+8. **Data Exfiltration**  
+   - Application: PowerShell  
+   - User Action: The malware attempts to exfiltrate data to a remote server.  
+   - Key Artifacts: Outbound network connections to suspicious domains.  
+   - Example:  
+     ```shell
+     # Monitor for outbound connections to suspicious domains
+     Get-NetTCPConnection | Where-Object { $_.RemoteAddress -like "*suspicious-domain.com*" }
+     ```
+
+</output>

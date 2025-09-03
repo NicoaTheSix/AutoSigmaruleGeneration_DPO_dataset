@@ -1,0 +1,26 @@
+<output>
+- title: Identify Registry Key Modification for Persistence
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Detects modifications to the registry key for persistence by monitoring process activities that change the specified registry path.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Type: Process
+        Image: 'C:\\Path\\To\\MaliciousPayload.exe'
+        Cmdline: 'C:\\Path\\To\\MaliciousPayload.exe'
+      dstNode:
+        Type: Registry
+        Key: 'HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'
+      relation: RegSetValue
+  condition: selection
+  tags:
+    - ATT&CK ID: T1547.001
+    - tactic: Persistence
+  level: high
+</output>

@@ -1,0 +1,137 @@
+```yaml
+- title: Identify Initial Access via Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook when an email with the subject line "Invoice Attached" is received.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice.xlsx"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+
+---
+- title: Identify Opening the Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Track the process creation of Microsoft Excel when the user opens the malicious attachment.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice.xlsx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+
+---
+- title: Identify Macro Execution
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for the execution of macros within Excel that may trigger outbound HTTP/HTTPS requests to download a payload.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious-domain.com"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+
+---
+- title: Identify Payload Execution
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Track the execution of the downloaded payload from the public directory, which may involve cmd.exe or the payload executable itself.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\cmd.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "payload.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+
+---
+- title: Identify Establishing C2 Communication
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for outbound connections initiated by the payload to the attacker's C2 server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Users\\Public\\payload.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious-c2.com"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Command and Control
+  level: high
+
+---
+- title: Identify Post-Exploitation Activities
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Track any further command executions or data exfiltration attempts made by the attacker using established connections.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\cmd.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious-c2.com"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Exfiltration
+  level: high
+```

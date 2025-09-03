@@ -1,0 +1,51 @@
+1. **Framework Section**  
+   **Phase 1: Discovery**  
+   - Querying network connections using commands such as `netstat`, `net use`, and `net session`.  
+   - Utilizing built-in features of network devices to gather information about connected systems.  
+   - Accessing cloud environment configurations to map out Virtual Private Clouds or Virtual Networks.  
+
+   **Phase 2: Enumeration**  
+   - Collecting detailed information about active TCP and UDP connections.  
+   - Identifying logged-in users and their sessions using commands like `who -a` and `quser.exe`.  
+   - Using specialized tools or scripts to enumerate network resources and connections.  
+
+   **Phase 3: Analysis**  
+   - Analyzing the gathered data to understand the network topology and identify potential targets.  
+   - Correlating connection data with known vulnerabilities or attack vectors.  
+   - Documenting findings for further exploitation or lateral movement within the network.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Network Connection Listing  
+     - Examples: `netstat -ano >> %temp%\download`, `netstat -naop tcp`, `net use`  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1049  
+
+   - **Pattern Name**: User Session Enumeration  
+     - Examples: `who -a`, `quser.exe`  
+     - Associated Phase: Enumeration  
+     - Mapping to TTP ID: T1049  
+
+   - **Pattern Name**: Cloud Environment Mapping  
+     - Examples: Accessing Virtual Private Clouds or Virtual Networks  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1049  
+
+   - **Pattern Name**: Active Connection Monitoring  
+     - Examples: Using tools like MAPMAKER, `netstat -an`, `GetExtendedTcpTable`  
+     - Associated Phase: Enumeration  
+     - Mapping to TTP ID: T1049  
+
+   - **Pattern Name**: Network Resource Enumeration  
+     - Examples: Using `WNetOpenEnumW`, `WNetEnumResourceW`  
+     - Associated Phase: Enumeration  
+     - Mapping to TTP ID: T1049  
+
+   - **Pattern Name**: RDP Session Discovery  
+     - Examples: `RDPConnectionParser`, `quser.exe`  
+     - Associated Phase: Enumeration  
+     - Mapping to TTP ID: T1049  
+
+   - **Pattern Name**: Network Topology Analysis  
+     - Examples: Gathering user, IP address, and server data related to RDP sessions  
+     - Associated Phase: Analysis  
+     - Mapping to TTP ID: T1049  

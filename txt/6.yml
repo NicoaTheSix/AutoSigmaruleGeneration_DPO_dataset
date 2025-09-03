@@ -1,0 +1,34 @@
+title: Detect Office or Scripted Process Spawning Downloader or Payload
+id: f29d123e-449e-45d7-841c-f640c772d3f0
+description: Detects Office or scripting engines spawning processes commonly used for downloading or executing payloads.
+status: production
+author: auto-generated
+date: 2025-07-13
+logsource:
+  category: custom
+  product: windows
+detection:
+  selection:
+    relation: Process Create
+    srcNode.Image|endswith:
+      - winword.exe
+      - excel.exe
+      - powerpnt.exe
+      - powershell.exe
+      - wscript.exe
+      - mshta.exe
+      - cmd.exe
+    dstNode.Image|endswith:
+      - powershell.exe
+      - curl.exe
+      - certutil.exe
+      - bitsadmin.exe
+      - rundll32.exe
+      - mshta.exe
+      - wget.exe
+      - .exe
+  condition: selection
+tags:
+  - attack.t1566.001
+  - attack.execution
+level: high

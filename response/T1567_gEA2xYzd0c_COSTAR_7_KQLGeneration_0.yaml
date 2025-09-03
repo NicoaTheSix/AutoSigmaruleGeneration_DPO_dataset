@@ -1,0 +1,2 @@
+
+Image: "C:\\Windows\\System32\\cmd.exe" AND Cmdline: "*del C:\\Users\\User\\Downloads\\payload.exe*" AND Type: Process

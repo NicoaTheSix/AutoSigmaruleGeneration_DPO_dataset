@@ -1,0 +1,51 @@
+1. **Framework Section**  
+   Phase 1: *Registry Interaction*  
+   - Monitor for use of the `reg.exe` command-line utility for registry modifications.  
+   - Analyze logs for access to sensitive registry keys, particularly those requiring elevated permissions (e.g., `HKEY_LOCAL_MACHINE`, `HKEY_CURRENT_USER`).  
+   - Detect unusual patterns of registry key creation or deletion, especially in common persistence locations (e.g., `Run` keys).  
+
+   Phase 2: *Defense Evasion*  
+   - Identify modifications to registry keys that disable security features (e.g., UAC, Windows Defender).  
+   - Track changes to registry values that could indicate obfuscation or concealment of malicious payloads (e.g., null character prepending).  
+   - Monitor for registry changes that enable macros or other potentially risky features in applications (e.g., Microsoft Office).  
+
+   Phase 3: *Persistence Mechanisms*  
+   - Detect the creation of registry keys associated with persistence (e.g., `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`).  
+   - Analyze for modifications that allow for the execution of malicious payloads upon system startup or user login.  
+   - Monitor for registry entries that store configuration data for malware or backdoors.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Registry Modification for Execution  
+     - Examples: "Sandworm Team modified in-registry Internet settings to lower internet security before launching rundll32.exe."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Disabling Security Features  
+     - Examples: "Wizard Spider modified the WDigest registry key to allow plaintext credentials to be cached in memory."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Persistence via Registry Keys  
+     - Examples: "Agent Tesla can achieve persistence by modifying Registry key entries."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Obfuscation Techniques  
+     - Examples: "Adversaries may prepend key names with a null character to hide them."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Credential Storage Manipulation  
+     - Examples: "APT41 used a malware variant called GOODLUCK to modify the registry in order to steal credentials."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Remote Registry Access  
+     - Examples: "Once Shamoon has access to a network share, it enables the RemoteRegistry service on the target system."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1112  
+
+   - **Pattern Name**: Registry Key Cleanup  
+     - Examples: "PCShare can delete its persistence mechanisms from the registry."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1112  

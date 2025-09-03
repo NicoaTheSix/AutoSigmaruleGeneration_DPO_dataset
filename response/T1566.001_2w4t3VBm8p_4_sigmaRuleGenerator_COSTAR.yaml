@@ -1,0 +1,27 @@
+<output>
+- title: Identify Execution of Malicious Payload
+- id: 123e4567-e89b-12d3-a456-426614174000
+- description: Detects the execution of a malicious payload from the Downloads folder initiated by Windows Explorer.
+- status: production
+- author: auto-generated
+- date: 2023-10-01
+- logsource:
+    category: custom
+    product: windows
+- detection:
+    selection:
+        srcNode:
+            Image: 'C:\\Windows\\explorer.exe'
+            Cmdline: 'C:\\Windows\\explorer.exe'
+            Type: Process
+        dstNode:
+            Image: 'C:\\Users\\<username>\\Downloads\\payload.exe'
+            Cmdline: 'C:\\Users\\<username>\\Downloads\\payload.exe'
+            Type: Process
+        relation: 'Process Create'
+- condition: selection
+- tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+- level: high
+</output>

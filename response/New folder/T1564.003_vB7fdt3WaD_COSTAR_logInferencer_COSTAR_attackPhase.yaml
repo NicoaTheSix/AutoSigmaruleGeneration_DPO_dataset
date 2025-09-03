@@ -1,0 +1,59 @@
+1. **Title**: Detection of Concealment via PowerShell  
+   **Details**:  
+   - Identify events where `srcNode.Image` is `powershell.exe`.  
+   - Map `srcNode.Cmdline` to include `-ExecutionPolicy Bypass -File "C:\\Users\\User\\Downloads\\malicious_script.ps1" -WindowStyle Hidden`.  
+   - Ensure `relation` is `Process Create`.  
+   - Validate that `dstNode.Type` is `Process` and `dstNode.Image` corresponds to the malicious PowerShell script.  
+   - Check for network connections to known C2 servers during the same timeframe.
+
+2. **Title**: Detection of Hidden Window Creation  
+   **Details**:  
+   - Identify events where `srcNode.Image` is `cmd.exe`.  
+   - Map `srcNode.Cmdline` to include `start /B "Hidden" "C:\\Path\\To\\malicious.exe"`.  
+   - Ensure `relation` is `Process Create`.  
+   - Validate that `dstNode.Type` is `Process` and `dstNode.Image` corresponds to `malicious.exe`.  
+   - Check for API calls related to `GetConsoleWindow` and `ShowWindow` in Windows Event Logs.
+
+3. **Title**: Detection of Registry Modification for Concealment  
+   **Details**:  
+   - Identify events where `srcNode.Type` is `Registry`.  
+   - Map `relation` to include `RegSetValue` for the path `HKCU:\\Console` with the name `WindowPosition`.  
+   - Validate that `dstNode.Key` is `HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run` and the value includes the PowerShell command with `-WindowStyle Hidden`.
+
+4. **Title**: Detection of Execution of Hidden Applications  
+   **Details**:  
+   - Identify events where `srcNode.Image` is `cmd.exe`.  
+   - Map `srcNode.Cmdline` to include `start /B "Hidden" "C:\\Path\\To\\hidden_app.exe"`.  
+   - Ensure `relation` is `Process Create`.  
+   - Validate that `dstNode.Type` is `Process` and `dstNode.Image` corresponds to `hidden_app.exe`.  
+   - Check for network traffic to known C2 servers during the same timeframe.
+
+5. **Title**: Detection of Remote Access via Hidden Interfaces  
+   **Details**:  
+   - Identify events where `srcNode.Image` is `cmd.exe`.  
+   - Map `srcNode.Cmdline` to include `start /B "Hidden" "C:\\Path\\To\\hidden_vnc.exe"`.  
+   - Ensure `relation` is `Process Create`.  
+   - Validate that `dstNode.Type` is `Process` and `dstNode.Image` corresponds to `hidden_vnc.exe`.  
+   - Check for network connections to the attacker's VNC server.
+
+6. **Title**: Detection of Use of API for Window Concealment  
+   **Details**:  
+   - Identify events where `srcNode.Image` is `malicious.exe`.  
+   - Map `srcNode.Cmdline` to include the execution command for `malicious.exe`.  
+   - Ensure `relation` is `Process Create`.  
+   - Validate that API calls to `ShowWindow` are logged in Windows Event Logs.
+
+7. **Title**: Detection of Execution of Scripts in Hidden Mode  
+   **Details**:  
+   - Identify events where `srcNode.Image` is `powershell.exe`.  
+   - Map `srcNode.Cmdline` to include `-ExecutionPolicy Bypass -File "C:\\Path\\To\\malicious_script.ps1" -WindowStyle Hidden`.  
+   - Ensure `relation` is `Process Create`.  
+   - Validate that `dstNode.Type` is `Process` and `dstNode.Image` corresponds to the malicious PowerShell script.  
+   - Check for network connections to known C2 servers during the same timeframe.
+
+8. **Title**: Detection of Concealment of Scheduled Tasks  
+   **Details**:  
+   - Identify events where `srcNode.Type` is `Task Scheduler`.  
+   - Map `relation` to include task creation commands that run in hidden mode.  
+   - Validate that the task name corresponds to `MaliciousTask` and includes the PowerShell command with `-WindowStyle Hidden`.  
+   - Check Task Scheduler logs for execution events related to the scheduled task.

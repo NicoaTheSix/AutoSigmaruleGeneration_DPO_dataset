@@ -1,0 +1,23 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Monitor for the creation of emails with the subject line "Important: Invoice Attached".  
+   - Log events related to the opening of emails that contain executable file types.
+
+2. **Map Opening of the Malicious Attachment**  
+   - Detect the execution of Microsoft Excel with the command line that includes the opening of `Invoice_2023.xlsx`.  
+   - Log the execution of macros, specifically looking for `Auto_Open()` in Excel files.
+
+3. **Validate Execution of the Payload**  
+   - Monitor for PowerShell commands that include `Invoke-WebRequest` to download files, particularly those targeting `http://malicious-site.com/payload.exe`.  
+   - Log the creation of new executable files in the Downloads directory, specifically `payload.exe`.
+
+4. **Track Establishing Remote Access**  
+   - Monitor for the creation of new Windows services, specifically looking for a service named `AnyDesk`.  
+   - Log service installation events that indicate the command `sc create AnyDesk binPath= "C:\\Program Files\\AnyDesk\\AnyDesk.exe" start= auto` was executed.
+
+5. **Analyze Command and Control Communication**  
+   - Monitor outbound network traffic for connections to the IP address `192.0.2.1` on port 443.  
+   - Log any patterns indicative of command and control communications, especially those involving unusual ports or known malicious IP addresses.
+
+6. **Detect Lateral Movement and Data Exfiltration**  
+   - Monitor for unusual file access patterns and large outbound file transfers, particularly involving `confidential_data.zip`.  
+   - Log AnyDesk sessions initiated from the compromised machine, especially those that include commands to send files to `192.0.2.1`.

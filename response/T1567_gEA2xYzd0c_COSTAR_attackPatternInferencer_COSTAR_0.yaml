@@ -1,0 +1,12 @@
+
+1. **Pattern Name**: Spearphishing Attachment
+   - Scenario Overview: An attacker sends a spearphishing email with a malicious Microsoft Office document attached, leveraging social engineering techniques to trick the user into opening the attachment, which then executes a macro to download additional payloads and establish persistence.
+
+   Attack Flow Breakdown:
+   <output>
+   1. **Email Delivery**
+      - Application: Outlook
+      - User Action: User receives an email from a spoofed address (e.g., admin@338).
+      - Key Artifacts: Email headers indicating spoofing, attachment named "Invoice.docx".
+      - Detection: Monitor for emails with suspicious "From" addresses and attachments with common spearphishing file types.
+   

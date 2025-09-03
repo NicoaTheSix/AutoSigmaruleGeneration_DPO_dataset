@@ -1,0 +1,52 @@
+1. **Identify Initial Access via Email**  
+   - Monitor for the creation of processes related to Outlook when an email with the subject line "Invoice Attached" is received.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice.xlsx"  
+
+2. **Identify Opening the Malicious Attachment**  
+   - Track the process creation of Microsoft Excel when the user opens the malicious attachment.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" (or similar path for Excel)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice.xlsx"  
+     - `relation`: "Process Create"  
+
+3. **Identify Macro Execution**  
+   - Monitor for the execution of macros within Excel that may trigger outbound HTTP/HTTPS requests to download a payload.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-domain.com"  
+     - `relation`: "TCP Connect"  
+
+4. **Identify Payload Execution**  
+   - Track the execution of the downloaded payload from the public directory, which may involve `cmd.exe` or the payload executable itself.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\cmd.exe" (or path to the payload executable)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "payload.exe"  
+     - `relation`: "Process Create"  
+
+5. **Identify Establishing C2 Communication**  
+   - Monitor for outbound connections initiated by the payload to the attacker's C2 server.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Users\\Public\\payload.exe"  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-c2.com"  
+     - `relation`: "TCP Connect"  
+
+6. **Identify Post-Exploitation Activities**  
+   - Track any further command executions or data exfiltration attempts made by the attacker using established connections.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\cmd.exe" (or other relevant executables)  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-c2.com"  
+     - `relation`: "TCP Connect"  

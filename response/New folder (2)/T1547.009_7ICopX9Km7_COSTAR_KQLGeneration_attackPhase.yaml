@@ -1,0 +1,8 @@
+<output>
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\\\Windows\\\\explorer.exe" AND dstNode.Type: "File" AND dstNode.Name: "MaliciousApp.lnk" AND relation: "CreateFile") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\\\Windows\\\\explorer.exe" AND dstNode.Type: "File" AND dstNode.Name: "Telegram.lnk" AND relation: "WriteFile") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\\\Windows\\\\explorer.exe" AND dstNode.Type: "Process" AND dstNode.Image: "C:\\\\Path\\\\To\\\\malware.exe" AND relation: "Process Create") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\\\Windows\\\\reg.exe" AND dstNode.Type: "Registry" AND dstNode.Key: "HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run" AND relation: "RegSetValue") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\\\Windows\\\\explorer.exe" AND dstNode.Type: "Process" AND dstNode.Image: "C:\\\\Path\\\\To\\\\MaliciousExecutable.exe" AND relation: "Process Create") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\\\Windows\\\\explorer.exe" AND dstNode.Type: "File" AND dstNode.Name: "Google Chrome.lnk" AND relation: "WriteFile")
+</output>

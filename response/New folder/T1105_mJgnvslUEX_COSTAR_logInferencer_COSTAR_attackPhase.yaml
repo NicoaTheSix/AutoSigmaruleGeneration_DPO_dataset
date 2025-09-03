@@ -1,0 +1,79 @@
+1. **Define Initial Access Detection**  
+   - Identify events where a user opens a spearphishing email with a malicious attachment in Outlook.  
+   - Map to the event schema:  
+     - `srcNode.Name`: "Outlook"  
+     - `dstNode.Name`: "invoice.docx" (or similar malicious attachment)  
+     - `relation`: "Process Create" (for Outlook process)  
+     - Log the event of opening the attachment.
+
+2. **Detect Execution of Malicious Document**  
+   - Monitor for the execution of macros in Microsoft Word when the malicious document is opened.  
+   - Map to the event schema:  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\OfficeXX\\WINWORD.EXE" (replace XX with the version number)  
+     - `dstNode.Image`: "invoice.docx"  
+     - `relation`: "Process Create"  
+     - Log the execution of the macro that triggers the PowerShell command.
+
+3. **Capture PowerShell Command Execution**  
+   - Detect the execution of PowerShell commands that download files from external URLs.  
+   - Map to the event schema:  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Name`: "payload.ps1" (or similar)  
+     - `relation`: "Process Create"  
+     - Log the PowerShell command executed, specifically the URL accessed.
+
+4. **Monitor Payload Download and Execution**  
+   - Identify events where the downloaded payload is executed.  
+   - Map to the event schema:  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Image`: "C:\\Path\\To\\Downloaded\\payload.ps1"  
+     - `relation`: "Process Create"  
+     - Log the execution of the downloaded script.
+
+5. **Track Command and Control Communication**  
+   - Monitor for outbound connections to known malicious IPs or domains initiated by PowerShell.  
+   - Map to the event schema:  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Dstaddress`: "malicious-c2.com" (or similar)  
+     - `relation`: "TCP Connect"  
+     - Log the command and control communication attempts.
+
+6. **Identify Secondary Payload Retrieval**  
+   - Detect PowerShell commands that download secondary payloads from the C2 server.  
+   - Map to the event schema:  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Name`: "secondary_payload.exe"  
+     - `relation`: "Process Create"  
+     - Log the execution of the PowerShell command that retrieves the secondary payload.
+
+7. **Capture Execution of Secondary Payload**  
+   - Monitor for the execution of the secondary payload after it has been downloaded.  
+   - Map to the event schema:  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Image`: "C:\\Users\\Victim\\Downloads\\secondary_payload.exe"  
+     - `relation`: "Process Create"  
+     - Log the execution event of the secondary payload.
+
+8. **Detect Persistence Mechanisms**  
+   - Identify changes to the registry or creation of scheduled tasks by the secondary payload.  
+   - Map to the event schema:  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Key`: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" (or similar)  
+     - `relation`: "RegSetValue"  
+     - Log any registry modifications or scheduled task creations.
+
+9. **Monitor Lateral Tool Transfer**  
+   - Detect the use of tools like PsExec for lateral movement across the network.  
+   - Map to the event schema:  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Image`: "C:\\Temp\\PsExec.exe"  
+     - `relation`: "Process Create"  
+     - Log the execution of PsExec and any remote command executions.
+
+10. **Establish Control on Lateral Systems**  
+    - Monitor for remote management tool connections (e.g., WinRM, RDP) from unusual sources.  
+    - Map to the event schema:  
+      - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+      - `dstNode.Dstaddress`: "Target Machine IP"  
+      - `relation`: "TCP Connect"  
+      - Log any remote session establishment attempts.

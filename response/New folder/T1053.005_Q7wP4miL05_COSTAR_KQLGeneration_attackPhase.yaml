@@ -1,0 +1,18 @@
+<output>
+subject: "*Invoice Attached*" AND sender_domain: "malicious.com"
+</output>
+<output>
+process_name: "excel.exe" AND file_name: "Invoice.xlsx"
+</output>
+<output>
+process_name: "powershell.exe" AND command_line: "*Invoke-WebRequest*"
+</output>
+<output>
+process_name: "payload.exe"
+</output>
+<output>
+process_name: "schtasks.exe" AND command_line: "*create*MaliciousTask*"
+</output>
+<output>
+process_name: "powershell.exe" AND command_line: "*Invoke-WebRequest*" AND destination: "malicious.com"
+</output>

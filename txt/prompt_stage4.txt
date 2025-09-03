@@ -1,0 +1,85 @@
+C — Context  
+You have identified key detection phases for the MITRE ATT&CK technique “Phishing: Spearphishing Attachment” {1. **Detect Suspicious Attachment Delivery via Email-Related Processes**
+
+   * **Details:**
+     Identify file creation events (`relation` = `"CreateFile"` or `"WriteFile"`) where the `srcNode.Image` matches common email clients (e.g., `outlook.exe`, `thunderbird.exe`, webmail browser paths) and the `dstNode.Name` or `dstNode.Image` ends with high-risk attachment extensions (`.docm`, `.xlsm`, `.exe`, `.lnk`, `.js`, `.vbs`, `.zip`, `.rar`, `.iso`). Log the attachment name and path for context.
+
+2. **Detect File Extraction or Archive Decompression to User Folders**
+
+   * **Details:**
+     Identify file creation events where the `srcNode.Image` is a decompression utility (e.g., `winzip.exe`, `7z.exe`, `explorer.exe`) or user-driven extraction, and `dstNode.Name` or `dstNode.Image` ends with suspicious extensions (as above). Focus on extractions into user directories such as `Downloads`, `Desktop`, or `Temp`.
+
+3. **Detect User-Initiated Execution of Suspicious Attachments**
+
+   * **Details:**
+     Identify process creation events (`relation` = `"Process Create"`) where the `srcNode.Image` is an email client or web browser, and the `dstNode.Image` matches Office applications (`winword.exe`, `excel.exe`, etc.), PDF readers, script engines (`wscript.exe`, `mshta.exe`, etc.), or files with suspicious double extensions (`dstNode.Image` or `dstNode.Cmdline` matches patterns like `*.pdf.exe`, `*.doc.lnk`). Validate that the `dstNode.Cmdline` references a path under user-controlled folders.
+
+4. **Detect Macro or Script Engine Activation from Office Apps**
+
+   * **Details:**
+     Identify process creation events where the `srcNode.Image` is an Office application and the `dstNode.Image` is a scripting engine (`powershell.exe`, `cmd.exe`, `wscript.exe`, `mshta.exe`, `rundll32.exe`). Focus on cases where the parent process is Office and the child process command line includes suspicious or obfuscated arguments (e.g., `-EncodedCommand`, remote URLs, or temp file writes).
+
+5. **Detect File/Extension Masquerading on Execution**
+
+   * **Details:**
+     Identify process creation events where `dstNode.Image` has a double extension or misleading extension/icon (e.g., `.pdf.exe`, `.docx.lnk`), especially when the `srcNode.Image` is a user-facing process (`explorer.exe`, email client, or browser). Correlate with recently created files in user folders.
+
+6. **Detect Office or Scripted Process Spawning Downloader or Payload**
+
+   * **Details:**
+     Identify process creation chains where an Office or scripting process (`srcNode.Image` = `winword.exe`, `excel.exe`, `powershell.exe`, etc.) spawns a new process (`dstNode.Image` = `powershell.exe`, custom binary, or suspicious child). Correlate with command lines that reference network actions, payload downloads, or execution of newly created files.
+
+7. **Detect Network Connections from Unusual Processes Post-Execution**
+
+   * **Details:**
+     Identify network events (`relation` = `"TCP Connect"`) where the `srcNode.Image` is a non-browser/non-system process, especially one previously created as a child of Office or scripting engine, and `dstNode.Dstaddress` or `dstNode.Port` matches known C2 infrastructure, suspicious domains, or high-entropy IPs. Prioritize processes executing shortly after macro/script activation.
+
+8. **Detect Persistence or System Modification on Initial Access**
+
+   * **Details:**
+     Identify registry or file events (`relation` = `"RegSetValue"`, `"CreateFile"`, `"WriteFile"`) initiated by suspicious processes (payloads, scripts, or Office children) that target common persistence locations:
+
+     * Registry: `dstNode.Key` matches `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` or similar autorun keys.
+     * File: `dstNode.Name` references `Startup` folders or known persistence paths.
+
+9. **Correlate Multi-Stage Attack Chains Across User Context**
+
+   * **Details:**
+     Link events across the above detections by user account, timestamp proximity, and process ancestry (`srcNode.Pid` → `dstNode.Pid`). Enable context-aware alerting by correlating the delivery, execution, payload deployment, and persistence phases for high-fidelity detection of spearphishing attachment scenarios.
+
+10. **Tag and Enrich Detected Events with TTP and Risk Context**
+
+    * **Details:**
+      For every event matching the above logic, add a label field `label: "T1566.001"` and enrich with contextual fields (e.g., suspicious sender, attachment name, process tree, network indicators) to support incident response and further rule refinement.
+} and now need to translate those phases into Sigma rules.
+
+O — Objective  
+Produce a series of complete, individual Sigma rules—one per detection phase—fully compliant with the specified structure.
+
+S — Style  
+• Valid YAML only  
+• No explanatory text or JSON examples  
+• Follow Sigma conventions and best practices exactly  
+
+T — Tone  
+Precise, technical, and authoritative.
+
+A — Audience  
+Sigma rule authors and cybersecurity detection engineers implementing these rules.
+
+R — Response Format  
+A single Markdown code block containing multiple YAML rule definitions, separated by `---`. Each rule must include:
+- title  
+- id (UUID)  
+- description  
+- status: production  
+- author: auto-generated  
+- date: YYYY-MM-DD  
+- logsource:  
+  - category: custom  
+  - product: windows  
+- detection:  
+  - block named `selection` only  
+- condition: `selection`  
+- tags (ATT&CK ID and tactic)  
+- level (high/medium/low)  

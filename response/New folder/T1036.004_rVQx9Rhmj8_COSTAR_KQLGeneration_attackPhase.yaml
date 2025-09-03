@@ -1,0 +1,8 @@
+<output>
+(srcNode: "Microsoft Outlook" AND relation: "email interaction" AND dstNode: "Invoice Attached" AND sender: "invoice@trustedcompany.com") OR 
+(srcNode: "Microsoft Excel" AND relation: "process creation" AND dstNode: "Invoice_12345.xlsm" AND command_line: "*macro execution*") OR 
+(srcNode: "PowerShell" AND relation: "process creation" AND dstNode: "C:\\\\Users\\\\Victim\\\\Downloads\\\\payload.exe") OR 
+(srcNode: "Task Scheduler" AND relation: "process creation" AND dstNode: "Windows Update Service" AND command: "C:\\\\Users\\\\Victim\\\\Downloads\\\\payload.exe") OR 
+(srcNode: "Task Scheduler" AND relation: "execution" AND dstNode: "C:\\\\Users\\\\Victim\\\\Downloads\\\\payload.exe") OR 
+(srcNode: "payload process" AND relation: "network activity" AND dstNode: "http://malicious-server.com")
+</output>

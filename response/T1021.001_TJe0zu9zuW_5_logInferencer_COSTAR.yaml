@@ -1,0 +1,21 @@
+<output>
+1. **Identify Scheduled Task Creation for Persistence**  
+   - Monitor for events where the `srcNode` is a process responsible for creating scheduled tasks (e.g., `schtasks.exe`).  
+   - Set the `dstNode` to reflect the scheduled task entry with the name "MaliciousTask".  
+   - Ensure the `relation` is set to "Process Create" for the task creation process.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\schtasks.exe",
+         "Cmdline": "schtasks /create /tn \"MaliciousTask\" /tr \"C:\\path\\to\\malicious.exe\" /sc onstart",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "MaliciousTask",
+         "Type": "Registry" // Assuming the task is stored in the registry
+       },
+       "relation": "Process Create"
+     }
+     ```
+</output>

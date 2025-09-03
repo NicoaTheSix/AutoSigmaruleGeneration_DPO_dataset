@@ -1,0 +1,68 @@
+<output>
+Pattern Name: Spearphishing Attachment
+
+Scenario Overview: This attack scenario involves an attacker sending a malicious email with an attachment designed to exploit a vulnerability in a commonly used office application. The user opens the attachment, which triggers a series of events leading to the execution of a payload that establishes a foothold in the victim's environment. The attack leverages multiple applications, including email clients, web browsers, and office suites, to achieve its objectives.
+
+Attack Flow Breakdown:
+
+**Stage 1: Initial Access via Email**
+- **Application Involved**: Outlook (or any email client)
+- **User Action**: The user receives an email with a subject line that appears legitimate (e.g., "Invoice Attached"). The user opens the email and downloads the attached file (e.g., `Invoice.docx`).
+- **Key Artifacts**: Email headers, attachment file (`Invoice.docx`), and user interaction logs.
+
+```shell
+# Log the email access and attachment download
+Get-EventLog -LogName Application -InstanceId 4624 | Where-Object { $_.Message -like "*Invoice.docx*" }
+```
+
+**Stage 2: Exploitation of the Document**
+- **Application Involved**: Microsoft Word
+- **User Action**: The user opens the `Invoice.docx` file, which contains a macro designed to execute a PowerShell command.
+- **Key Artifacts**: Macro code within the document, process creation logs for `WINWORD.EXE`.
+
+```shell
+# Monitor for macro execution in Word documents
+Get-WinEvent -LogName Microsoft-Windows-Security-Auditing | Where-Object { $_.Message -like "*WINWORD.EXE*" }
+```
+
+**Stage 3: Payload Execution**
+- **Application Involved**: PowerShell
+- **User Action**: The macro executes a PowerShell command that downloads a malicious payload from a remote server (e.g., `http://malicious.com/payload.exe`).
+- **Key Artifacts**: PowerShell command logs, network traffic to the malicious URL, and downloaded file (`payload.exe`).
+
+```shell
+# Capture PowerShell command execution
+Get-WinEvent -LogName Microsoft-Windows-PowerShell/Operational | Where-Object { $_.Message -like "*Invoke-WebRequest*" }
+```
+
+**Stage 4: Establishing Persistence**
+- **Application Involved**: Windows Task Scheduler
+- **User Action**: The downloaded payload (`payload.exe`) sets up a scheduled task to ensure it runs on system startup.
+- **Key Artifacts**: Scheduled task logs, process creation logs for `schtasks.exe`.
+
+```shell
+# Monitor for scheduled task creation
+Get-WinEvent -LogName Microsoft-Windows-TaskScheduler/Operational | Where-Object { $_.Message -like "*Create*" }
+```
+
+**Stage 5: Command and Control Communication**
+- **Application Involved**: PowerShell or custom executable
+- **User Action**: The payload initiates a connection to the attacker's command and control (C2) server to receive further instructions.
+- **Key Artifacts**: Outbound network connections to the C2 server, logs of the executable's network activity.
+
+```shell
+# Capture outbound connections to known malicious IPs
+Get-NetTCPConnection | Where-Object { $_.RemoteAddress -eq "malicious.com" }
+```
+
+**Stage 6: Data Exfiltration**
+- **Application Involved**: Various applications (e.g., PowerShell, FTP client)
+- **User Action**: The attacker uses the established connection to exfiltrate sensitive data from the victim's machine.
+- **Key Artifacts**: Logs of data transfer activities, file access logs for sensitive files.
+
+```shell
+# Monitor for large outbound data transfers
+Get-NetTCPConnection | Where-Object { $_.State -eq "Established" -and $_.RemotePort -eq 21 }
+```
+
+</output>

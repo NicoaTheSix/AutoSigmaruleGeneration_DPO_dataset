@@ -1,0 +1,26 @@
+<output>
+- title: Identify Cleanup and Covering Tracks via Command Execution
+- id: 123e4567-e89b-12d3-a456-426614174000
+- description: Detects command execution that targets temporary files for deletion, indicating potential cleanup activities.
+- status: production
+- author: auto-generated
+- date: 2023-10-01
+- logsource:
+    category: custom
+    product: windows
+- detection:
+    selection:
+        srcNode:
+            Image: 'C:\\Windows\\System32\\cmd.exe'
+            Cmdline: '*del /f /q %temp%\\*'
+            Type: Process
+        dstNode:
+            Name: '%temp%\\*'
+            Type: File
+        relation: Process Create
+- condition: selection
+- tags:
+    - T1070
+    - Defense Evasion
+- level: high
+</output>

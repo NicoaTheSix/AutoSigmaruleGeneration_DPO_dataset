@@ -1,0 +1,41 @@
+1. **Framework Section**  
+   Phase 1: *Discovery*  
+   - Focus on command execution patterns that enumerate local accounts (e.g., `net user`, `dscl . list /Users`, `esxcli system account list`).  
+   - Monitor for file access patterns related to user account information (e.g., `/etc/passwd`, `ntuser.dat`, `UserClass.dat`).  
+   - Analyze process creation events for tools/scripts that perform account enumeration (e.g., PowerShell scripts, custom malware).  
+
+   Phase 2: *Information Gathering*  
+   - Identify and log the use of built-in commands and utilities that gather user account information (e.g., `net localgroup`, `id`, `groups`).  
+   - Track the output of commands that may be redirected to files (e.g., `>> %temp%\\download`).  
+   - Monitor for network activity that may indicate remote enumeration of accounts (e.g., commands executed against domain controllers).  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Local Account Enumeration via Command Line  
+     - Examples: `net user`, `net localgroup`, `dscl . list /Users`  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1087.001  
+
+   - **Pattern Name**: File Access for User Information  
+     - Examples: Accessing `/etc/passwd`, `ntuser.dat`, `UserClass.dat`  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1087.001  
+
+   - **Pattern Name**: Output Redirection for Account Data  
+     - Examples: `net user >> %temp%\\download`, `cmd.exe /c net user {Username}`  
+     - Associated Phase: Information Gathering  
+     - Mapping to TTP ID: T1087.001  
+
+   - **Pattern Name**: Use of Scripting for Account Discovery  
+     - Examples: PowerShell-based scripts like POWERPOST, tools like BloodHound  
+     - Associated Phase: Information Gathering  
+     - Mapping to TTP ID: T1087.001  
+
+   - **Pattern Name**: Network Enumeration of User Accounts  
+     - Examples: `net user /domain`, `net group "domain admins" /domain`  
+     - Associated Phase: Information Gathering  
+     - Mapping to TTP ID: T1087.001  
+
+   - **Pattern Name**: Process Monitoring for User Discovery  
+     - Examples: Monitoring processes that access user account information (e.g., `cmd.exe`, `powershell.exe`)  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1087.001  

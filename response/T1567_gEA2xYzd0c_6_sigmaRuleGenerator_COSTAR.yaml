@@ -1,0 +1,25 @@
+<output>
+- title: Identify Data Exfiltration via PowerShell
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Detects potential data exfiltration attempts using PowerShell to upload files to cloud services.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
+        Cmdline|contains: 'Invoke-WebRequest -InFile'
+      dstNode:
+        Dstaddress|contains: 'cloudservice.com'
+        Port: 443
+      relation: 'Process Create'
+  condition: selection
+  tags:
+    - T1071.001
+    - exfiltration
+  level: high
+</output>

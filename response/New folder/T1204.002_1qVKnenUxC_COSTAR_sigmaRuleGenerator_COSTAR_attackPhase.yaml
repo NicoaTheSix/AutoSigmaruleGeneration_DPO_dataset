@@ -1,0 +1,288 @@
+```yaml
+- title: Monitor for Spearphishing Email Attachments
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Identify email logs where the sender's address is from an external domain and the attachment has a .docm extension. This indicates a potential spearphishing attempt.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      sender_domain: external
+      attachment_extension: ".docm"
+  condition: selection
+  tags:
+    - T1566
+    - phishing
+  level: high
+---
+- title: Detect Process Creation from Outlook to Word
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Map process creation events where WINWORD.EXE is initiated by OUTLOOK.EXE with a .docm file in the command line. This indicates that a user has opened a potentially malicious Word document.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      process_name: "WINWORD.EXE"
+      parent_process_name: "OUTLOOK.EXE"
+      command_line: "*\\.docm"
+  condition: selection
+  tags:
+    - T1203
+    - execution
+  level: high
+---
+- title: Track Macro Execution in Microsoft Word
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor logs for macro execution events within Microsoft Word documents, specifically looking for VBAProject execution logs. This indicates that a macro has been enabled and executed, potentially leading to malicious activity.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      event_id: 1001
+      macro_execution: "VBAProject"
+  condition: selection
+  tags:
+    - T1059
+    - execution
+  level: medium
+---
+- title: Capture PowerShell Command Execution
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Track PowerShell command logs that show execution of Invoke-WebRequest or Start-Process commands. This indicates that a macro may have executed a command to download and run a malicious payload.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      command_line: "*Invoke-WebRequest*"
+      or:
+        - command_line: "*Start-Process*"
+  condition: selection
+  tags:
+    - T1059
+    - execution
+  level: high
+---
+- title: Monitor Registry Modifications for Persistence
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Identify registry changes in HKCU\Software\Microsoft\Windows\CurrentVersion\Run that add new entries. This indicates that a payload is attempting to establish persistence on the system.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      registry_path: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+      action: "create"
+  condition: selection
+  tags:
+    - T1547
+    - persistence
+  level: high
+---
+- title: Analyze Network Traffic for C2 Communication
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Monitor network logs for outbound connections to known malicious IP addresses or domains. This indicates that the compromised system is attempting to communicate with an attacker's command and control server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      destination_ip: "malicious_ip_list"
+  condition: selection
+  tags:
+    - T1071
+    - command_and_control
+  level: high
+---
+- title: Detect Malicious Macro Execution in Excel
+  id: 123e4567-e89b-12d3-a456-426614174006
+  description: Identify process creation events where EXCEL.EXE is initiated by OUTLOOK.EXE with a .xlsm file in the command line. This indicates that a user has opened a potentially malicious Excel document.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      process_name: "EXCEL.EXE"
+      parent_process_name: "OUTLOOK.EXE"
+      command_line: "*\\.xlsm"
+  condition: selection
+  tags:
+    - T1203
+    - execution
+  level: high
+---
+- title: Capture JavaScript File Execution from ZIP Extraction
+  id: 123e4567-e89b-12d3-a456-426614174007
+  description: Track file system logs showing extraction events from ZIP files and the creation of JavaScript files in user directories. This indicates that a user has extracted a potentially malicious JavaScript file.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      file_extension: ".js"
+      extraction_event: true
+  condition: selection
+  tags:
+    - T1203
+    - execution
+  level: medium
+---
+- title: Monitor for Execution of Malicious Installers
+  id: 123e4567-e89b-12d3-a456-426614174008
+  description: Identify instances where executable files (e.g., Setup.exe) are run from user directories. This indicates that a user has executed a potentially malicious installer.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      file_name: "Setup.exe"
+      file_path: "user_directory"
+  condition: selection
+  tags:
+    - T1203
+    - execution
+  level: high
+---
+- title: Detect Double Extension Files
+  id: 123e4567-e89b-12d3-a456-426614174009
+  description: Monitor for emails with attachments that have double extensions (e.g., .pdf.exe). This indicates a potential file type masquerading attempt to trick users into executing malicious files.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      attachment_extension: "*.pdf.exe"
+  condition: selection
+  tags:
+    - T1566
+    - phishing
+  level: high
+---
+- title: Track Outbound Connections to Malicious URLs
+  id: 123e4567-e89b-12d3-a456-426614174010
+  description: Analyze network traffic for unusual outbound connections, particularly to newly established domains or IPs. This indicates that a compromised system may be attempting to download additional malicious payloads.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      destination_ip: "newly_established_ip_list"
+  condition: selection
+  tags:
+    - T1071
+    - command_and_control
+  level: high
+---
+- title: Monitor for PDF File Open Events
+  id: 123e4567-e89b-12d3-a456-426614174011
+  description: Identify process creation logs showing AcroRd32.exe initiated by OUTLOOK.EXE with a PDF file. This indicates that a user has opened a potentially malicious PDF document.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      process_name: "AcroRd32.exe"
+      parent_process_name: "OUTLOOK.EXE"
+      command_line: "*.pdf"
+  condition: selection
+  tags:
+    - T1203
+    - execution
+  level: high
+---
+- title: Capture User Interaction with Malicious Attachments
+  id: 123e4567-e89b-12d3-a456-426614174012
+  description: Monitor for emails with attachments that originate from external sources, particularly those that are password-protected ZIP files. This indicates a potential obfuscated file delivery attempt.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      sender_domain: external
+      attachment_type: "password_protected_zip"
+  condition: selection
+  tags:
+    - T1566
+    - phishing
+  level: medium
+---
+- title: Track PowerShell Commands from JavaScript Execution
+  id: 123e4567-e89b-12d3-a456-426614174013
+  description: Monitor PowerShell command logs showing execution of Invoke-WebRequest from JavaScript files. This indicates that a JavaScript file may be executing a command to download a malicious payload.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      command_line: "*Invoke-WebRequest*"
+      source_file_extension: ".js"
+  condition: selection
+  tags:
+    - T1059
+    - execution
+  level: high
+---
+- title: Monitor for Registry Changes Related to Persistence
+  id: 123e4567-e89b-12d3-a456-426614174014
+  description: Identify registry modifications that add new entries for persistence, especially those related to recently executed applications. This indicates that a payload is attempting to maintain persistence on the system.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      registry_path: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+      action: "create"
+      related_to_recent_apps: true
+  condition: selection
+  tags:
+    - T1547
+    - persistence
+  level: high
+```

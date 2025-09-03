@@ -1,0 +1,56 @@
+1. **Framework Section**  
+   Phase 1: *Concealment of Activity*  
+   - Focus on the use of hidden window parameters in scripting languages (e.g., PowerShell `-WindowStyle Hidden`).  
+   - Monitor for API calls that create hidden windows (e.g., `ShowWindow`, `CreateDesktop()`).  
+   - Analyze application behavior for modifications in property list (plist) files on macOS (e.g., `apple.awt.UIElement`).  
+
+   Phase 2: *Execution of Malicious Payloads*  
+   - Detect execution of scripts or applications that utilize hidden window features (e.g., `ProcessWindowStyle.Hidden`).  
+   - Investigate registry modifications that affect window visibility (e.g., `HKEY_CURRENT_USER\Console\WindowPosition`).  
+   - Monitor for the use of command-line arguments that suppress window visibility during execution.  
+
+   Phase 3: *Persistence and Evasion*  
+   - Identify techniques that allow for the persistence of hidden processes (e.g., registry keys that set default window positions off-screen).  
+   - Analyze the use of hidden VNC sessions or remote access tools that operate without user visibility.  
+   - Monitor for behaviors that indicate attempts to evade detection through window concealment (e.g., executing tasks in hidden mode).  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Concealment via PowerShell  
+     - Examples: APT19 used `-WindowStyle Hidden` to conceal PowerShell windows.  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1564.003  
+
+   - **Pattern Name**: Hidden Window Creation  
+     - Examples: IMAPLoader hides the Windows Console window using `GetConsoleWindow` and `ShowWindow` APIs.  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1564.003  
+
+   - **Pattern Name**: Registry Modification for Concealment  
+     - Examples: PowerShower added a registry key to spawn PowerShell instances with off-screen coordinates.  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1564.003  
+
+   - **Pattern Name**: Execution of Hidden Applications  
+     - Examples: Astaroth loads its module with the `vShow` parameter set to zero, opening the application with a hidden window.  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1564.003  
+
+   - **Pattern Name**: Remote Access via Hidden Interfaces  
+     - Examples: TrickBot used a hidden VNC (hVNC) window to monitor the victim.  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1564.003  
+
+   - **Pattern Name**: Use of API for Window Concealment  
+     - Examples: AvosLocker hid its console window using the `ShowWindow` API function.  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1564.003  
+
+   - **Pattern Name**: Execution of Scripts in Hidden Mode  
+     - Examples: Snip3 executed PowerShell scripts in a hidden window.  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1564.003  
+
+   - **Pattern Name**: Concealment of Scheduled Tasks  
+     - Examples: AsyncRAT hides the execution of scheduled tasks using `ProcessWindowStyle.Hidden`.  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1564.003  

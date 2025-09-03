@@ -1,0 +1,3 @@
+<output>
+srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "malicious_script.ps1"
+</output>

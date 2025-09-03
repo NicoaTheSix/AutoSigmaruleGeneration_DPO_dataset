@@ -1,0 +1,131 @@
+```yaml
+- title: Detect Use of Legitimate Cloud Services for Data Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Identify events where Outlook is used to exfiltrate data via PowerShell to a cloud service.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: "*outlook.exe*"
+      relation: "Process Create"
+      dstNode:
+        Image: "*powershell.exe*"
+        Cmdline: "*-ExecutionPolicy Bypass -File*"
+      dstNode:
+        Image: "*"
+        Uri: "*googleapis.com*"
+  condition: selection
+  tags:
+    - T1071.001
+    - exfiltration
+  level: high
+---
+- title: Detect Email-Based Data Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Identify events where Outlook is used to send data to a phishing site via a web browser.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: "*outlook.exe*"
+      relation: "Process Create"
+      dstNode:
+        Image: "*chrome.exe*"
+        Cmdline: "*phishing_site_url*"
+      dstNode:
+        Image: "*outlook.exe*"
+        Cmdline: "*send email to external address*"
+  condition: selection
+  tags:
+    - T1071.001
+    - exfiltration
+  level: high
+---
+- title: Detect API Utilization for Data Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Identify events where a web browser is used to access EWS API for data exfiltration.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: "*chrome.exe*"
+      relation: "Process Create"
+      dstNode:
+        Image: "*powershell.exe*"
+        Cmdline: "*EWS/Exchange.asmx*"
+      dstNode:
+        Image: "*powershell.exe*"
+        Cmdline: "*download files from emails*"
+  condition: selection
+  tags:
+    - T1071.001
+    - exfiltration
+  level: high
+---
+- title: Detect Encrypted Traffic for Covert Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Identify events where Outlook is used to collect data and send it to an encrypted service.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: "*outlook.exe*"
+      relation: "Process Create"
+      dstNode:
+        Image: "*powershell.exe*"
+        Cmdline: "*Get-ChildItem*"
+      dstNode:
+        Image: "*powershell.exe*"
+        Cmdline: "*anonymfiles.com*"
+  condition: selection
+  tags:
+    - T1071.001
+    - exfiltration
+  level: high
+---
+- title: Detect Use of Tunneling Services for Data Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Identify events where Outlook is used to set up a tunneling service for data exfiltration.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: "*outlook.exe*"
+      relation: "Process Create"
+      dstNode:
+        Image: "*powershell.exe*"
+        Cmdline: "*ngrok.exe*"
+      dstNode:
+        Image: "*powershell.exe*"
+        Cmdline: "*Invoke-WebRequest*ngrok_url*"
+  condition: selection
+  tags:
+    - T1071.001
+    - exfiltration
+  level: high
+```

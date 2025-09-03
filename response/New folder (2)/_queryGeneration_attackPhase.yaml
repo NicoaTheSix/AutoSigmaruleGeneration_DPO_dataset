@@ -1,0 +1,33 @@
+<output>{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "event.type": "authentication"
+          }
+        },
+        {
+          "range": {
+            "event.timestamp": {
+              "gte": "now-1d/d",
+              "lt": "now/d"
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "term": {
+            "user.name": "admin"
+          }
+        },
+        {
+          "term": {
+            "event.outcome": "failure"
+          }
+        }
+      ]
+    }
+  }
+}</output>

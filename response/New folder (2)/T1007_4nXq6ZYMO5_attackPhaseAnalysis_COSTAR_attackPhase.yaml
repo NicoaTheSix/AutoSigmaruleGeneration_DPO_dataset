@@ -1,0 +1,36 @@
+1. **Framework Section**  
+   **Phase 1: Service Discovery**  
+   - Utilize OS utility commands (e.g., `net start`, `tasklist /svc`, `sc query`) to gather information about running services.  
+   - Identify and log service names, statuses, and configurations from the system.  
+   - Analyze service dependencies and configurations to understand potential attack vectors.  
+
+   **Phase 2: Information Utilization**  
+   - Assess the gathered service information to determine potential targets for further exploitation.  
+   - Correlate service data with known vulnerabilities or misconfigurations to prioritize follow-on actions.  
+   - Document findings to inform subsequent phases of an attack or for lateral movement within the network.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Command Execution for Service Enumeration  
+     - Examples: `net start >> %temp%\download[1]`, `tasklist`, `sc query`  
+     - Associated Phase: Service Discovery  
+     - Mapping to TTP ID: T1007  
+
+   - **Pattern Name**: Service Status Retrieval  
+     - Examples: `Cobalt Strike can enumerate services on compromised hosts`, `GravityRAT has a feature to list the available services on the system`  
+     - Associated Phase: Service Discovery  
+     - Mapping to TTP ID: T1007  
+
+   - **Pattern Name**: Targeting Specific Services  
+     - Examples: `TeamTNT has searched for services such as Alibaba Cloud Security's aliyun service`, `SILENTTRINITY can search for modifiable services that could be used for privilege escalation`  
+     - Associated Phase: Information Utilization  
+     - Mapping to TTP ID: T1007  
+
+   - **Pattern Name**: Automated Service Discovery  
+     - Examples: `During Operation CuckooBees, the threat actors used the net start command as part of their initial reconnaissance`, `Turlasurveys a system upon check-in to discover running services`  
+     - Associated Phase: Service Discovery  
+     - Mapping to TTP ID: T1007  
+
+   - **Pattern Name**: Service Configuration Analysis  
+     - Examples: `BitPaymer can enumerate existing Windows services on the host that are configured to run as LocalSystem`, `ZLib has the ability to discover and manipulate Windows services`  
+     - Associated Phase: Information Utilization  
+     - Mapping to TTP ID: T1007  

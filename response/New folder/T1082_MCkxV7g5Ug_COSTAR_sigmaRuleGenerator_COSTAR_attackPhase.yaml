@@ -1,0 +1,117 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for events where a user opens an email with a specific subject line "Important Update" and an attachment named "Invoice_2023.xlsx."
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Subject: "Important Update"
+      Attachment: "Invoice_2023.xlsx"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+---
+- title: Map Exploitation of Vulnerability
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Detect when the user opens the Excel attachment that contains macros, particularly those that execute PowerShell commands.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      EventID: 1001
+      Application: "Excel"
+      MacroExecution: true
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Validate Execution of Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Track the execution of the downloaded executable file "payload.exe" located in the %temp% directory.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      CommandLine: "%temp%\\payload.exe"
+      EventID: 4688
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+---
+- title: Monitor for Establishing Persistence
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Identify events related to the creation of a scheduled task that runs the payload at startup.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Command: "schtasks"
+      Parameters: "*MaliciousTask* %temp%\\payload.exe"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: high
+---
+- title: Detect Data Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor network traffic for outbound connections to the attacker's command and control (C2) server, specifically looking for PowerShell commands that use Invoke-WebRequest to send data.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Command: "Invoke-WebRequest"
+      URL: "http://malicious.com/exfil"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1041
+    - tactic: Exfiltration
+  level: high
+---
+- title: Identify Cleanup and Covering Tracks
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Look for events indicating the deletion of files, specifically the original Excel file "Invoice_2023.xlsx" and the payload "payload.exe" from the %temp% directory.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      EventID: 4663
+      FileName: "Invoice_2023.xlsx"
+      Action: "Delete"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1070
+    - tactic: Defense Evasion
+  level: high
+```

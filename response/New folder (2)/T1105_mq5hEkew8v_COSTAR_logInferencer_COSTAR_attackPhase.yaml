@@ -1,0 +1,52 @@
+1. **Identify Initial Access via Spearphishing Email**  
+   - Monitor for the creation of processes related to Outlook that involve email interactions. Specifically, look for emails with attachments named "malicious.docx".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "malicious.docx"  
+
+2. **Identify Execution of Malicious Attachment**  
+   - Monitor for the execution of Microsoft Word processes that are initiated by Outlook and involve macros. Specifically, look for PowerShell commands executed from Word documents.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" (or similar path for Word)  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `relation`: "Process Create"  
+
+3. **Identify Downloading Additional Tools from C2**  
+   - Monitor for PowerShell commands that download files from known malicious domains. Specifically, look for commands that use `Invoke-WebRequest` to download executables.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "payload.exe"  
+     - `relation`: "Process Create"  
+
+4. **Identify Execution of Downloaded Payload**  
+   - Monitor for the execution of the downloaded payload (`payload.exe`) from the Downloads directory.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\cmd.exe" (or similar path for cmd)  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "C:\\Users\\Victim\\Downloads\\payload.exe"  
+     - `relation`: "Process Create"  
+
+5. **Identify Establishing Persistence and Further Exploitation**  
+   - Monitor for the creation of scheduled tasks that execute unusual binaries, specifically those that point to the downloaded payload.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\schtasks.exe"  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "C:\\Users\\Victim\\Downloads\\payload.exe"  
+     - `relation`: "Process Create"  
+
+6. **Identify Lateral Movement**  
+   - Monitor for the use of PsExec or similar tools that execute commands on remote machines.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Path\\To\\PsExec.exe"  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "C:\\Path\\To\\MaliciousTool.exe"  
+     - `relation`: "Process Create"  

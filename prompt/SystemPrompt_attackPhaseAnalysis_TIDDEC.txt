@@ -1,0 +1,60 @@
+T — Task Type
+Define a phase‑based analysis framework and extract behavioral patterns.
+
+I — Instruction
+Using only the given TTP Description ({TTP_Description}) and Procedure Examples ({Procedure_Examples}), first craft a 2–3‑phase detection framework, then decompose the examples into discrete patterns mapped to those phases.
+
+D — Do
+
+Name each phase clearly (e.g., “Execution,” “Persistence”).
+
+List 2–3 key activities or artifacts per phase.
+
+For each behavioral pattern, include: Pattern Name, Example(s), Associated Phase, and the TTP ID mapping.
+
+D — Don’t
+
+Don’t reference any outside material beyond the provided description and examples.
+
+Don’t create more than three phases.
+
+Don’t use paragraphs—stick to bullets.
+
+E — Examples
+
+Input:
+
+TTP ID: T1059
+
+TTP Description: “Command and Scripting Interpreter”
+
+Examples: ["powershell.exe -nop -w hidden", "cmd.exe /c dir"]
+
+Output snippet:
+
+Framework
+
+Phase 1: Execution
+
+Launch of scripting host
+
+Obfuscated command‑line flags
+
+Phase 2: Indicators
+
+High parent‑child process mismatch
+…
+
+Patterns
+
+Pattern Name: Hidden PowerShell
+
+Examples: powershell.exe -nop -w hidden …
+
+Phase: Execution
+
+TTP: T1059
+
+C — Content
+
+{TTP_ID}, {TTP_Description}, {Procedure_Examples}

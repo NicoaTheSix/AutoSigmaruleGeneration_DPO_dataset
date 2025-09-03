@@ -1,0 +1,132 @@
+```yaml
+- title: Identify Initial Access via Spearphishing Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically for emails with attachments named "Invoice_2023.xlsx" and subject lines containing "Important Document".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice_2023.xlsx"
+  condition: selection
+  tags:
+    - T1566
+    - Initial Access
+  level: high
+---
+- title: Detect Opening of Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Track the process creation of Excel when the user opens the malicious attachment, ensuring that the Excel file contains macros.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice_2023.xlsx"
+  condition: selection
+  tags:
+    - T1203
+    - Initial Access
+  level: high
+---
+- title: Monitor Macro Execution and Payload Download
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Look for PowerShell commands executed from Excel that download files from the internet, particularly those referencing a URL like "http://malicious-server.com/payload.exe".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious-server.com"
+      dstNode.Port: 
+        - 80
+        - 443
+  condition: selection
+  tags:
+    - T1059
+    - Execution
+  level: high
+---
+- title: Detect Execution of the Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the execution of the downloaded payload executable and any outbound network connections to known malicious IP addresses.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious-ip-address"
+  condition: selection
+  tags:
+    - T1203
+    - Execution
+  level: high
+---
+- title: Identify Changes for Persistence
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Track modifications to registry keys commonly used for persistence, such as those under HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"
+      dstNode.Type: "Registry"
+      dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+  condition: selection
+  tags:
+    - T1547
+    - Persistence
+  level: medium
+---
+- title: Monitor Data Exfiltration Activities
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Look for large outbound data transfers or unusual traffic patterns indicating data being sent to the attacker's command and control server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Users\\Victim\\AppData\\Local\\Temp\\payload.exe"
+      dstNode.Type: "Network"
+      dstNode.Port: 
+        - 80
+        - 443
+  condition: selection
+  tags:
+    - T1041
+    - Exfiltration
+  level: high
+```

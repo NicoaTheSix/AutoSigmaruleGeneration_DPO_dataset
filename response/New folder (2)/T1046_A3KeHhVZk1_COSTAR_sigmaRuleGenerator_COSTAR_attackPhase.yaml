@@ -1,0 +1,132 @@
+```yaml
+- title: Identify Initial Access via Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for the creation of processes related to Outlook that involve email interactions, specifically for emails with subject lines containing "Important Update" and attachments named "Invoice_2023.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice_2023.xlsx"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+---
+- title: Identify Opening of Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Track events where Microsoft Excel is opened with macros enabled for the file "Invoice_2023.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      dstNode.Type: "File"
+      dstNode.Name: "Invoice_2023.xlsx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+---
+- title: Detect Macro Execution and Payload Download
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell execution initiated by Excel that downloads a file from a remote server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Type: "File"
+      dstNode.Name: "payload.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+---
+- title: Identify Execution of the Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the execution of the downloaded payload from the TEMP directory, specifically looking for process creation logs indicating the execution of "payload.exe".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\cmd.exe"
+      dstNode.Type: "Process"
+      dstNode.Image: "$env:TEMP\\payload.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Detect Establishing Command and Control
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Track network connections initiated by the payload to known malicious domains, specifically looking for outbound connections to "http://malicious-server.com".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "malicious-server.com"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1071
+    - tactic: Command and Control
+  level: high
+---
+- title: Monitor for Data Exfiltration or Lateral Movement
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Identify unusual file access patterns or RDP connections initiated from the compromised host, indicating potential data exfiltration or lateral movement.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Type: "Process"
+      srcNode.Image: "C:\\Windows\\System32\\mstsc.exe"
+      dstNode.Type: "Network"
+      dstNode.Dstaddress: "target_ip_address"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1071
+    - tactic: Exfiltration
+  level: high
+```

@@ -1,0 +1,66 @@
+1. **Framework Section**  
+   Phase 1: *Service/Task Creation*  
+   - Monitor for the creation of new services or scheduled tasks with names similar to legitimate ones.  
+   - Analyze service/task descriptions for anomalies or discrepancies with known legitimate services.  
+   - Review the command-line arguments used during the creation of services or tasks for suspicious patterns.  
+
+   Phase 2: *Service/Task Modification*  
+   - Detect modifications to existing services or scheduled tasks, particularly changes to names or descriptions.  
+   - Investigate the use of commands like `schtasks /change` or service management commands that alter service properties.  
+   - Examine registry keys associated with service configurations for unauthorized changes.  
+
+   Phase 3: *Execution and Persistence*  
+   - Track the execution of services or tasks that have been renamed or disguised to appear legitimate.  
+   - Monitor for unusual parent-child process relationships that may indicate a malicious service execution.  
+   - Analyze network activity initiated by these services or tasks for signs of command and control communication.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Service Name Masquerading  
+     - Examples: Sandworm Team leveraged Systemd service units to masquerade GOGETTER malware as legitimate services.  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Scheduled Task Name Spoofing  
+     - Examples: APT-C-36 disguised its scheduled tasks as those used by Google.  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Use of Non-Printable Characters  
+     - Examples: APT32 used hidden or non-printing characters to help masquerade service names.  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Modification of Existing Services  
+     - Examples: APT41 used `SCHTASKS /Change` to modify legitimate scheduled tasks to run malicious code.  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Impersonation of Legitimate Services  
+     - Examples: Emote installed itself as a new service with the service name "Windows Defender System Service."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Creation of Benign-Looking Services  
+     - Examples: Aquatic Panda created new, malicious services using names such as "Windows User Service."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Persistence via Renaming  
+     - Examples: Black Basta established persistence by creating a new service named "FAX" after deleting the legitimate service by the same name.  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Network Activity from Masqueraded Services  
+     - Examples: Egregor masqueraded the svchost.exe process to exfiltrate data.  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Use of Common File Names  
+     - Examples: Wizard Spider used task names to appear legitimate such as "WinDotNet" and "GoogleTask."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Registry Key Masquerading  
+     - Examples: Truvasys adds a Registry Run key with a value "TaskMgr" to masquerade as the legitimate Windows Task Manager.  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1036.004  

@@ -1,0 +1,7 @@
+
+8. **Post-Exploitation Activities**
+   - Application: Various (e.g., cmd.exe, powershell.exe)
+   - User Action: The attacker uses the established connection to execute further commands on the compromised system.
+   - Key Artifacts: Command history showing execution of commands like `net user`, `whoami`, or `powershell -exec bypass`.
+   - Detection: Monitor for unusual command executions and changes in user account privileges or group memberships.
+

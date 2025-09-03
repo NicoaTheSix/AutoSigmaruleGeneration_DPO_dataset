@@ -1,0 +1,43 @@
+1. **Framework Section**  
+   Phase 1: *Discovery of Local Groups*  
+   - Execute commands to list local groups (e.g., `net localgroup`, `dscl . -list /Groups`, `groups`)  
+   - Collect information about group memberships and permissions  
+   - Identify users with elevated privileges (e.g., local administrators)  
+
+   Phase 2: *Analysis of Permissions*  
+   - Analyze the output of group enumeration commands for privilege escalation opportunities  
+   - Cross-reference group memberships with known user accounts to identify potential targets  
+   - Document findings for further exploitation or lateral movement  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Local Group Enumeration  
+     - Examples:  
+       - `net localgroup administrator >> %temp%\download[1]`  
+       - `net localgroup "administrator"`  
+       - `net localgroup administrators`  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1069.001  
+
+   - **Pattern Name**: Privilege Identification  
+     - Examples:  
+       - BloodHound collecting information about local groups and members  
+       - Cobalt Strike using `net localgroup` to list local groups  
+       - Flawed Ammyy enumerating privilege levels during initial infection  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1069.001  
+
+   - **Pattern Name**: Cross-Platform Group Discovery  
+     - Examples:  
+       - Gomir checking effective group ID for superuser privileges in Linux  
+       - Caterpillar WebShell obtaining a list of local groups  
+       - PoshC2 using `Get-LocAdm` for enumerating permission groups  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1069.001  
+
+   - **Pattern Name**: Command Execution for Group Information  
+     - Examples:  
+       - Tonto Team using `ShowLocalGroupDetails` to identify accounts  
+       - QakBot using `net localgroup` for discovery  
+       - OilRigh executing `net localgroup administrators` to find local admins  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1069.001  

@@ -1,0 +1,121 @@
+```yaml
+- title: Monitor for Suspicious Email Attachments
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Identify email logs where the subject line contains "Important Document" and the attachment is named "Invoice.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      subject: "*Important Document*"
+      attachment: "Invoice.xlsx"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+
+---
+- title: Track Excel File Execution
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Map to Windows Event Log entries indicating the execution of Excel with command line including "Invoice.xlsx" and macro execution.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: "*excel.exe"
+      CommandLine: "*Invoice.xlsx*"
+      EventID: 4688
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059.001
+    - tactic: Execution
+  level: high
+
+---
+- title: Detect PowerShell Command Execution
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell command execution logs that include commands to download a file from a remote server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      CommandLine: "*Invoke-WebRequest*http://malicious-server.com/payload.exe*"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059.001
+    - tactic: Execution
+  level: high
+
+---
+- title: Monitor for Execution of Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Identify events where a process is created with the image path containing "Downloads" and the executable name is "payload.exe".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: "*Downloads*"
+      FileName: "payload.exe"
+      EventID: 4688
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+
+---
+- title: Track Scheduled Task Creation
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for logs indicating the creation of new scheduled tasks by executables that are not recognized or are newly downloaded.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      EventID: 4698
+      Image: "*unknown*"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: medium
+
+---
+- title: Monitor for Data Exfiltration Activities
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Identify network traffic logs showing outbound connections to known malicious IP addresses, particularly during large data transfers.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: network
+  detection:
+    selection:
+      DestinationIP: ["malicious_ip_1", "malicious_ip_2"]
+      BytesTransferred: ">100MB"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1041
+    - tactic: Exfiltration
+  level: high
+```

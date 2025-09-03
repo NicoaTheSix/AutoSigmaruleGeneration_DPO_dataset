@@ -1,0 +1,20 @@
+<output>
+1. **Identify Browser Shortcut Manipulation**  
+   - Monitor for events where the `dstNode` is a shortcut file located at `C:\\Users\\User\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Chrome.lnk`.  
+   - Set the `relation` to "WriteFile" to capture the modification of the shortcut file.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Path\\To\\Malicious\\Payload.exe",  // Replace with the actual malicious payload executable path
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Name": "Chrome.lnk",
+         "Image": "C:\\Users\\User\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Chrome.lnk",
+         "Type": "File"
+       },
+       "relation": "WriteFile"
+     }
+     ```
+</output>

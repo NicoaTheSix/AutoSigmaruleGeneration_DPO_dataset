@@ -1,0 +1,101 @@
+```yaml
+- title: Identify Initial Email Delivery
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for email events where the subject line contains "Invoice Attached" and the attachment is named "Invoice_2023.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Name: "Outlook"
+      dstNode.Name: "Invoice_2023.xlsx"
+      relation: "Email Received"
+  condition: selection
+  tags:
+    - ATT&CK_ID: T1203
+    - tactic: Initial Access
+  level: high
+---
+- title: Track User Interaction with Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Monitor for events where the user opens the Excel file, triggering macros.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      dstNode.Image: "C:\\Path\\To\\Invoice_2023.xlsx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK_ID: T1203
+    - tactic: Execution
+  level: high
+---
+- title: Log Payload Execution
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Monitor for PowerShell commands executed by the Excel macro that download a payload from a suspicious URL.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Image: "[path to the downloaded executable]"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK_ID: T1059
+    - tactic: Execution
+  level: high
+---
+- title: Establish Command and Control Monitoring
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for outbound HTTP POST requests to the attacker's C2 server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Dstaddress: "[malicious IP address]"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK_ID: T1071
+    - tactic: Command and Control
+  level: high
+---
+- title: Track Data Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for outbound traffic that indicates data exfiltration, specifically HTTP POST requests with sensitive data.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode.Dstaddress: "[C2 server IP]"
+      relation: "TCP Send"
+  condition: selection
+  tags:
+    - ATT&CK_ID: T1041
+    - tactic: Exfiltration
+  level: high
+```

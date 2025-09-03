@@ -1,0 +1,136 @@
+```yaml
+- title: Identify Initial Access via Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for events where Outlook is used to open an email with a specific subject line "Important Update" and an attachment named "Invoice_2023.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Name: "Outlook"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+
+---
+- title: Map Exploit Execution in Excel
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Detect when the Excel application is launched with the attachment "Invoice_2023.xlsx".
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: "C:\\Program Files\\Microsoft Office\\root\\OfficeXX\\EXCEL.EXE"
+      dstNode:
+        Image: "C:\\Users\\Victim\\Downloads\\Invoice_2023.xlsx"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+
+---
+- title: Validate PowerShell Command Execution
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Look for PowerShell commands executed that include Invoke-WebRequest to download a file from a URL.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode:
+        Image: "C:\\Users\\Victim\\Downloads\\payload.exe"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+
+---
+- title: Detect Scheduled Task Creation for Persistence
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Monitor for the creation of a scheduled task that runs the payload executable at startup.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: "C:\\Windows\\System32\\schtasks.exe"
+      dstNode:
+        Name: "MaliciousTask"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: medium
+
+---
+- title: Identify Data Exfiltration Preparation
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Look for PowerShell commands that scan for sensitive files in the user's Documents folder and prepare them for exfiltration.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode:
+        Name: "C:\\Temp\\StagedFiles\\"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1041
+    - tactic: Exfiltration
+  level: medium
+
+---
+- title: Monitor Data Exfiltration Activity
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Detect outbound network connections initiated by PowerShell to upload files to an external server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dstNode:
+        Dstaddress: "malicious-website.com"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1041
+    - tactic: Exfiltration
+  level: high
+```

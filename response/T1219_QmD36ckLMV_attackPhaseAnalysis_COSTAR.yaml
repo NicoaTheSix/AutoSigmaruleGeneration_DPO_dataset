@@ -1,0 +1,41 @@
+1. **Framework Section**  
+   **Phase 1: Installation and Configuration**  
+   - Identify the installation of remote access tools (e.g., AnyDesk, TeamViewer, Ammyy Admin) on endpoints.  
+   - Monitor for changes in system services or scheduled tasks that may indicate persistence mechanisms (e.g., Windows Services created by remote access tools).  
+   - Analyze registry keys associated with remote access tools (e.g., `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall`) for unauthorized installations.  
+
+   **Phase 2: Command and Control Establishment**  
+   - Detect network traffic patterns indicative of remote access tool communications (e.g., unusual outbound connections to known remote access tool servers).  
+   - Monitor for command-line executions of remote access tools that may indicate interactive sessions (e.g., `AnyDesk.exe`, `TeamViewer.exe`).  
+   - Analyze logs for remote session initiation events (e.g., Event ID 4624 for logon events related to remote access).  
+
+   **Phase 3: Lateral Movement and Persistence**  
+   - Track the use of remote access tools for lateral movement across the network (e.g., connections initiated from one compromised host to another).  
+   - Identify the use of remote management tools in conjunction with malware deployment (e.g., Atera used to download additional payloads).  
+   - Monitor for the establishment of persistent connections through remote access tools (e.g., tmate sessions or RMM tools maintaining access).  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Remote Access Tool Installation  
+     - Examples: "Akira uses legitimate utilities such as AnyDesk and PuTTy for maintaining remote access to victim environments."  
+     - Associated Phase: Installation and Configuration  
+     - Mapping to TTP ID: T1219  
+
+   - **Pattern Name**: Interactive Command and Control Session  
+     - Examples: "Cobalt Group used the Ammyy Admin tool as well as TeamViewer for remote access, including to preserve remote access if a Cobalt Strike module was lost."  
+     - Associated Phase: Command and Control Establishment  
+     - Mapping to TTP ID: T1219  
+
+   - **Pattern Name**: Lateral Movement via Remote Access  
+     - Examples: "DarkVishnya used DameWare Mini Remote Control for lateral movement."  
+     - Associated Phase: Lateral Movement and Persistence  
+     - Mapping to TTP ID: T1219  
+
+   - **Pattern Name**: Use of RMM Tools for Malware Deployment  
+     - Examples: "FIN7 has utilized the remote management tool Atera to download malware to a compromised system."  
+     - Associated Phase: Lateral Movement and Persistence  
+     - Mapping to TTP ID: T1219  
+
+   - **Pattern Name**: Persistence through Remote Access Tools  
+     - Examples: "Scattered Spider members themselves also deploy RMM software including AnyDesk, LogMeIn, and ConnectWise Control to establish persistence on the compromised network."  
+     - Associated Phase: Lateral Movement and Persistence  
+     - Mapping to TTP ID: T1219  

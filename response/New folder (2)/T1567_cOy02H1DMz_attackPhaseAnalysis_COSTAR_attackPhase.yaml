@@ -1,0 +1,46 @@
+1. **Framework Section**  
+   Phase 1: *Data Exfiltration Initiation*  
+   - Identify legitimate external web services being accessed by hosts within the network.  
+   - Monitor for unusual or unauthorized data transfer requests to these services.  
+   - Analyze network traffic patterns for SSL/TLS encrypted communications to known web services.  
+
+   Phase 2: *Data Transfer Execution*  
+   - Inspect API calls made to external services for anomalies, such as unexpected file uploads or downloads.  
+   - Track the use of file hosting services and cloud storage platforms for data transfer activities.  
+   - Review command-line activities and scripts that may indicate automated data exfiltration processes.  
+
+   Phase 3: *Post-Exfiltration Analysis*  
+   - Correlate logs from web services with internal access logs to identify potential data exfiltration events.  
+   - Investigate any alerts triggered by unusual data volumes or patterns associated with web service communications.  
+   - Assess the impact of exfiltrated data by analyzing the types of files and data accessed or transferred.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Use of Legitimate Web Services for Exfiltration  
+     - Examples: "AppleSeed has exfiltrated files using web services."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1567  
+
+   - **Pattern Name**: Exfiltration via Cloud Storage Services  
+     - Examples: "APT28 can exfiltrate data over Google Drive."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1567  
+
+   - **Pattern Name**: API Utilization for Data Transfer  
+     - Examples: "SampleCheck5000 can use the Microsoft Office Exchange Web Services API to access an actor-controlled account and retrieve files for exfiltration."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1567  
+
+   - **Pattern Name**: Use of Encrypted Channels for Data Exfiltration  
+     - Examples: "ngrok has been used by threat actors to configure servers for data exfiltration."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1567  
+
+   - **Pattern Name**: Leveraging Messaging APIs for Data Relay  
+     - Examples: "Magic Hound has used the Telegram API sendMessage to relay data on compromised devices."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1567  
+
+   - **Pattern Name**: Uploading to Shared Email Accounts  
+     - Examples: "OilCheck can upload documents from compromised hosts to a shared Microsoft Office 365 Outlook email account for exfiltration."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1567  

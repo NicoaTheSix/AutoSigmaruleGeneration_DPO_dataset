@@ -1,0 +1,161 @@
+```yaml
+- title: Identify Initial Access via Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Monitor for events where an email is received with a specific subject line (e.g., "Invoice Attached"). Capture relevant email headers and attachment filenames.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      subject: "Invoice Attached"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+
+---
+- title: Map Opening the Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Detect the creation of a process for Microsoft Excel when a user opens an attachment.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+
+---
+- title: Validate Macro Execution
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Track events indicating that macros are enabled in Excel.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      macro_enabled: true
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059.003
+    - tactic: Execution
+  level: medium
+
+---
+- title: Capture Payload Download and Execution
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Identify PowerShell command executions that download a file from a malicious URL.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      relation: "Process Create"
+      Cmdline: 
+        - "*Invoke-WebRequest*"
+        - "*curl*"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1059.001
+    - tactic: Execution
+  level: high
+
+---
+- title: Detect Execution of the Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitor for the creation of a process for the downloaded executable (e.g., malware.exe).
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Image: "*malware.exe*"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+
+---
+- title: Establish Command and Control Detection
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Look for outbound network connections initiated by the malicious executable to a C2 server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Dstaddress: "<C2_SERVER_IP>"
+      relation: "TCP Connect"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1071
+    - tactic: Command and Control
+  level: high
+
+---
+- title: Monitor for Persistence Mechanism
+  id: 123e4567-e89b-12d3-a456-426614174006
+  description: Detect the creation of a scheduled task by the malware.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      command: "schtasks /create"
+      relation: "Process Create"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1053
+    - tactic: Persistence
+  level: medium
+
+---
+- title: Identify Data Exfiltration
+  id: 123e4567-e89b-12d3-a456-426614174007
+  description: Capture outbound network traffic that indicates sensitive data is being sent to the C2 server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      Dstaddress: "<C2_SERVER_IP>"
+      relation: "TCP Send"
+  condition: selection
+  tags:
+    - ATT&CK ID: T1041
+    - tactic: Exfiltration
+  level: high
+```

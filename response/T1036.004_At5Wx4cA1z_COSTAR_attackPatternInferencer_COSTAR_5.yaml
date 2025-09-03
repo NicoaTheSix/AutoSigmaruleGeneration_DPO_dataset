@@ -1,0 +1,7 @@
+
+   6. **Establishing Persistence**
+      - Application: Windows Services
+      - User Action: The payload creates a new service to ensure persistence.
+      - Key Artifacts: New service created with a name similar to a legitimate service (e.g., "Windows Update Service").
+      - Detection: Monitor for the creation of new services with names similar to legitimate ones and analyze service descriptions for anomalies.
+   

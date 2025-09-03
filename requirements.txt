@@ -1,0 +1,9 @@
+elasticsearch
+pandas
+openpyxl
+openai
+ollama
+tqdm
+pyyaml
+notebook
+ipykernel

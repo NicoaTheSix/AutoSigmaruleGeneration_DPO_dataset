@@ -1,0 +1,37 @@
+title: Detect Suspicious Attachment Delivery via Email-Related Processes
+id: 6b1f1b8f-7d61-4134-bbdb-72f7fcfd9d47
+description: Detects suspicious file creation by email clients involving high-risk attachment types as part of spearphishing delivery.
+status: production
+author: auto-generated
+date: 2025-07-13
+logsource:
+  category: custom
+  product: windows
+detection:
+  selection:
+    relation|contains:
+      - CreateFile
+      - WriteFile
+    srcNode.Image|endswith:
+      - outlook.exe
+      - thunderbird.exe
+      - chrome.exe
+      - msedge.exe
+      - firefox.exe
+    dstNode.Name|endswith:
+      - .docm
+      - .xlsm
+      - .exe
+      - .lnk
+      - .js
+      - .vbs
+      - .zip
+      - .rar
+      - .iso
+      - .img
+      - .chm
+  condition: selection
+tags:
+  - attack.t1566.001
+  - attack.initial_access
+level: high

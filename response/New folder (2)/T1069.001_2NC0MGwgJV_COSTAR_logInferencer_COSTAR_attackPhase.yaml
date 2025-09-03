@@ -1,0 +1,44 @@
+1. **Identify Initial Access via Email**  
+   - Monitor for the creation of processes related to Microsoft Outlook when an email with the subject line "Invoice Attached" is received. Specifically, look for the attachment named "Invoice_2023.xlsx".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" (or similar path for Outlook)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+2. **Identify Opening of Malicious Attachment**  
+   - Monitor for the execution of Microsoft Excel when the user opens the downloaded Excel file "Invoice_2023.xlsx".  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" (or similar path for Excel)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Invoice_2023.xlsx"  
+     - `relation`: "Process Create"  
+
+3. **Identify Execution of PowerShell Command via Macro**  
+   - Monitor for the execution of PowerShell commands initiated by the Excel macro when the user opens the malicious Excel file.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "malicious_script.ps1"  
+     - `relation`: "Process Create"  
+
+4. **Identify Creation of Scheduled Task for Persistence**  
+   - Monitor for the creation of scheduled tasks that run the PowerShell script at startup, indicating an attempt to establish persistence.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks" (or similar path for scheduled tasks)  
+     - `relation`: "RegCreateKey"  
+
+5. **Identify Data Exfiltration via Web Browser**  
+   - Monitor for network connections initiated by a web browser (e.g., Chrome) that send sensitive data to an external server.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" (or similar path for Chrome)  
+     - `dstNode.Type`: "Network"  
+     - `dstNode.Dstaddress`: "malicious-website.com"  
+     - `relation`: "TCP Send"  

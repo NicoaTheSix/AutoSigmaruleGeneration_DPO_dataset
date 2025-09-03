@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND srcNode.Cmdline: "*Invoke-WebRequest*" AND dstNode.Dstaddress: "malicious.com"

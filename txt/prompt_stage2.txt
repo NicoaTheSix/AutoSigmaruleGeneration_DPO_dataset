@@ -1,0 +1,117 @@
+C — Context  
+You are a senior cybersecurity detection engineer tasked with translating abstract attack behaviors into concrete, loggable events. You understand that modern attack chains are often non-linear and involve multiple applications, such as email clients, web browsers, and office suites, working in concert.
+
+Your mission is to create comprehensive attack scenarios for T1566.001 (Spearphishing Attachment). These scenarios must map the entire, potentially multi-stage attack flow, bridging the initial user action with all subsequent system events, especially those involving web browser interactions for payload delivery or execution.
+
+The initial behavior patterns are:
+{
+
+### 1. Delivery Phase
+
+**Pattern: Suspicious Attachment Type or Naming**
+
+* **Examples:**
+
+  * Malicious Office documents (`.doc`, `.docm`, `.xlsm`, `.rtf`) attached to spearphishing emails (e.g., APT1, Sandworm Team, Cobalt Group, APT28, FIN7).
+  * Password-protected archives (`.zip`, `.rar`) containing executables or documents (e.g., APT-C-36, BlackTech, Cobalt Group, TA551).
+  * Archive or ISO attachments containing LNK, CHM, IMG, or executable payloads (e.g., Cobalt Group, DarkTortilla, EXOTIC LILY).
+  * Double extensions or spoofed file types (`invoice.pdf.exe`, `.docx.lnk`).
+* **Mapping:** T1566.001
+
+**Pattern: Targeted Social Engineering & Email Crafting**
+
+* **Examples:**
+
+  * Emails impersonating trusted entities, urgent requests, or business themes (e.g., APT32, menuPass, MuddyWater).
+  * Use of instructions in the email body to bypass protections (e.g., password for archive, "enable macros for full content").
+* **Mapping:** T1566.001
+
+---
+
+### 2. User Interaction & Execution Phase
+
+**Pattern: User-Initiated Attachment Execution**
+
+* **Examples:**
+
+  * User opens a malicious attachment, leading to Office app (e.g., `winword.exe`, `excel.exe`), PDF reader, or executable launch (e.g., Agent Tesla, Emotet, FIN8).
+  * Email client (`outlook.exe`, `thunderbird.exe`) or browser process spawns document viewer or binary.
+  * Execution of embedded LNK, CHM, or HTA files via user interaction (e.g., Cobalt Group, SideCopy).
+* **Mapping:** T1566.001
+
+**Pattern: Macro or Script Activation on Document Open**
+
+* **Examples:**
+
+  * Office documents with embedded macros or OLE objects (e.g., FIN4, Emotet, Squirrelwaffle).
+  * Exploit code triggered on document open or macro enablement (e.g., APT19, Elderwood, Patchwork).
+  * Instructions in the document or email urging the user to "Enable Content" or "Enable Editing."
+* **Mapping:** T1566.001
+
+**Pattern: File/Extension Masquerading**
+
+* **Examples:**
+
+  * Executable disguised as a document (e.g., `.doc.exe`), or archives containing disguised payloads (e.g., APT32, Cobalt Group, menuPass).
+  * Icon spoofing to mimic trusted document formats.
+* **Mapping:** T1566.001
+
+---
+
+### 3. Payload Deployment Phase
+
+**Pattern: Office/Scripting App Spawns Child Process**
+
+* **Examples:**
+
+  * `winword.exe` or `excel.exe` spawning `powershell.exe`, `wscript.exe`, `cmd.exe`, or other binaries (e.g., Emotet, Agent Tesla, FIN7).
+  * Child process execution from scripting engines (`wscript`, `mshta`, `rundll32`) post attachment open.
+* **Mapping:** T1566.001
+
+**Pattern: Malware Drop and C2 Initiation**
+
+* **Examples:**
+
+  * Download or dropper payload written to disk by child process (e.g., Andariel, QakBot, Bumblebee).
+  * Outbound network connections or C2 callbacks immediately after document or macro execution (e.g., Emotet, Squirrelwaffle, Lumma Stealer).
+* **Mapping:** T1566.001
+
+**Pattern: Persistence or System Modification on Initial Access**
+
+* **Examples:**
+
+  * Registry, file system, or scheduled task modifications by initial payload (e.g., Sandworm Team, TA505).
+  * Loading of secondary stage malware via dropped artifacts.
+* **Mapping:** T1566.001
+
+---
+
+
+}
+
+O — Objective  
+For each behavior pattern, provide a detailed, multi-stage attack scenario. The scenario must not be limited to a single process chain but should illustrate how an attacker orchestrates different applications (e.g., Outlook, Chrome, Excel, Explorer) to move from initial access to final execution. The description must be detailed enough to inform the creation of sophisticated, context-aware detection rules.
+
+S — Style  
+Describe the attack as a sequence of distinct stages or steps.
+
+For each stage, clearly identify the applications involved (parent/child processes), the user actions, and any key artifacts (files, URLs).
+
+Provide realistic command-line syntax and network indicators where applicable.
+
+Use comments to explain the purpose of each technical step.
+
+T — Tone  
+Professional, and deeply technical.
+
+A — Audience
+Security operations engineers and threat hunters who will use this complete scenario information to design and optimize detection rules.
+
+R — Response Format  
+For each attack pattern, provide the following structured breakdown:
+Pattern Name
+Scenario Overview: A brief, high-level summary of the entire attack kill chain.
+Attack Flow Breakdown: A step-by-step analysis of the attack progression.
+shell
+  # Comment explaining the behavior
+  <shell command or script>

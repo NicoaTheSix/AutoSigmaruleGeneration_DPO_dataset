@@ -1,0 +1,56 @@
+1. **Framework Section**  
+   **Phase 1: Information Gathering**  
+   - Utilize OS administration utilities (e.g., `ipconfig`, `ifconfig`, `arp`, `route`) to collect network configuration details.  
+   - Execute commands on network devices (e.g., `show ip route`, `show ip interface`) to retrieve interface configurations and routing information.  
+   - Leverage specialized tools or scripts to automate the collection of network settings and configurations from compromised hosts.  
+
+   **Phase 2: Data Exfiltration**  
+   - Log and transmit collected network information (e.g., IP addresses, MAC addresses) to command and control (C2) servers.  
+   - Use file redirection or logging mechanisms to store network configuration data for later retrieval by adversaries.  
+   - Implement network communication protocols to send gathered data securely to external servers.  
+
+   **Phase 3: Network Mapping**  
+   - Analyze collected network data to identify potential targets and access points within the network.  
+   - Utilize gathered information to shape follow-on actions, such as lateral movement or privilege escalation.  
+   - Maintain an updated inventory of network configurations to facilitate ongoing reconnaissance and exploitation efforts.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Network Configuration Discovery  
+     - Examples: `ipconfig /all`, `ifconfig`, `arp -a`  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Command Execution for Network Information  
+     - Examples: `show ip route`, `show ip interface`, `netsh interface show`  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Data Logging and Transmission  
+     - Examples: `ipconfig /all >> %temp%\download`, logging MAC and IP addresses to a file  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Automated Network Scanning  
+     - Examples: Using tools like `NBTscan`, `Advanced IP Scanner`  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Network Information Exfiltration  
+     - Examples: Sending collected data to C2 servers, using HTTP requests to transmit IP information  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Network Mapping for Target Identification  
+     - Examples: Analyzing collected IP and MAC addresses to identify network topology  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Proxy Configuration Discovery  
+     - Examples: Using `InternetQueryOptionA` to gather proxy settings  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1016  
+
+   - **Pattern Name**: Domain and Network Adapter Enumeration  
+     - Examples: Collecting domain names and network adapter information using `GetAdaptersInfo`  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1016  

@@ -1,0 +1,51 @@
+1. **Framework Section**  
+   Phase 1: *Discovery*  
+   - Monitor for command-line utilities (e.g., `dir`, `ls`, `find`, `tree`) used for file and directory enumeration.  
+   - Analyze logs for access to file system metadata, including file attributes and directory listings.  
+   - Detect the use of custom tools or scripts that perform file and directory discovery.  
+
+   Phase 2: *Information Gathering*  
+   - Identify patterns of access to sensitive directories (e.g., `C:\Program Files`, `C:\Users`, `C:\Documents and Settings`).  
+   - Track the collection of file metadata, such as file size, type, and last modified timestamps.  
+   - Monitor for commands that search for specific file types or extensions (e.g., `.doc`, `.pdf`, `.xls`).  
+
+   Phase 3: *Exfiltration Preparation*  
+   - Detect attempts to gather information on files for potential exfiltration (e.g., listing files before encryption).  
+   - Monitor for the creation of temporary files that may indicate data collection activities.  
+   - Analyze network traffic for signs of file listings being sent to external servers or command-and-control (C2) infrastructure.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Command-Line Enumeration  
+     - Examples: `admin@338actors used the following commands after exploiting a machine with LOWBALL malware to obtain information about files and directories: dir c:\\ >> %temp%\\downloaddir "c:\\Documents and Settings" >> %temp%\\downloaddir "c:\\Program Files\\" >> %temp%\\downloaddir d:\\ >> %temp%\\download`  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: File Metadata Collection  
+     - Examples: `Akira examines files prior to encryption to determine if they meet requirements for encryption and can be encrypted by the ransomware. These checks are performed through native Windows functions such as GetFileAttributesW.`  
+     - Associated Phase: Information Gathering  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: Targeted File Search  
+     - Examples: `AppleSeed has the ability to search for .txt, .ppt, .hwp, .pdf, and .doc files in specified directories.`  
+     - Associated Phase: Information Gathering  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: Recursive Directory Listing  
+     - Examples: `Epic recursively searches for all .doc files on the system and collects a directory listing of the Desktop, %TEMP%, and %WINDOWS%\\Temp directories.`  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: Pre-Exfiltration File Listing  
+     - Examples: `WastedLocker can enumerate files and directories just prior to encryption.`  
+     - Associated Phase: Exfiltration Preparation  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: Use of Custom Tools for Enumeration  
+     - Examples: `Cobalt Strike can explore files on a compromised system.`  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1083  
+
+   - **Pattern Name**: File Type Filtering  
+     - Examples: `TrickBot searches the system for all of the following file extensions: .avi, .mov, .mkv, .mpeg, .mpeg4, .mp4, .mp3, .wav, .ogg, .jpeg, .jpg, .png, .bmp, .gif, .tiff, .ico, .xlsx, and .zip.`  
+     - Associated Phase: Information Gathering  
+     - Mapping to TTP ID: T1083  

@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Windows\\System32\\cmd.exe" AND srcNode.Cmdline: "*net user*" AND srcNode.Type: Process

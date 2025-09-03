@@ -1,0 +1,51 @@
+1. **Framework Section**  
+   Phase 1: *Discovery*  
+   - Identify services running on remote hosts and local network infrastructure devices.  
+   - Utilize tools for port scanning and service enumeration (e.g., Nmap, WinEggDrop).  
+   - Conduct OS fingerprinting to determine the operating systems of discovered services.  
+
+   Phase 2: *Vulnerability Assessment*  
+   - Assess discovered services for known vulnerabilities (e.g., using vulnerability scanners like SMBTouch).  
+   - Perform targeted scans for specific vulnerabilities (e.g., EternalBlue) on identified services.  
+   - Analyze results from scans to prioritize targets based on exposure and risk.  
+
+   Phase 3: *Exploitation Preparation*  
+   - Gather information on open ports and services to plan potential exploitation.  
+   - Map out network topology based on discovered services and their configurations.  
+   - Identify weak points in the network that could be leveraged for further attacks.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Port Scanning  
+     - Examples: "Agrius used the open-source port scanner WinEggDrop to perform detailed scans of hosts of interest in victim networks."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1046  
+
+   - **Pattern Name**: Service Enumeration  
+     - Examples: "BlackByte has used tools such as NetScan to enumerate network services in victim environments."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1046  
+
+   - **Pattern Name**: Vulnerability Scanning  
+     - Examples: "BackdoorDiplomacy has used SMBTouch, a vulnerability scanner, to determine whether a target is vulnerable to EternalBlue malware."  
+     - Associated Phase: Vulnerability Assessment  
+     - Mapping to TTP ID: T1046  
+
+   - **Pattern Name**: OS Fingerprinting  
+     - Examples: "APT32 performed network scanning on the network to search for open ports, services, OS fingerprinting, and other vulnerabilities."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1046  
+
+   - **Pattern Name**: Network Mapping  
+     - Examples: "Industroyer uses a custom port scanner to map out a network."  
+     - Associated Phase: Exploitation Preparation  
+     - Mapping to TTP ID: T1046  
+
+   - **Pattern Name**: Targeted Scanning  
+     - Examples: "Lazarus Group has used nmap from a router VM to scan ports on systems within the restricted segment of an enterprise network."  
+     - Associated Phase: Vulnerability Assessment  
+     - Mapping to TTP ID: T1046  
+
+   - **Pattern Name**: Service Discovery in Cloud Environments  
+     - Examples: "Team TNT has also used malware that utilizes zmap and zgrab to search for vulnerable services in cloud environments."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1046  

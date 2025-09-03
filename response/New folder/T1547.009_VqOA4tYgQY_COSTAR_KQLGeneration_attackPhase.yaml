@@ -1,0 +1,3 @@
+<output>
+dstNode.Type: File AND dstNode.relation: CreateFile AND dstNode.Name: '*malicious.lnk*' AND dstNode.Cmdline: 'C:\\Path\\To\\Malicious\\Payload.exe'
+</output>

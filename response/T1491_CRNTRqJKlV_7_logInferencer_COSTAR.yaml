@@ -1,0 +1,22 @@
+<output>
+1. **Identify Command and Control Communication via PowerShell**  
+   - Monitor for events where the `srcNode` is a PowerShell process.  
+   - Set the `relation` to "TCP Connect" for the outbound network connection.  
+   - Ensure the `dstNode` contains a `Dstaddress` that matches known malicious IP addresses or domains.  
+   - Example:  
+     ```json
+     {
+       "srcNode": {
+         "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+         "Cmdline": "powershell.exe -Command ...",
+         "Type": "Process"
+       },
+       "dstNode": {
+         "Dstaddress": "192.0.2.1",  // Replace with known malicious IP
+         "Port": 443,
+         "Type": "Network"
+       },
+       "relation": "TCP Connect"
+     }
+     ```
+</output>

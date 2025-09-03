@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Windows\\System32\\regedit.exe" AND srcNode.Type: Process AND dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" AND dstNode.Type: Registry AND relation: RegSetValue

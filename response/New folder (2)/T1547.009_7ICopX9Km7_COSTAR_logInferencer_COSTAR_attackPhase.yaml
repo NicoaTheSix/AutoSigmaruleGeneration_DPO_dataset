@@ -1,0 +1,59 @@
+1. **Identify Shortcut Creation for Persistence**  
+   - Monitor for the creation of a `.LNK` file in the CSIDL_STARTUP directory, indicating an attempt to establish persistence.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\explorer.exe" (or similar path for Windows Explorer)  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "MaliciousApp.lnk"  
+     - `relation`: "CreateFile"  
+     - `timestamp`: [Time of creation]
+
+2. **Identify Modification of Existing Shortcuts**  
+   - Monitor for modifications to existing shortcut files that point to malicious executables.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\explorer.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Telegram.lnk" (or similar existing shortcut)  
+     - `relation`: "WriteFile"  
+     - `timestamp`: [Time of modification]
+
+3. **Identify Use of Malicious LNK Files**  
+   - Monitor for the execution of `.LNK` files that download and execute additional malware.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\explorer.exe"  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "C:\\Path\\To\\malware.exe"  
+     - `relation`: "Process Create"  
+     - `timestamp`: [Time of execution]
+
+4. **Identify Registry Key Manipulation for Persistence**  
+   - Monitor for registry modifications that ensure a malicious shortcut executes on startup.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\reg.exe" (or similar path for registry modification)  
+     - `dstNode.Type`: "Registry"  
+     - `dstNode.Key`: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"  
+     - `relation`: "RegSetValue"  
+     - `timestamp`: [Time of modification]
+
+5. **Identify Masquerading via Shortcuts**  
+   - Monitor for the execution of shortcuts that masquerade as legitimate applications.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\explorer.exe"  
+     - `dstNode.Type`: "Process"  
+     - `dstNode.Image`: "C:\\Path\\To\\MaliciousExecutable.exe"  
+     - `relation`: "Process Create"  
+     - `timestamp`: [Time of execution]
+
+6. **Identify Browser Shortcut Modification**  
+   - Monitor for modifications to browser shortcuts that include malicious extensions.  
+   - Schema Fields:  
+     - `srcNode.Type`: "Process"  
+     - `srcNode.Image`: "C:\\Windows\\explorer.exe"  
+     - `dstNode.Type`: "File"  
+     - `dstNode.Name`: "Google Chrome.lnk"  
+     - `relation`: "WriteFile"  
+     - `timestamp`: [Time of modification]

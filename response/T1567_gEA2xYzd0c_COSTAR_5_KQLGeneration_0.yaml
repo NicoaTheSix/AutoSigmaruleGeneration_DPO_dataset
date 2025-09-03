@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Windows\\System32\\schtasks.exe" AND srcNode.Cmdline: "schtasks /create /tn \"MaliciousTask\" /tr \"C:\\Path\\To\\SuspiciousBinary.exe\" /sc onlogon" AND dstNode.Name: "MaliciousTask" AND dstNode.Type: Process

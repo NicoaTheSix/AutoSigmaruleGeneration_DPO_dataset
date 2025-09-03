@@ -1,0 +1,2 @@
+
+srcNode.Image: "C:\\Path\\To\\malicious.exe" AND srcNode.Type: "Process" AND dstNode.Image: "C:\\Windows\\explorer.exe" AND dstNode.Type: "Process" AND relation: "Process Create"

@@ -1,0 +1,51 @@
+1. **Framework Section**  
+   Phase 1: *Discovery*  
+   - Identify installed security software and configurations using commands such as `WMIC`, `reg query`, and `tasklist`.  
+   - Query system processes and services to detect security tools and their statuses.  
+   - Utilize cloud APIs to enumerate security agents in cloud environments (e.g., AWS CloudWatch, Azure VM Agent).  
+
+   Phase 2: *Assessment*  
+   - Analyze the gathered information to determine the presence of specific security products (e.g., antivirus, EDR tools).  
+   - Evaluate the configurations and settings of identified security software to assess potential vulnerabilities.  
+   - Monitor for any changes in the state of security tools that may indicate evasion or tampering attempts.  
+
+   Phase 3: *Exploitation*  
+   - Execute follow-on actions based on the assessment of security software (e.g., disabling or bypassing security measures).  
+   - Deploy malware or other tools tailored to the identified security environment to maximize effectiveness.  
+   - Utilize the information to avoid detection during subsequent malicious activities.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Security Software Enumeration  
+     - Examples: "ABK has the ability to identify the installed anti-virus product on the compromised host."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: WMI Queries for Security Products  
+     - Examples: "APT42 has used Windows Management Instrumentation (WMI) to check for anti-virus products."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Process Name Checks  
+     - Examples: "DarkGate will not execute its keylogging thread if a process name associated with Trend Micro anti-virus is identified."  
+     - Associated Phase: Assessment  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Cloud Security Agent Discovery  
+     - Examples: "Pacucan enumerate AWS security services, including WAF rules and GuardDuty detectors."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Conditional Execution Based on Security Software  
+     - Examples: "The main CozyCardropper checks whether the victim has an anti-virus product installed. If the installed product is on a predetermined list, the dropper will exit."  
+     - Associated Phase: Exploitation  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Registry Key Queries  
+     - Examples: "Carberp has queried the infected system's registry searching for specific registry keys associated with antivirus products."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Termination of Security Processes  
+     - Examples: "ThiefQuest uses the kill_unwanted function to get a list of running processes, compares each process with an encrypted list of 'unwanted' security related programs, and kills the processes for security related programs."  
+     - Associated Phase: Exploitation  
+     - Mapping to TTP ID: T1518.001  

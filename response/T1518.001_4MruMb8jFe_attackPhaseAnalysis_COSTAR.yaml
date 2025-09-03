@@ -1,0 +1,51 @@
+1. **Framework Section**  
+   Phase 1: *Discovery*  
+   - Identify installed security software and configurations using commands such as `WMIC`, `reg query`, and `tasklist`.  
+   - Query system processes and services to detect security tools and their statuses.  
+   - Utilize cloud APIs to enumerate security agents in cloud environments (e.g., AWS CloudWatch, Azure VM Agent).  
+
+   Phase 2: *Assessment*  
+   - Analyze the gathered information to determine the presence of specific security products (e.g., antivirus, EDR tools).  
+   - Evaluate the potential impact of identified security software on adversary operations (e.g., whether to proceed with infection).  
+   - Monitor for changes in security software status or configurations that may indicate defensive measures.  
+
+   Phase 3: *Evasion*  
+   - Implement checks to avoid detection by security software (e.g., terminating processes associated with security tools).  
+   - Modify behavior based on the presence of specific security products (e.g., altering payload delivery or execution strategy).  
+   - Use stealth techniques to bypass or disable security measures identified during the discovery phase.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Security Software Enumeration  
+     - Examples: "Action RAT can identify AV products on an infected host using the command: cmd.exe WMIC /Node:localhost /Namespace:\\root\\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Process and Service Checks  
+     - Examples: "DarkGate will not execute its keylogging thread if a process name associated with Trend Micro anti-virus is identified."  
+     - Associated Phase: Assessment  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Cloud Security Discovery  
+     - Examples: "Pacucan enumerate AWS security services, including WAF rules and GuardDuty detectors."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Evasion Techniques  
+     - Examples: "Epic searches for anti-malware services running on the victim’s machine and terminates itself if it finds them."  
+     - Associated Phase: Evasion  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Registry Key Queries  
+     - Examples: "Carberphas queried the infected system's registry searching for specific registry keys associated with antivirus products."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Command-Line Discovery  
+     - Examples: "Lumma Stealer has detected antivirus processes using commands such as 'tasklist' and 'findstr'."  
+     - Associated Phase: Discovery  
+     - Mapping to TTP ID: T1518.001  
+
+   - **Pattern Name**: Conditional Execution Based on Security Tools  
+     - Examples: "The main CozyCardropper checks whether the victim has an anti-virus product installed. If the installed product is on a predetermined list, the dropper will exit."  
+     - Associated Phase: Evasion  
+     - Mapping to TTP ID: T1518.001  

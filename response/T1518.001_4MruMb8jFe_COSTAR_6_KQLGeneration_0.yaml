@@ -1,0 +1,2 @@
+
+Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND Cmdline: "*-ExecutionPolicy Bypass -File *" AND Dstaddress: "malicious.com" AND Port: 80 AND relation: "TCP Connect"

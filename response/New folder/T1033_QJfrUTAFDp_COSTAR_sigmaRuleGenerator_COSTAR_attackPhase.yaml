@@ -1,0 +1,138 @@
+```yaml
+- title: Identify Initial Access via Email
+  id: 123e4567-e89b-12d3-a456-426614174000
+  description: Detects when a victim receives a spearphishing email with a malicious attachment in Outlook.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Name: "Outlook"
+        Type: "Process"
+      event_type: "email_received"
+    condition: selection
+  tags:
+    - ATT&CK ID: T1566
+    - tactic: Initial Access
+  level: high
+
+---
+- title: Capture Opening of the Malicious Attachment
+  id: 123e4567-e89b-12d3-a456-426614174001
+  description: Detects when a victim opens a malicious attachment in Microsoft Word.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Name: "Winword"
+        Type: "Process"
+      event_type: "document_opened"
+    condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Initial Access
+  level: high
+
+---
+- title: Monitor Payload Download via Web Browser
+  id: 123e4567-e89b-12d3-a456-426614174002
+  description: Identifies the execution of a PowerShell command that downloads a malicious executable.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Name: "PowerShell"
+        Type: "Process"
+      dstNode:
+        Type: "Network"
+        url: "malicious_payload_url"
+    condition: selection
+  tags:
+    - ATT&CK ID: T1059
+    - tactic: Execution
+  level: high
+
+---
+- title: Track Execution of the Malicious Payload
+  id: 123e4567-e89b-12d3-a456-426614174003
+  description: Detects the execution of a downloaded executable that establishes a reverse shell to the C2 server.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Name: "PowerShell"
+        Type: "Process"
+      dstNode:
+        Image: "payload.exe"
+        Type: "Process"
+    condition: selection
+  tags:
+    - ATT&CK ID: T1203
+    - tactic: Execution
+  level: high
+
+---
+- title: Log Establishing Command and Control
+  id: 123e4567-e89b-12d3-a456-426614174004
+  description: Monitors the payload's communication with the C2 server for further instructions.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Name: "PowerShell"
+        Type: "Process"
+      dstNode:
+        Type: "Network"
+        ip: "C2_server_ip"
+    condition: selection
+  tags:
+    - ATT&CK ID: T1071
+    - tactic: Command and Control
+  level: high
+
+---
+- title: Detect Post-Exploitation Activities
+  id: 123e4567-e89b-12d3-a456-426614174005
+  description: Identifies further commands executed by the attacker to escalate privileges or move laterally.
+  status: production
+  author: auto-generated
+  date: 2023-10-01
+  logsource:
+    category: custom
+    product: windows
+  detection:
+    selection:
+      srcNode:
+        Name: "cmd.exe"
+        Type: "Process"
+      event_type: "command_executed"
+    condition: selection
+  tags:
+    - ATT&CK ID: T1068
+    - tactic: Privilege Escalation
+  level: high
+```

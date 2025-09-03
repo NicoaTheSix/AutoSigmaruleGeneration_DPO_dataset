@@ -1,0 +1,39 @@
+title: Detect File Extraction or Archive Decompression to User Folders
+id: 3a23d3b4-d94d-46bb-9157-9670c6350d88
+description: Detects file creation in user folders by decompression utilities or explorer involving suspicious attachment types.
+status: production
+author: auto-generated
+date: 2025-07-13
+logsource:
+  category: custom
+  product: windows
+detection:
+  selection:
+    relation|contains:
+      - CreateFile
+      - WriteFile
+    srcNode.Image|endswith:
+      - winzip.exe
+      - 7z.exe
+      - explorer.exe
+    dstNode.Name|endswith:
+      - .docm
+      - .xlsm
+      - .exe
+      - .lnk
+      - .js
+      - .vbs
+      - .zip
+      - .rar
+      - .iso
+      - .img
+      - .chm
+    dstNode.Name|contains:
+      - \Downloads\
+      - \Desktop\
+      - \Temp\
+  condition: selection
+tags:
+  - attack.t1566.001
+  - attack.initial_access
+level: medium

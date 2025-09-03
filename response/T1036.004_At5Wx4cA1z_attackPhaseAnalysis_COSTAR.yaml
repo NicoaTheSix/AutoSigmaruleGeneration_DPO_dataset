@@ -1,0 +1,46 @@
+1. **Framework Section**  
+   Phase 1: *Service/Task Creation*  
+   - Monitor for the creation of new services or scheduled tasks with names similar to legitimate ones.  
+   - Analyze service/task descriptions for anomalies or discrepancies with known legitimate services.  
+   - Review the command-line arguments used during service/task creation for suspicious patterns.  
+
+   Phase 2: *Service/Task Modification*  
+   - Detect modifications to existing services or scheduled tasks, particularly changes to names or descriptions.  
+   - Investigate the use of commands like `schtasks /change` or service management commands that alter properties of legitimate services.  
+   - Examine registry keys associated with service configurations for unauthorized changes.  
+
+   Phase 3: *Execution and Persistence*  
+   - Track the execution of services or tasks that have been renamed or disguised to appear legitimate.  
+   - Monitor for unusual parent-child process relationships that may indicate a malicious service/task execution.  
+   - Analyze network activity initiated by these services/tasks for signs of command and control communication.  
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: Service Name Masquerading  
+     - Examples: Sandworm Team leveraged Systemd service units to masquerade GOGETTER malware; APT-C-36 disguised scheduled tasks as those used by Google.  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Description Manipulation  
+     - Examples: CSPY Downloader attempted to appear as a legitimate Windows service with a fake description; TheExaramel for Windows dropper created a service with the description "Windows Check AV."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Service Modification  
+     - Examples: APT41 used `SCHTASKS /Change` to modify legitimate scheduled tasks; DEADEYE modified scheduled tasks including legitimate Windows tasks.  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Impersonation of Legitimate Services  
+     - Examples: Emote installed itself as a new service named "Windows Defender System Service"; Bazar created a task named to appear benign.  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Registry Key Manipulation  
+     - Examples: build_downer added itself to the Registry Run key as "NVIDIA"; Truvasys added a Registry Run key with a value "TaskMgr."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1036.004  
+
+   - **Pattern Name**: Execution of Malicious Services  
+     - Examples: Wizard Spider used scheduled tasks to install TrickBot with names like WinDotNet; FIN7 created a scheduled task named "AdobeFlashSync."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1036.004  

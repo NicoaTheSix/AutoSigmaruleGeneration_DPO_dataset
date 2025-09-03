@@ -1,0 +1,51 @@
+1. **Framework Section**  
+   Phase 1: *Information Gathering*  
+   - Analyze system commands and tools used for information retrieval (e.g., `systeminfo`, `uname`, `ver`, `df`).
+   - Monitor API calls and scripts that query system details (e.g., WMI queries, `esxcli` commands).
+   - Identify artifacts related to system information collection (e.g., temporary files created during data collection).
+
+   Phase 2: *Data Exfiltration*  
+   - Track network communications that send system information to command and control (C2) servers.
+   - Monitor for file creation or modification events that indicate data packaging for exfiltration (e.g., files in `%temp%`).
+   - Analyze beaconing behavior that includes system information in the payload.
+
+   Phase 3: *Follow-on Actions*  
+   - Observe changes in system behavior or configuration following information gathering (e.g., deployment of additional payloads).
+   - Identify any lateral movement attempts based on the gathered system information (e.g., targeting specific OS versions).
+   - Monitor for persistence mechanisms that may be established after initial reconnaissance.
+
+2. **Behavioral Patterns Section**  
+   - **Pattern Name**: OS Version Identification  
+     - Examples: "4H RAT sends an OS version identifier in its beacons."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1082  
+
+   - **Pattern Name**: System Information Collection via Commands  
+     - Examples: "admin@338 actors used the following commands after exploiting a machine with LOWBALL malware to obtain information about the OS: ver >> %temp%\\download systeminfo >> %temp%\\download."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1082  
+
+   - **Pattern Name**: API Calls for System Details  
+     - Examples: "Akira uses the GetSystemInfo Windows function to determine the number of processors on a victim machine."  
+     - Associated Phase: Phase 1  
+     - Mapping to TTP ID: T1082  
+
+   - **Pattern Name**: Data Transmission to C2  
+     - Examples: "Felismus collects the system information, including hostname and OS version, and sends it to the C2 server."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1082  
+
+   - **Pattern Name**: Use of Temporary Files for Data Storage  
+     - Examples: "During Operation Honeybee, the threat actors collected the computer name, OS, and other system information using cmd /c systeminfo > %temp%\\ temp.ini."  
+     - Associated Phase: Phase 2  
+     - Mapping to TTP ID: T1082  
+
+   - **Pattern Name**: Follow-on Payload Deployment  
+     - Examples: "Wizard Spider has used Systeminfo and similar commands to acquire detailed configuration information of a victim's machine."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1082  
+
+   - **Pattern Name**: Lateral Movement Based on System Info  
+     - Examples: "TrickBot gathers the OS version, machine name, CPU type, amount of RAM available, and UEFI/BIOS firmware information from the victim’s machine."  
+     - Associated Phase: Phase 3  
+     - Mapping to TTP ID: T1082  

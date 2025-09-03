@@ -1,0 +1,2 @@
+
+srcNode.Name: "Outlook" AND srcNode.Type: "Process" AND dstNode.Name: "malicious_macro.docm" AND dstNode.Type: "File" AND relation: "Process Create"

