@@ -1,2 +1,0 @@
-
-srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND srcNode.Cmdline: "powershell.exe -ExecutionPolicy Bypass -File C:\\Users\\User\\Downloads\\payload.exe" AND srcNode.Type: Process AND dstNode.Image: "C:\\Users\\User\\Downloads\\payload.exe" AND dstNode.Cmdline: "C:\\Users\\User\\Downloads\\payload.exe" AND dstNode.Type: Process

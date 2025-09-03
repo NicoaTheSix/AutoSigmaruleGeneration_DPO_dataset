@@ -1,7 +1,0 @@
-
-   7. **Browser Shortcut Manipulation**
-      - Application: Chrome
-      - User Action: The malicious payload modifies the browser shortcut to launch a malicious extension.
-      - Key Artifacts: Shortcut file modified at `C:\Users\User\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Chrome.lnk`.
-      - Detection: Monitor for modifications to browser shortcuts that may lead to the execution of malicious extensions or payloads.
-   

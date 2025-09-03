@@ -1,7 +1,0 @@
-
-   7. **Post-Execution Activity**
-      - Application: Task Scheduler
-      - User Action: The payload creates a scheduled task to maintain persistence.
-      - Key Artifacts: Scheduled task named "MaliciousTask" set to trigger on user logon.
-      - Detection: Monitor for the creation of new scheduled tasks with unusual names or commands.
-   

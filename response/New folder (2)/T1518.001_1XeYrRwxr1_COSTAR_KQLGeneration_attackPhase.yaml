@@ -1,9 +1,0 @@
-<output>
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice_2023.xlsx") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice_2023.xlsx") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" AND relation: "Process Create" AND dstNode.Type: "File" AND dstNode.Name: "payload.exe") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\cmd.exe" AND dstNode.Type: "Process" AND dstNode.Image: "C:\\Users\\Victim\\Downloads\\payload.exe") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\reg.exe" AND dstNode.Type: "Registry" AND dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "malicious-website.com") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\cmd.exe" AND dstNode.Type: "File" AND dstNode.Name: "C:\\Users\\Victim\\Downloads\\payload.exe")
-</output>

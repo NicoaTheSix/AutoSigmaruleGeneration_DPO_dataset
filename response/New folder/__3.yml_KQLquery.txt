@@ -1,2 +1,0 @@
-
-relation: "Process Create" AND srcNode.Image: (outlook.exe OR thunderbird.exe OR chrome.exe OR msedge.exe OR firefox.exe) AND dstNode.Image: (winword.exe OR excel.exe OR powerpnt.exe OR acrobat.exe OR acroRd32.exe OR wscript.exe OR mshta.exe OR cmd.exe OR powershell.exe) AND dstNode.Cmdline: ("\\Downloads\\" OR "\\Desktop\\" OR "\\Temp\\")

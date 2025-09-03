@@ -1,2 +1,0 @@
-
-Image: "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe" AND Cmdline: "*-Command*" AND Dstaddress: "192.0.2.1" AND Port: 443 AND relation: "TCP Connect"

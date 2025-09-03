@@ -1,2 +1,0 @@
-
-srcNode.Image: "C:\\Windows\\System32\\schtasks.exe" AND srcNode.Cmdline: "*schtasks /create*" AND srcNode.Type: Process AND dstNode.Name: "*" AND dstNode.Type: Registry AND relation: "Process Create"

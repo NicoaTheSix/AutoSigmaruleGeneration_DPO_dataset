@@ -1,2 +1,0 @@
-
-srcNode.Image: "C:\\Windows\\explorer.exe" AND srcNode.Type: Process AND dstNode.Name: "payload.exe" AND dstNode.Type: File AND dstNode.Image: "C:\\Users\\<username>\\Downloads\\payload.exe"

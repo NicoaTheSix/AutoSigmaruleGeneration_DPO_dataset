@@ -1,7 +1,0 @@
-
-6. **Establishing Persistence**
-   - Application: Windows Task Scheduler
-   - User Action: The payload creates a scheduled task to ensure it runs on system startup.
-   - Key Artifacts: Scheduled task created with command: `schtasks /create /tn "MaliciousTask" /tr "C:\Users\User\Downloads\payload.exe" /sc onlogon`.
-   - Detection: Monitor for creation of scheduled tasks with unusual names or commands.
-

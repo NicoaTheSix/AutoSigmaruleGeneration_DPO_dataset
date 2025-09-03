@@ -1,8 +1,0 @@
-<output>
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice.docx") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice.docx") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "malicious.com") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\schtasks.exe" AND dstNode.Type: "Registry" AND dstNode.Key: "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tasks") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Path\\To\\MaliciousExecutable.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "malicious.com") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Type: "Network" AND dstNode.Port: 21)
-</output>

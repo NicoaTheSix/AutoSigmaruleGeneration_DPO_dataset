@@ -1,2 +1,0 @@
-
-Image: ("C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" OR "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\pwsh.exe") AND (Cmdline: "Invoke-WebRequest" OR Cmdline: "Invoke-RestMethod") AND dstNode.Dstaddress: ("malicious.com" OR "external_ip")

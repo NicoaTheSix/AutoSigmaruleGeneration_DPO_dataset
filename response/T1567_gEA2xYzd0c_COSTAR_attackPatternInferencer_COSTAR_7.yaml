@@ -1,7 +1,0 @@
-
-   8. **Post-Exfiltration Cleanup**
-      - Application: Windows Command Prompt
-      - User Action: The payload deletes temporary files and clears logs to cover tracks.
-      - Key Artifacts: Command executed: `del C:\Users\User\Downloads\payload.exe` and log clearing commands.
-      - Detection: Monitor for deletion of files and clearing of logs, especially following suspicious activity.
-   

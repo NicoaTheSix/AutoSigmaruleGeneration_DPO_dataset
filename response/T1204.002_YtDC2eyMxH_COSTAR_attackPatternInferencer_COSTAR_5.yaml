@@ -1,6 +1,0 @@
-
-6. **Establishing Persistence**
-   - Application: Task Scheduler
-   - User Action: The payload creates a scheduled task to ensure it runs on system startup.
-   - Key Artifacts: Scheduled task entry created with a command to execute the payload.
-   - Detection: Monitor for new scheduled tasks created by non-administrative users that point to unusual executables.

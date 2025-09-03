@@ -1,6 +1,0 @@
-
-3. **Execution of Malicious Macro**
-   - Application: Microsoft Word
-   - User Action: The macro executes upon enabling content.
-   - Key Artifacts: Macro code that downloads a payload from a remote server.
-   - Detection: Monitor for processes spawned from Word that execute scripts or download files.

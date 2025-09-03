@@ -1,3 +1,0 @@
-<output>
-subject: "Invoice Attached" OR Image: "C:\\\\Program Files\\\\Microsoft Office\\\\root\\\\Office16\\\\EXCEL.EXE" OR macro_enabled: true OR Image: "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe" AND Cmdline: ("*Invoke-WebRequest*" OR "*curl*") OR Image: "*malware.exe*" OR Dstaddress: "<C2_SERVER_IP>" OR command: "schtasks /create" OR Dstaddress: "<C2_SERVER_IP>"
-</output>

@@ -1,6 +1,0 @@
-
-6. **Establishing Persistence**
-   - Application: Windows Registry
-   - User Action: The malicious payload modifies the registry to ensure it runs on startup.
-   - Key Artifacts: Registry key modification at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`.
-   - Detection: Monitor for changes to registry keys associated with startup programs.

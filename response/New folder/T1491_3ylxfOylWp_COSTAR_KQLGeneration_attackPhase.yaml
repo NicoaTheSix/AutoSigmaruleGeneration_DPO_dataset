@@ -1,3 +1,0 @@
-<output>
-(srcNode: "Microsoft Outlook" AND dstNode: "Invoice_2023.xlsx" AND relation: "Process Create") OR (srcNode: "Microsoft Excel" AND dstNode: "Invoice_2023.xlsx" AND relation: "Process Create") OR (srcNode: "powershell.exe" AND dstNode: "http://malicious-server.com/payload.exe" AND relation: "TCP Connect") OR (srcNode: "payload.exe" AND dstNode: "malicious-server.com" AND relation: "Process Create") OR (srcNode: "reg.exe" AND dstNode: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" AND relation: "RegSetValue") OR (srcNode: "schtasks.exe" AND dstNode: "malicious_task" AND relation: "Process Create")
-</output>

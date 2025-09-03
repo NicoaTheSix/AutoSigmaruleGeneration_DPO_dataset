@@ -1,7 +1,0 @@
-
-   7. **Command and Control Communication**
-      - Application: PowerShell
-      - User Action: The payload initiates a connection to the attacker's command and control server.
-      - Key Artifacts: Network traffic to `http://malicious.com/c2` with unusual user-agent strings.
-      - Detection: Monitor for outbound connections to known malicious domains or IP addresses.
-   

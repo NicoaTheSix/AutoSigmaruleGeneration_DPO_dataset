@@ -1,7 +1,0 @@
-<output>
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice_2023.xlsx") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice_2023.xlsx") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "malicious-server.com") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Users\\Victim\\Downloads\\payload.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "C2 server IP") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\reg.exe" AND dstNode.Type: "Registry" AND dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run")
-</output>

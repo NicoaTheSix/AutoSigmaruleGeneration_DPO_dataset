@@ -1,2 +1,0 @@
-
-srcNode.Image: "C:\\Windows\\System32\\schtasks.exe" AND srcNode.Cmdline: "schtasks /create /tn \"MaliciousTask\" /tr \"C:\\Users\\User\\Downloads\\payload.exe\" /sc onlogon" AND dstNode.Name: "MaliciousTask" AND dstNode.Type: "Registry"

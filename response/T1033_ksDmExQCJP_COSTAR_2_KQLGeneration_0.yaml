@@ -1,2 +1,0 @@
-
-srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND srcNode.Cmdline: "* /mFileOpen" AND srcNode.Type: "Process" AND dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Cmdline: "* -ExecutionPolicy Bypass -Command *" AND dstNode.Type: "Process"

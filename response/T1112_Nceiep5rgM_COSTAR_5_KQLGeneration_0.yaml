@@ -1,2 +1,0 @@
-
-srcNode.Image: "C:\\Windows\\System32\\reg.exe" AND srcNode.Cmdline: "reg add HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v MaliciousApp /t REG_SZ /d \"malicious_payload.exe\"" AND dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\MaliciousApp" AND relation: RegCreateKey

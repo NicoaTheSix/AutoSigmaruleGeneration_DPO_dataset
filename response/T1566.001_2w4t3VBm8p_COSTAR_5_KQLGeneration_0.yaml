@@ -1,2 +1,0 @@
-
-srcNode.Type: Process AND srcNode.Image: "*\\Path\\To\\MaliciousExecutable.exe" AND srcNode.Cmdline: "*\\Path\\To\\MaliciousExecutable.exe -arg" AND dstNode.Type: Registry AND dstNode.Key: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" AND relation: "RegSetValue"

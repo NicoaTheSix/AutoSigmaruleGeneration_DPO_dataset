@@ -1,2 +1,0 @@
-
-Image: "C:\\Windows\\System32\\schtasks.exe" AND Cmdline: "*schtasks /create*" AND dstNode.Name: "MaliciousTask" AND dstNode.Type: "Process"

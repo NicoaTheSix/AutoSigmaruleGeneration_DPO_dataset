@@ -1,6 +1,0 @@
-
-8. **Cleanup and Covering Tracks**
-   - Application: Windows Command Prompt
-   - User Action: The payload deletes temporary files and logs to avoid detection.
-   - Key Artifacts: Command executed: `del /f /q %temp%\*`
-   - Detection: Monitor for command-line activity that deletes files, especially in temporary directories.

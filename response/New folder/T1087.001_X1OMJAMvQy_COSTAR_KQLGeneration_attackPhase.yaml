@@ -1,8 +1,0 @@
-<output>
-(srcNode: "email_client" AND dstNode: "malicious_document.docx" AND sender: "unknown" AND attachment: "executable_macro") OR 
-(srcNode: "Microsoft Word" AND dstNode: "malicious_document.docx" AND cmdline: "*macro_execution*") OR 
-(srcNode: ("cmd.exe" OR "explorer.exe") AND dstNode: "payload.exe" AND relation: "direct_execution") OR 
-(srcNode: "process_modifying_registry" AND dstNode: "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\payload.exe" AND action: ("RegSetValue" OR "RegCreateKey")) OR 
-(srcNode: "web_browser" AND dstNode: "malicious_ip_or_domain" AND relation: "outbound_traffic") OR 
-(srcNode: "cmd.exe" AND action: "deletion_command" AND target: "payload.exe" AND location: "temp_directory")
-</output>

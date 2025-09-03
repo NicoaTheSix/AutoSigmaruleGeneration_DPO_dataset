@@ -1,7 +1,0 @@
-<output>
-(srcNode.Name: "Outlook" AND dstNode.Name: "Invoice_2023.xlsx" AND relation: "Email Received") OR 
-(srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" AND dstNode.Image: "C:\\Path\\To\\Invoice_2023.xlsx" AND relation: "Process Create") OR 
-(srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Image: "[path to the downloaded executable]" AND relation: "Process Create") OR 
-(srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Dstaddress: "[malicious IP address]" AND relation: "TCP Connect") OR 
-(srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Dstaddress: "[C2 server IP]" AND relation: "TCP Send")
-</output>

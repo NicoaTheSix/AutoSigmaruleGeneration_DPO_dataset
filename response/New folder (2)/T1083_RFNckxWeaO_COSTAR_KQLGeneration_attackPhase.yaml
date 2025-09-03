@@ -1,8 +1,0 @@
-<output>
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice.xlsx") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE" AND dstNode.Type: "File" AND dstNode.Name: "Invoice.xlsx") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Type: "File" AND dstNode.Name: "backdoor.exe") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Type: "Registry" AND dstNode.Key: "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" AND dstNode.Type: "Network" AND dstNode.Dstaddress: "malicious-server.com") OR 
-(srcNode.Type: "Process" AND srcNode.Image: "C:\\Windows\\System32\\cmd.exe" AND dstNode.Type: "File" AND dstNode.Name: "backdoor.exe")
-</output>

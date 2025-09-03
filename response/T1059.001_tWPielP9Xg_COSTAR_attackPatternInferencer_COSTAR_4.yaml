@@ -1,6 +1,0 @@
-
-5. **Execution of Malicious Payload**
-   - Application: PowerShell
-   - User Action: The downloaded executable is executed by the user or automatically.
-   - Key Artifacts: Executable file located at `C:\Users\User\Downloads\payload.exe`.
-   - Detection: Monitor for execution of newly downloaded executables, especially from the Downloads folder.

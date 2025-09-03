@@ -1,3 +1,0 @@
-<output>
-srcNode.Type: "Process" AND srcNode.Image: "C:\\\\Program Files\\\\Microsoft Office\\\\root\\\\Office16\\\\OUTLOOK.EXE" AND dstNode.Type: "File" AND dstNode.Name: "invoice.docx"
-</output>

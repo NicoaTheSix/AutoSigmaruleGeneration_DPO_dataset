@@ -1,7 +1,0 @@
-
-   6. **Establishing Persistence**
-      - Application: Registry Editor
-      - User Action: The payload modifies the Registry to ensure it runs at startup.
-      - Key Artifacts: New entry created in `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run` for "MaliciousApp".
-      - Detection: Monitor for modifications to startup Registry keys and creation of new entries.
-   

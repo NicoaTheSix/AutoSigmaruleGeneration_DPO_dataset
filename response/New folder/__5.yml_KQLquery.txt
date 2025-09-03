@@ -1,2 +1,0 @@
-
-(srcNode.Image: (explorer.exe OR outlook.exe OR thunderbird.exe OR chrome.exe OR msedge.exe OR firefox.exe)) AND (dstNode.Image: (".pdf.exe" OR ".doc.exe" OR ".docx.lnk" OR ".xls.lnk" OR ".pdf.lnk")) AND (dstNode.Cmdline: "\Downloads\" OR dstNode.Cmdline: "\Desktop\" OR dstNode.Cmdline: "\Temp\")

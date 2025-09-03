@@ -1,2 +1,0 @@
-
-srcNode.Image: "C:\\Windows\\System32\\sc.exe" AND srcNode.Cmdline: "*sc create*" AND dstNode.Name: "*WindowsUpdateService*" AND srcNode.Type: Process AND dstNode.Type: Registry

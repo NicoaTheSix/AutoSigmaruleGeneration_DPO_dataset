@@ -1,2 +1,0 @@
-
-srcNode.Image: "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE" AND srcNode.Type: Process AND (dstNode.Image: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" OR dstNode.Image: "C:\\Windows\\System32\\cmd.exe") AND dstNode.Type: Process

@@ -1,2 +1,0 @@
-
-srcNode.Image: (powershell.exe OR cmd.exe OR rundll32.exe OR mshta.exe OR wget.exe OR curl.exe OR bitsadmin.exe OR *.exe) AND dstNode.Port: (80 OR 443)

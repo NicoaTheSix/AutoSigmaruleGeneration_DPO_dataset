@@ -1,1 +1,0 @@
-srcNode.Image: "C:\\Path\\To\\MaliciousExecutable.exe" AND srcNode.Cmdline: "C:\\Path\\To\\MaliciousExecutable.exe -createTask" AND dstNode.Name: "MaliciousScheduledTask" AND dstNode.Type: "Registry"

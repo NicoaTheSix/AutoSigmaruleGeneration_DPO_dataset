@@ -1,6 +1,0 @@
-
-7. **Command and Control Communication**
-   - Application: PowerShell
-   - User Action: The payload initiates a connection to a command and control (C2) server to receive further instructions.
-   - Key Artifacts: Network traffic to known malicious IP addresses or domains.
-   - Detection: Monitor for outbound connections to suspicious IP addresses or domains, especially those associated with known threat actors.

@@ -1,3 +1,0 @@
-<output>
-(srcNode.Name: "Outlook" AND event_type: "email_received") OR (srcNode.Name: "Winword" AND event_type: "document_opened") OR (srcNode.Name: "PowerShell" AND dstNode.Type: "Network" AND dstNode.url: "malicious_payload_url") OR (srcNode.Name: "PowerShell" AND dstNode.Image: "payload.exe") OR (srcNode.Name: "PowerShell" AND dstNode.Type: "Network" AND dstNode.ip: "C2_server_ip") OR (srcNode.Name: "cmd.exe" AND event_type: "command_executed")
-</output>

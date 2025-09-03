@@ -1,9 +1,13 @@
- Please generate a list of types that a output with defect may be within thw below prompt.
- The output should follow the format ,for example:
- <error>Incomplete Framework Definition<error>
- <error>Ambiguous Phase Titles<error>
- <error>Insufficient Key Activities<error>
- <error>Inaccurate Behavioral Patterns<error>
- <error>Missing Pattern Details<error>
- <error>Lack of Professional Tone<error>...vice versa
+Please generate a list of defect types that a faulty output could fall into for the task defined by the input prompt below.
+
+Output rules:
+- Do NOT include explanations, numbering, or extra text.
+- Do not write more than five outputs.
+- Keep each item 2–5 words, Title Case, noun phrase.
+- Output ONLY lines in the format:
+  <output>Title Case, concise defect type</output>for example:
+ <output>Incomplete Framework Definition</output>
+ <output>Ambiguous Phase Titles</output>
+ <output>Lack of Professional Tone</output>...vice versa
+
 Here is my input prompt: 

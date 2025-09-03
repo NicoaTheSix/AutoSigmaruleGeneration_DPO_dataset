@@ -1,7 +1,0 @@
-
-   5. **Execution of Malicious Payload**
-      - Application: Windows Explorer
-      - User Action: User inadvertently executes the downloaded payload by double-clicking on it.
-      - Key Artifacts: Executable file located at `C:\Users\User\Downloads\payload.exe`.
-      - Detection: Monitor for execution of newly created executables in user download directories.
-   

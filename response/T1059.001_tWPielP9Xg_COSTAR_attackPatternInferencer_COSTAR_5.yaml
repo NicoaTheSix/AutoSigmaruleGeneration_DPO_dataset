@@ -1,6 +1,0 @@
-
-6. **Establishing Persistence**
-   - Application: PowerShell
-   - User Action: The malicious payload creates a scheduled task to ensure persistence.
-   - Key Artifacts: PowerShell command: `New-ScheduledTask -Action (New-ScheduledTaskAction -Execute 'C:\Users\User\Downloads\payload.exe') -Trigger (New-ScheduledTaskTrigger -AtStartup) -Register`
-   - Detection: Monitor for creation of scheduled tasks that execute suspicious executables.

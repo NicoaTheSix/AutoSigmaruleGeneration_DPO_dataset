@@ -1,6 +1,0 @@
-
-1. **Email Delivery**
-   - Application: Outlook
-   - User Action: User receives a spearphishing email from a spoofed address (e.g., admin@338).
-   - Key Artifacts: Email headers indicating spoofing, attachment named "Invoice.docx".
-   - Detection: Monitor for emails with suspicious "From" addresses and attachments with common spearphishing file types.
